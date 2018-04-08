@@ -1,6 +1,6 @@
 package datadownloader;
 
-import datadownloader.BossaAPI.BossaAPIInterface.*;
+import datadownloader.BossaAPIInterface.*;
 
 import java.util.Scanner;
 
@@ -11,9 +11,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        BossaAPI.BossaAPIInterface api = BossaAPI.getApiInstance();
+        BossaAPIInterface api = BossaAPI.getApiInstance();
         int response = api.SetCallbackStatus(
-                new BossaAPI.BossaAPIInterface.SetCallbackStatusDummy() {
+                new BossaAPIInterface.SetCallbackStatusDummy() {
                     public void invoke(int var) {
                     System.out.println("SetCallbackStatus of callback function: " + var);
             }
@@ -21,7 +21,7 @@ public class Main {
         System.out.println("SetCallbackStatus returned: " + api.GetResultCodeDesc(response));
 
         response = api.SetCallbackAccount(
-                new BossaAPI.BossaAPIInterface.SetCallbackAccountDummy() {
+                new BossaAPIInterface.SetCallbackAccountDummy() {
                     @Override
                     public void invoke(NolAggrStatement nolaggrstatement) {
                         System.out.println("SetCallbackAccount of callback function: ");
@@ -73,7 +73,7 @@ public class Main {
         System.out.println("Initialize returned: " + api.GetResultCodeDesc(response));
 
         response = api.SetCallback(
-                new BossaAPI.BossaAPIInterface.SetCallbackDummy() {
+                new BossaAPIInterface.SetCallbackDummy() {
                     @Override
                     public void invoke(NolRecentInfo nolrecentinfo) {
                         System.out.println("SetCallback of callback function: " + nolrecentinfo);
