@@ -1,9 +1,11 @@
-package DataDownloader;
+package datadownloader;
 
-import DataDownloader.BossaAPI.BossaAPIInterface.*;
+import datadownloader.BossaAPI.BossaAPIInterface.*;
+
 import java.util.Scanner;
 
 /** Simple example of JNA interface mapping and usage. */
+@SuppressWarnings("Convert2Lambda")
 public class Main {
 
 
@@ -98,6 +100,6 @@ public class Main {
         //System.out.println(api.GetResultCodeDesc(api.AddToFilter(isin2, false)));
         Scanner keyboard = new Scanner(System.in);
         System.out.println("enter an integer");
-        int myint = keyboard.nextInt();
+        @SuppressWarnings("unused") int myint = keyboard.nextInt();
     }
 }

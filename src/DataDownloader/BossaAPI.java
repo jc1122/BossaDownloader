@@ -10,11 +10,11 @@ import java.util.Map;
  * BossaAPI TODO dodaj to do modelu
  */
 @SuppressWarnings({"WeakerAccess", "Convert2Lambda", "unused"})
-public class BossaAPI {
-    private static BossaAPI instance = null;
+enum BossaAPI {
+    ;
     private static BossaAPIInterface apiInstance = null;
 
-    private BossaAPI() {
+    static {
         Map<String,String> functionNames = new HashMap<>();
 
         functionNames.put("APIOrderRequest","_APIOrderRequest@12");
@@ -49,9 +49,6 @@ public class BossaAPI {
     }
 
     static BossaAPIInterface getApiInstance() {
-        if(instance == null) {
-            instance = new BossaAPI();
-        }
         return apiInstance;
     }
 
