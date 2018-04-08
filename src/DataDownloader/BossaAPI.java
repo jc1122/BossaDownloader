@@ -1,4 +1,4 @@
-package DataDownloader;
+package datadownloader;
 
 import com.sun.jna.*;
 
@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * BossaAPI TODO dodaj to do modelu
  */
+@SuppressWarnings({"WeakerAccess", "Convert2Lambda", "unused"})
 public class BossaAPI {
     private static BossaAPI instance = null;
     private static BossaAPIInterface apiInstance = null;
@@ -54,6 +55,7 @@ public class BossaAPI {
         return apiInstance;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public interface BossaAPIInterface extends Library {
 
         interface OrderType {
@@ -74,23 +76,24 @@ public class BossaAPI {
             int MarketCode = 4;
         }
 
-        class NolBidAskTbl extends Structure
-        {
+        class NolBidAskTbl extends Structure {
             public static class ByReference extends NolBidAskTbl implements Structure.ByReference { }
+
             public int depth; // pozycja ofery 1-5
             public int side;  // 1- kupno/ 2- sprzeda¿
             public double price; // cena ofery
             public int size;     // rozmiar oferty
             public int amount;		// iloœæ ofert
         }
-        class NolBidAskStr extends Structure
-        {
+
+        class NolBidAskStr extends Structure {
             public int offersize;
             public NolBidAskTbl.ByReference bidask_table;
         }
-        class NolTicker extends Structure
-        {
+
+        class NolTicker extends Structure {
             public static class ByReference extends NolTicker implements Structure.ByReference { }
+
             public byte[] Isin = new byte[13];		// International Securities Identifying Number
             public byte[] Name = new byte[21];		// Full name of the ticker
             public byte[] MarketCode = new byte[3];
@@ -100,13 +103,13 @@ public class BossaAPI {
 
         class NolTickers extends Structure {
             public static class ByReference extends NolTickers implements Structure.ByReference { }
+
             public NolTicker.ByReference ptrtickerslist;	// pointer to list of tickers
             public int size;			// size of table of ticker structures
         }
 
         @SuppressWarnings("unused")
-        class NolRecentInfo extends Structure
-        {
+        class NolRecentInfo extends Structure {
             public int BitMask; 		// mask of data
             public NolTicker ticker;	// structure containing information about name and isin
             public double ValoLT;	// a(flag in BitMask) - value of last transaction 1
@@ -135,30 +138,33 @@ public class BossaAPI {
             public int Error;			// z - error
         }
 
-        class NolFund extends Structure
-        {
+        class NolFund extends Structure {
             public static class ByReference extends NolFund implements Structure.ByReference { }
+
             public byte[] name = new byte[30];         // name of fundation
             public byte[] value = new byte[30];        // value of fundation
         }
 
         class NolPos extends Structure{
             public static class ByReference extends NolPos implements Structure.ByReference { }
+
             public NolTicker ticker;         // isin of acctivity
             public int acc110; 	       // amount of acctivity
             public int acc120;
         }
-        class NolStatement extends Structure
-        {
-           public static class ByReference extends NolStatement implements Structure.ByReference { }
-           public byte[] name = new byte[13];              // account
-           public byte[] ike = new byte[2];				// is ike ?
-           public byte[] type = new byte[2];				// type of account
-           public NolFund.ByReference ptrfund;           // pointer to table of fundations
-           public int sizefund;               // size of fountations table
-           public NolPos.ByReference ptrpos;             // pointer to table of acctivities
-           public int sizepos;                // size of acctivities table
+
+        class NolStatement extends Structure {
+            public static class ByReference extends NolStatement implements Structure.ByReference { }
+
+            public byte[] name = new byte[13];              // account
+            public byte[] ike = new byte[2];				// is ike ?
+            public byte[] type = new byte[2];				// type of account
+            public NolFund.ByReference ptrfund;           // pointer to table of fundations
+            public int sizefund;               // size of fountations table
+            public NolPos.ByReference ptrpos;             // pointer to table of acctivities
+            public int sizepos;                // size of acctivities table
         }
+
         class NolAggrStatement extends Structure {
             public NolStatement.ByReference ptrstate;       // pointer to nolstatments
             public int size;                     // number of accounts
@@ -200,6 +206,7 @@ public class BossaAPI {
             public byte[] Txt = new byte[160];			// bit 31													0x80000000
             public byte[] ExpireTm = new byte[9];		// bit 32 expire time
         }
+
         @SuppressWarnings("unused")
         class NolOrderRequest extends Structure {
             public int BitMask;
@@ -223,6 +230,7 @@ public class BossaAPI {
             public byte[] SessionDt = new byte[9];	//t	 session date								40000
             public byte[] ExpireTm = new byte[9];	//u expire time									80000
         }
+
         // initialize function
         // AppId - string containing the application information
         int Initialize(String AppId);
@@ -240,13 +248,14 @@ public class BossaAPI {
         interface SetCallbackDummy extends Callback {
             void invoke(NolRecentInfo nolrecentinfo);
         }
+
         // function for setting a callback function
         // void (*ptrcallback) (RecentInfo*) - pointer to callback function
-         int SetCallback(SetCallbackDummy dummy);
+        int SetCallback(SetCallbackDummy dummy);
 
         // function for clearing a filter
         // Flush - flag used for automatic filter approvment
-         int ClearFilter();
+        int ClearFilter();
 
         // function for describing errors
         String GetResultCodeDesc(int code); 	/* code returned by function */
@@ -260,18 +269,21 @@ public class BossaAPI {
         interface SetCallbackAccountDummy extends Callback {
             void invoke(NolAggrStatement nolaggrstatement);
         }
+
         // function for setting a callback function (accounts information)
         int SetCallbackAccount(SetCallbackAccountDummy dummy);
 
         interface SetCallbackOrderDummy extends Callback {
             void invoke(NolOrderReport nolorderreport);
         }
+
         // function for setting a callback function (orders information)
         int SetCallbackOrder(SetCallbackOrderDummy dummy);
 
         interface SetCallbackOutlookDummy extends Callback {
             void invoke(String outlook);
         }
+
         // function for setting a callback function (outlook information)
         int SetCallbackOutlook(SetCallbackOutlookDummy dummy);
 
@@ -283,6 +295,7 @@ public class BossaAPI {
         interface SetCallbackDelayDummy extends Callback {
             void invoke(float delay);
         }
+
         int SetCallbackDelay(SetCallbackDelayDummy dummy);
 
         int GetTickers(NolTickers ptrtickers, int TypeofList, NolTicker in_ticker);
@@ -295,6 +308,7 @@ public class BossaAPI {
         interface SetCallbackStatusDummy extends Callback {
             void invoke(int var);
         }
+
         int SetCallbackStatus(SetCallbackStatusDummy dummy);
     }
 }
