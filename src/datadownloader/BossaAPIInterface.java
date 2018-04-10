@@ -63,6 +63,7 @@ public interface BossaAPIInterface extends Library {
     }
 
     class NolBidAskTbl extends Structure {
+
         public static class ByReference extends NolBidAskTbl implements Structure.ByReference {
         }
 
@@ -79,6 +80,7 @@ public interface BossaAPIInterface extends Library {
     }
 
     class NolTicker extends Structure {
+
         public static class ByReference extends NolTicker implements Structure.ByReference {
         }
 
@@ -90,6 +92,7 @@ public interface BossaAPIInterface extends Library {
     }
 
     class NolTickers extends Structure {
+
         public static class ByReference extends NolTickers implements Structure.ByReference {
         }
 
@@ -125,6 +128,7 @@ public interface BossaAPIInterface extends Library {
         public NolBidAskStr offers; // y - offers       200000
 
         public int Error;            // z - error
+
     }
 
     class NolFund extends Structure {
@@ -197,6 +201,7 @@ public interface BossaAPIInterface extends Library {
         public byte BizRejRsn;            // bit 30													0x40000000
         public byte[] Txt = new byte[160];            // bit 31													0x80000000
         public byte[] ExpireTm = new byte[9];        // bit 32 expire time
+
     }
 
     @SuppressWarnings("unused")

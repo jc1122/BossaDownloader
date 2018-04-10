@@ -18,8 +18,27 @@ public class Main {
                     System.out.println("SetCallbackStatus of callback function: " + var);
             }
         });
+
+/*        int response = BossaAPI.SetCallbackStatus(
+                var -> System.out.println("SetCallbackStatus of callback function: " + var));*/
+
         System.out.println("SetCallbackStatus returned: " + api.GetResultCodeDesc(response));
 
+ /*       response = BossaAPI.SetCallbackAccount(new BossaAPI.SetCallbackAccountDummyAPI() {
+            @Override
+            public void invoke(BossaAPI.NolAggrStatementAPI nolaggrstatementAPI) {
+                System.out.println("SetCallbackAccount of callback function: ");
+                System.out.println("Number of accounts: " + nolaggrstatementAPI.getStatement().size());
+                System.out.println("Account name: " + nolaggrstatementAPI.getStatement().get(0).getName());
+                System.out.println("IKE status: " + nolaggrstatementAPI.getStatement().get(0).getIke());
+                System.out.println("Account type: " + nolaggrstatementAPI.getStatement().get(0).getType());
+                System.out.println("Fund size: " + nolaggrstatementAPI.getStatement().get(0).getFund().size());
+                System.out.println("Activity size: " + nolaggrstatementAPI.getStatement().get(0).getPositions().size());
+                System.out.println("Fund name: " + nolaggrstatementAPI.getStatement().get(0).getFund().get(0).getName());
+                System.out.println("Fund value: " + nolaggrstatementAPI.getStatement().get(0).getFund().get(0).getValue());
+                //System.out.println("Amount of activity: " + nolaggrstatement.ptrstate.ptrpos.acc110);
+            }
+        });*/
         response = api.SetCallbackAccount(
                 new BossaAPIInterface.SetCallbackAccountDummy() {
                     @Override
@@ -29,7 +48,7 @@ public class Main {
                         System.out.println("Account name: " + new String(nolaggrstatement.ptrstate.name));
                         System.out.println("IKE status: " + new String(nolaggrstatement.ptrstate.ike));
                         System.out.println("Account type: " + new String(nolaggrstatement.ptrstate.type));
-                        System.out.println("Fund size: " + nolaggrstatement.ptrstate.sizefund);
+                        System.out.println("Fund size: " + nolaggrstatement.ptrstate.ptrfund);
                         System.out.println("Activity size: " + nolaggrstatement.ptrstate.sizepos);
                         System.out.println("Fund name: " + new String(nolaggrstatement.ptrstate.ptrfund.name));
                         System.out.println("Fund value: " + new String(nolaggrstatement.ptrstate.ptrfund.value));
@@ -39,6 +58,8 @@ public class Main {
         );
         System.out.println("SetCallbackAccount returned: " + api.GetResultCodeDesc(response));
 
+/*        response = BossaAPI.SetCallbackDelay(
+                delay -> System.out.println("SetCallbackDelay of callback function: " + delay));*/
         response = api.SetCallbackDelay(
                 new SetCallbackDelayDummy() {
                     @Override
@@ -49,6 +70,8 @@ public class Main {
         );
         System.out.println("SetCallbackDelay returned: " + api.GetResultCodeDesc(response));
 
+/*        response = BossaAPI.SetCallbackOrder(
+                nolorderreport -> System.out.println("SetCallbackOrder of callback function: " + nolorderreport));*/
         response = api.SetCallbackOrder(
                 new SetCallbackOrderDummy() {
                     @Override
@@ -59,6 +82,8 @@ public class Main {
         );
         System.out.println("SetCallbackOrder returned: " + api.GetResultCodeDesc(response));
 
+/*        response = BossaAPI.SetCallbackOutlook(
+                outlook -> System.out.println("SetCallbackOutlook of callback function: " + outlook));*/
         response = api.SetCallbackOutlook(
                 new SetCallbackOutlookDummy() {
                     @Override
@@ -69,6 +94,7 @@ public class Main {
         );
         System.out.println("SetCallbackOutlook returned: " + api.GetResultCodeDesc(response));
 
+        //response = BossaAPI.Initialize();
         response = api.Initialize("BOS;BOS");
         System.out.println("Initialize returned: " + api.GetResultCodeDesc(response));
 
