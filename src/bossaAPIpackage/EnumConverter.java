@@ -1,4 +1,4 @@
-package datadownloader;
+package bossaAPIpackage;
 
 import com.sun.jna.FromNativeContext;
 import com.sun.jna.ToNativeContext;

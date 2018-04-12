@@ -1,66 +1,11 @@
-package datadownloader;
+package bossaAPIpackage;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
 import com.sun.jna.Structure;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings({"WeakerAccess", "Convert2Lambda", "unused", "UnusedReturnValue"})
 public interface BossaAPIInterface extends Library {
-
-    //http://technofovea.com/blog/archives/815
-    enum OrderType implements JnaEnum<OrderType> {
-        Undef, //= -1;
-        NewOrder, //= 0;
-        ModOrder, //= 1;
-        DelOrder, //= 2;
-        StatOrder; //= 3;
-
-        private static int start = -1;
-
-        @Contract(pure = true)
-        public int getIntValue() {
-            return this.ordinal() + start;
-        }
-
-        @Nullable
-        public OrderType getForValue(int i) {
-            for (OrderType o : OrderType.values()) {
-                if (o.getIntValue() == i) {
-                    return o;
-                }
-            }
-            return null;
-        }
-    }
-
-    @SuppressWarnings("unused")
-    enum TypeofList implements JnaEnum<TypeofList> {
-        Undef,// = -1;
-        All, //= 0;
-        Symbol, //= 1;
-        ISIN, //= 2;
-        CFI, //= 3;
-        MarketCode; //= 4;
-
-        private static int start = -1;
-
-        @Contract(pure = true)
-        public int getIntValue() {
-            return this.ordinal() + start;
-        }
-
-        @Nullable
-        public TypeofList getForValue(int i) {
-            for (TypeofList o : TypeofList.values()) {
-                if (o.getIntValue() == i) {
-                    return o;
-                }
-            }
-            return null;
-        }
-    }
 
     class NolBidAskTbl extends Structure {
 

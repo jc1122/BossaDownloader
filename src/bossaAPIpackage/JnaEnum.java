@@ -1,7 +1,7 @@
-package datadownloader;
+package bossaAPIpackage;
 
 //http://technofovea.com/blog/archives/815
-public interface JnaEnum<T> {
+interface JnaEnum<T> {
     int getIntValue();
 
     T getForValue(int i);
