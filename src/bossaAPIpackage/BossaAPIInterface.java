@@ -5,7 +5,7 @@ import com.sun.jna.Library;
 import com.sun.jna.Structure;
 
 @SuppressWarnings({"WeakerAccess", "Convert2Lambda", "unused", "UnusedReturnValue"})
-public interface BossaAPIInterface extends Library {
+interface BossaAPIInterface extends Library {
 
     class NolBidAskTbl extends Structure {
 

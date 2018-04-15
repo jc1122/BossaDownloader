@@ -5,12 +5,42 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
 public enum TypeofList implements JnaEnum<TypeofList> {
-    Undef,// = -1;
-    All, //= 0;
-    Symbol, //= 1;
-    ISIN, //= 2;
-    CFI, //= 3;
-    MarketCode; //= 4;
+    UndefList {
+        @Override
+        public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
+            return false;
+        }
+    },// = -1;
+    All {
+        @Override
+        public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
+            return false;
+        }
+    }, //= 0;
+    Symbol {
+        @Override
+        public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
+            return ticker.getName().equals("");
+        }
+    }, //= 1;
+    ISIN {
+        @Override
+        public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
+            return ticker.getIsin().equals("");
+        }
+    }, //= 2;
+    CFI {
+        @Override
+        public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
+            return ticker.getCFI().equals("");
+        }
+    }, //= 3;
+    MarketCode {
+        @Override
+        public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
+            return ticker.getMarketCode().equals("");
+        }
+    }; //= 4;
 
     private static int start = -1;
 
@@ -28,4 +58,6 @@ public enum TypeofList implements JnaEnum<TypeofList> {
         }
         return null;
     }
+
+    public abstract boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker);
 }
