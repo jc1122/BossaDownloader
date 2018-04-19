@@ -12,12 +12,12 @@ import java.util.*;
  * This class is a wrapper for <a href="https://github.com/java-native-access/jna">JNA</a> mapping
  * of <a href="http://bossa.pl/notowania/narzedzia/bossapi/">BossaAPI</a> interface.
  *
- *<p> All methods of this class are <i>static</i></p> 
+ * <p> All methods of this class are <i>static</i></p>
  */
 @SuppressWarnings({"WeakerAccess", "unused", "Convert2MethodRef", "Convert2Lambda"})
 public enum BossaAPI {
     ;
-    public static BossaAPIInterface apiInstance;
+    public static BossaAPIInterface INSTANCE;
 
     static {
         Map<String, String> functionNames = new HashMap<>();
@@ -55,7 +55,7 @@ public enum BossaAPI {
             }
         });
 
-        apiInstance = (BossaAPIInterface)
+        INSTANCE = (BossaAPIInterface)
                 Native.loadLibrary("nolclientapi",
                         BossaAPIInterface.class,
                         options);
@@ -105,7 +105,7 @@ public enum BossaAPI {
 
     /**
      * Initializes library, should be called before calling any other methods.
-     * Will fail if called, when <a href="http://bossa.pl/oferta/internet/pomoc/nol"/>NOL3</a>
+     * Will fail if called, when <a href="http://bossa.pl/oferta/internet/pomoc/nol">NOL3</a>
      * is not running. To check status of NOL3, use {@link BossaAPI#SetCallbackStatus(SetCallbackStatusDummyAPI)}
      * before calling this method.
      *
@@ -113,7 +113,7 @@ public enum BossaAPI {
      * @throws IllegalStateException if unsuccessful
      */
     public static String Initialize() throws IllegalStateException {
-        int errorCode = apiInstance.Initialize("BOS;BOS"); //the only accepted AppId by server
+        int errorCode = INSTANCE.Initialize("BOS;BOS"); //the only accepted AppId by server
         String output = GetResultCodeDesc(errorCode);
         if (errorCode < 0)
             throw new IllegalStateException(output);
@@ -142,7 +142,7 @@ public enum BossaAPI {
      */
     public static String AddToFilter(String TickersToAdd, boolean Flush) throws IllegalStateException {
         ClearFilter();
-        int errorCode = apiInstance.AddToFilter(TickersToAdd, Flush);
+        int errorCode = INSTANCE.AddToFilter(TickersToAdd, Flush);
         String output = GetResultCodeDesc(errorCode);
         if (errorCode < 0) throw new IllegalStateException(output);
         return output;
@@ -158,7 +158,7 @@ public enum BossaAPI {
      */
     @Deprecated
     private static int RemFromFilter(String TickersToRem, boolean Flush) {
-        return apiInstance.RemFromFilter(TickersToRem, Flush);
+        return INSTANCE.RemFromFilter(TickersToRem, Flush);
     }
 
     /**
@@ -169,8 +169,9 @@ public enum BossaAPI {
      * @return message
      */
     @SuppressWarnings("Convert2Lambda")
+    @Deprecated
     public static String SetCallback(SetCallbackDummyAPI dummy) {
-        int errorCode = apiInstance.SetCallback(new BossaAPIInterface.SetCallbackDummy() {
+        int errorCode = INSTANCE.SetCallback(new BossaAPIInterface.SetCallbackDummy() {
             @Override
             public void invoke(BossaAPIInterface.NolRecentInfo nolrecentinfo) {
                 dummy.invoke(new NolRecentInfoAPI(nolrecentinfo));
@@ -186,8 +187,9 @@ public enum BossaAPI {
      * @param dummy callback function
      * @return message
      */
+    @Deprecated
     public static String SetCallbackAccount(SetCallbackAccountDummyAPI dummy) {
-        int errorCode = apiInstance.SetCallbackAccount(nolaggrstatement -> dummy.invoke(new NolAggrStatementAPI(nolaggrstatement)));
+        int errorCode = INSTANCE.SetCallbackAccount(nolaggrstatement -> dummy.invoke(new NolAggrStatementAPI(nolaggrstatement)));
         return GetResultCodeDesc(errorCode);
     }
 
@@ -198,8 +200,9 @@ public enum BossaAPI {
      * @param dummy callback function
      * @return message
      */
+    @Deprecated
     public static String SetCallbackOrder(SetCallbackOrderDummyAPI dummy) {
-        int errorCode = apiInstance.SetCallbackOrder(nolorderreport -> dummy.invoke(new NolOrderReportAPI(nolorderreport)));
+        int errorCode = INSTANCE.SetCallbackOrder(nolorderreport -> dummy.invoke(new NolOrderReportAPI(nolorderreport)));
         return GetResultCodeDesc(errorCode);
     }
 
@@ -209,9 +212,9 @@ public enum BossaAPI {
      * @param dummy callback function
      * @return message
      */
-
+    @Deprecated
     public static String SetCallbackOutlook(SetCallbackOutlookDummyAPI dummy) {
-        int errorCode = apiInstance.SetCallbackOutlook(outlook -> dummy.invoke(outlook));
+        int errorCode = INSTANCE.SetCallbackOutlook(outlook -> dummy.invoke(outlook));
         return GetResultCodeDesc(errorCode);
     }
 
@@ -228,7 +231,7 @@ public enum BossaAPI {
             NolOrderReportAPI nolorderreport,
             OrderType Typ) {
 
-        return apiInstance.APIOrderRequest(
+        return INSTANCE.APIOrderRequest(
                 nolorderrequest.wrappee,
                 nolorderreport.wrappee,
                 Typ);
@@ -243,7 +246,7 @@ public enum BossaAPI {
      * @throws IllegalStateException if unsuccessful
      */
     public static String SetTradingSess(boolean val) throws IllegalStateException {
-        int errorCode = apiInstance.SetTradingSess(val);
+        int errorCode = INSTANCE.SetTradingSess(val);
         String output = GetResultCodeDesc(errorCode);
         if (errorCode < 0) throw new IllegalStateException(output);
         return output;
@@ -256,7 +259,7 @@ public enum BossaAPI {
      * @return message
      */
     public static String SetCallbackDelay(SetCallbackDelayDummyAPI dummy) {
-        int errorCode = apiInstance.SetCallbackDelay(delay -> dummy.invoke(delay));
+        int errorCode = INSTANCE.SetCallbackDelay(delay -> dummy.invoke(delay));
         return GetResultCodeDesc(errorCode);
     }
 
@@ -286,13 +289,13 @@ public enum BossaAPI {
      * @return message
      */
     public static String SetCallbackStatus(SetCallbackStatusDummyAPI dummy) {
-        int errorCode = apiInstance.SetCallbackStatus(dummy);
+        int errorCode = INSTANCE.SetCallbackStatus(dummy);
         return GetResultCodeDesc(errorCode);
     }
 
     // function for describing errors
     private static String GetResultCodeDesc(int code) {    /* code returned by function */
-        return apiInstance.GetResultCodeDesc(code);
+        return INSTANCE.GetResultCodeDesc(code);
     }
 
     /**
@@ -302,13 +305,13 @@ public enum BossaAPI {
      */
     // function for getting the information about verson of dll
     public static String Get_Version() {
-        return apiInstance.Get_Version();
+        return INSTANCE.Get_Version();
     }
 
     //clear filter before adding new papers
     @SuppressWarnings("UnusedReturnValue")
     private static int ClearFilter() {
-        return apiInstance.ClearFilter();
+        return INSTANCE.ClearFilter();
     }
 
     /**
@@ -317,32 +320,58 @@ public enum BossaAPI {
      * @return message
      */
     public static String Shutdown() {
-        return apiInstance.Shutdown();
+        return INSTANCE.Shutdown();
     }
 
+    /**
+     * Receives market quotes.
+     *
+     * @see NolRecentInfoAPI
+     */
+    @Deprecated
     public interface SetCallbackDummyAPI extends Callback {
         void invoke(NolRecentInfoAPI nolRecentInfoAPI);
     }
 
+    /**
+     * Receives account information.
+     */
+    @Deprecated
     public interface SetCallbackAccountDummyAPI extends Callback {
         void invoke(NolAggrStatementAPI nolaggrstatementAPI);
     }
 
+    /**
+     * Receives order updates and data.
+     */
+    @Deprecated
     public interface SetCallbackOrderDummyAPI extends Callback {
         void invoke(NolOrderReportAPI nolorderreport);
     }
 
+    /**
+     * Receives diagnostic data.
+     */
+    @Deprecated
     public interface SetCallbackOutlookDummyAPI extends Callback {
         void invoke(String outlook);
     }
 
+    /**
+     * Receives current delay to server.
+     */
+    @Deprecated
     public interface SetCallbackDelayDummyAPI extends Callback {
         void invoke(float delay);
     }
 
+    /**
+     * Receives status of NOL3
+     */
+    @Deprecated
     public interface SetCallbackStatusDummyAPI extends BossaAPIInterface.SetCallbackStatusDummy {
-        void invoke(int var);
-    }
+        void invoke(Nol3State var);
+    } //TODO remove all callbacks and implement observer
 
     //extracted to help composition
     private static abstract class BossaAPIClassWrapper<T, Q extends Structure> {
@@ -376,11 +405,12 @@ public enum BossaAPI {
          */
         @Contract(pure = true)
         public MarketSide getSide() {
-            return MarketSide.values[wrappee.side-1];
+            return MarketSide.values[wrappee.side - 1];
         }
 
         /**
          * Price of offer on current level.
+         *
          * @return price
          */
         @Contract(pure = true)
@@ -390,6 +420,7 @@ public enum BossaAPI {
 
         /**
          * Volume of offers on current level.
+         *
          * @return size
          */
         @Contract(pure = true)
@@ -399,6 +430,7 @@ public enum BossaAPI {
 
         /**
          * Amount of offers on current level.
+         *
          * @return amount
          */
         @Contract(pure = true)
@@ -476,16 +508,16 @@ public enum BossaAPI {
         private List<NolTickerAPI> tickerListCache;
 
         private NolTickersAPI(TypeofList typeofList, NolTickerAPI in_ticker) {
-            this.wrappee = apiInstance.InitListTickers();
+            this.wrappee = INSTANCE.InitListTickers();
             if (in_ticker == null) {
                 if (typeofList.getIntValue() > 0)
                     throw new IllegalArgumentException(typeofList.name() + " cannot be used with null ticker!");
-                apiInstance.GetTickers(wrappee, typeofList, null);
+                INSTANCE.GetTickers(wrappee, typeofList, null);
             } else {
                 if (typeofList.isTickerFieldEmpty(in_ticker)) {
                     throw new IllegalArgumentException("Ticker field " + typeofList.name() + "is empty!");
                 }
-                apiInstance.GetTickers(wrappee, typeofList, in_ticker.wrappee);
+                INSTANCE.GetTickers(wrappee, typeofList, in_ticker.wrappee);
             }
             tickerListCache = convertPointerToListHelper(wrappee.size, wrappee.ptrtickerslist,
                     NolTickerAPI.class);
@@ -497,7 +529,7 @@ public enum BossaAPI {
          * @return message
          */
         public String close() {
-            int errorCode = apiInstance.ReleaseTickersList(wrappee);
+            int errorCode = INSTANCE.ReleaseTickersList(wrappee);
             wrappee = null;
             return BossaAPI.GetResultCodeDesc(errorCode);
         }
@@ -530,7 +562,7 @@ public enum BossaAPI {
 
     /**
      * Stores market info about given ticker. <br>
-     * This object is returned by {@link SetCallbackDummyAPI#invoke(NolRecentInfoAPI)} function set as callback by
+     * This object is returned by {@link BossaAPI.SetCallbackDummyAPI#invoke(NolRecentInfoAPI)} function set as callback by
      * {@link BossaAPI#SetCallback(SetCallbackDummyAPI)}.
      * Data returned in this class is shattered. Not all fields are filled in each instance!
      */
@@ -544,6 +576,7 @@ public enum BossaAPI {
          * Each bit in bitmask represents a field stored in this class.
          * {@code 1} for filled filled {@code 0} for unfilled.
          * Unfilled fields are set to 0.
+         *
          * @return bit mask
          */
         @Contract(pure = true)
@@ -558,6 +591,7 @@ public enum BossaAPI {
 
         /**
          * Returns cash value of last transaction.
+         *
          * @return cash value
          */
         @Contract(pure = true)
@@ -567,6 +601,7 @@ public enum BossaAPI {
 
         /**
          * Returns volume of last transaction.
+         *
          * @return volume
          */
         @Contract(pure = true)
@@ -576,6 +611,7 @@ public enum BossaAPI {
 
         /**
          * Returns time of last transaction in hh:mm:ss format.
+         *
          * @return time
          */
         @NotNull
@@ -585,6 +621,7 @@ public enum BossaAPI {
 
         /**
          * Returns open price of current trading session.
+         *
          * @return open
          */
         @Contract(pure = true)
@@ -594,6 +631,7 @@ public enum BossaAPI {
 
         /**
          * Return high price of current trading session.
+         *
          * @return high
          */
         @Contract(pure = true)
@@ -603,6 +641,7 @@ public enum BossaAPI {
 
         /**
          * Return low price of current trading session.
+         *
          * @return low
          */
         @Contract(pure = true)
@@ -612,6 +651,7 @@ public enum BossaAPI {
 
         /**
          * Return close price of current trading session. TODO check if this is true!
+         *
          * @return close
          */
         @Contract(pure = true)
@@ -621,6 +661,7 @@ public enum BossaAPI {
 
         /**
          * Return current best bid price.
+         *
          * @return bid price
          */
         @Contract(pure = true)
@@ -630,6 +671,7 @@ public enum BossaAPI {
 
         /**
          * Return current best ask price.
+         *
          * @return ask price
          */
         @Contract(pure = true)
@@ -639,6 +681,7 @@ public enum BossaAPI {
 
         /**
          * Return size of offer of current best bid price.
+         *
          * @return size
          */
         @Contract(pure = true)
@@ -648,6 +691,7 @@ public enum BossaAPI {
 
         /**
          * Return size of offer of current best ask price.
+         *
          * @return size
          */
         public int getAskSize() {
@@ -665,6 +709,7 @@ public enum BossaAPI {
 
         /**
          * Get cumulative turnover of current trading session.
+         *
          * @return turnover
          */
         public double getTotalValue() {
@@ -673,6 +718,7 @@ public enum BossaAPI {
 
         /**
          * Get open interest.
+         *
          * @return open interest
          */
         public int getOpenInterest() {
@@ -681,6 +727,7 @@ public enum BossaAPI {
 
         /**
          * Phase of trading session.
+         *
          * @return phase
          */
         public String getPhase() {
@@ -689,6 +736,7 @@ public enum BossaAPI {
 
         /**
          * Status of trading session.
+         *
          * @return status
          */
         public String getStatus() {
@@ -719,6 +767,7 @@ public enum BossaAPI {
 
         /**
          * Returns turnover of session opening.
+         *
          * @return turnover
          */
         public double getOpenValue() {
@@ -727,6 +776,7 @@ public enum BossaAPI {
 
         /**
          * Returns turnover of session closing.
+         *
          * @return turnover
          */
         public double getCloseValue() {
@@ -735,6 +785,7 @@ public enum BossaAPI {
 
         /**
          * Return close price of previous trading session.
+         *
          * @return reference price
          */
         public double getReferPrice() {
@@ -753,6 +804,7 @@ public enum BossaAPI {
 
         /**
          * No idea TODO check behavior of this method
+         *
          * @return error code
          */
         public int getError() {
@@ -791,6 +843,7 @@ public enum BossaAPI {
 
         /**
          * Returns the ticker of portfolio position.
+         *
          * @return ticker
          */
         public NolTickerAPI getTicker() {
@@ -799,6 +852,7 @@ public enum BossaAPI {
 
         /**
          * Get amount of shares of position on default account. This amount is at users disposal.
+         *
          * @return amount
          */
         public int getAcc110() {
@@ -807,6 +861,7 @@ public enum BossaAPI {
 
         /**
          * Get amount of shares which are currently blocked. Ex. they may be blocked for a pending sell order.
+         *
          * @return amount
          */
         public int getAcc120() {
@@ -836,7 +891,8 @@ public enum BossaAPI {
         }
 
         /**
-         *  Account number of currently active account.
+         * Account number of currently active account.
+         *
          * @return account number
          */
         public String getName() {
@@ -857,6 +913,7 @@ public enum BossaAPI {
          * Returns account type:
          * {@code M} - cash market account <br>
          * {@code P} - derivates
+         *
          * @return account type
          */
         public String getType() {
@@ -884,6 +941,7 @@ public enum BossaAPI {
 
         /**
          * Return list of papers in portfolio.
+         *
          * @return positions
          */
         public List<NolPosAPI> getPositions() {
@@ -903,7 +961,7 @@ public enum BossaAPI {
     }
 
     /**
-     * Class contains list of statements for all accessible accounts.
+     * Contains list of statements for all accessible accounts.
      */
     public static final class NolAggrStatementAPI extends BossaAPIClassWrapper<NolAggrStatementAPI, BossaAPIInterface.NolAggrStatement> {
 
@@ -1169,5 +1227,156 @@ public enum BossaAPI {
             return new String(wrappee.ExpireTm).trim();
         }
 
+    }
+
+    public static final class QuotesObservable extends Observable {
+
+        private static final QuotesObservable INSTANCE = new QuotesObservable();
+        private NolRecentInfoAPI nolRecentInfoAPI;
+
+        private QuotesObservable() {
+        }
+
+        public static QuotesObservable getInstance() {
+            return INSTANCE;
+        }
+
+        public NolRecentInfoAPI getNolRecentInfoAPI() {
+            return nolRecentInfoAPI;
+        }
+
+        private class CallbackHelper implements BossaAPIInterface.SetCallbackDummy {
+            @Override
+            public void invoke(BossaAPIInterface.NolRecentInfo nolrecentinfo) {
+                nolRecentInfoAPI = new NolRecentInfoAPI(nolrecentinfo);
+                setChanged();
+                notifyObservers();
+            }
+        }
+    }
+
+    public static final class StatusObservable extends Observable {
+        private Nol3State nol3State;
+        private static StatusObservable INSTANCE = new StatusObservable();
+
+        private StatusObservable() {
+        }
+
+        public static StatusObservable getInstance() {
+            return INSTANCE;
+        }
+
+        public Nol3State getNol3State() {
+            return nol3State;
+        }
+
+        private class CallbackHelper implements BossaAPIInterface.SetCallbackStatusDummy {
+            @Override
+            public void invoke(Nol3State nol3State) {
+                StatusObservable.this.nol3State = nol3State;
+                setChanged();
+                notifyObservers();
+            }
+        }
+    }
+
+    public static final class AccountsObservable extends Observable {
+        private NolAggrStatementAPI nolAggrStatementAPI;
+        private static AccountsObservable INSTANCE = new AccountsObservable();
+
+        private AccountsObservable() {
+        }
+
+        public static AccountsObservable getInstance() {
+            return INSTANCE;
+        }
+
+        public NolAggrStatementAPI getNolAggrStatementAPI() {
+            return nolAggrStatementAPI;
+        }
+
+        private class CallbackHelper implements BossaAPIInterface.SetCallbackAccountDummy {
+            @Override
+            public void invoke(BossaAPIInterface.NolAggrStatement nolAggrStatement) {
+                AccountsObservable.this.nolAggrStatementAPI = new NolAggrStatementAPI(nolAggrStatement);
+                setChanged();
+                notifyObservers();
+            }
+        }
+    }
+
+    public static final class DelayObservable extends Observable {
+        private float delay;
+        private static DelayObservable INSTANCE = new DelayObservable();
+
+        private DelayObservable() {
+        }
+
+        public static DelayObservable getInstance() {
+            return INSTANCE;
+        }
+
+        public float getDelay() {
+            return delay;
+        }
+
+        private class CallbackHelper implements BossaAPIInterface.SetCallbackDelayDummy {
+            @Override
+            public void invoke(float delay) {
+                DelayObservable.this.delay = delay;
+                setChanged();
+                notifyObservers();
+            }
+        }
+    }
+
+    public static final class OrderObservable extends Observable {
+        private NolOrderReportAPI nolOrderReportAPI;
+        private static OrderObservable INSTANCE = new OrderObservable();
+
+        private OrderObservable() {
+        }
+
+        public static OrderObservable getInstance() {
+            return INSTANCE;
+        }
+
+        public NolOrderReportAPI getNolOrderReportAPI() {
+            return nolOrderReportAPI;
+        }
+
+        private class CallbackHelper implements BossaAPIInterface.SetCallbackOrderDummy {
+            @Override
+            public void invoke(BossaAPIInterface.NolOrderReport nolOrderReport) {
+                OrderObservable.this.nolOrderReportAPI = new NolOrderReportAPI(nolOrderReport);
+                setChanged();
+                notifyObservers();
+            }
+        }
+    }
+
+    public static final class OutlookObservable extends Observable {
+        private String outlook;
+        private static OutlookObservable INSTANCE = new OutlookObservable();
+
+        private OutlookObservable() {
+        }
+
+        public static OutlookObservable getInstance() {
+            return INSTANCE;
+        }
+
+        public String getOutlook() {
+            return outlook;
+        }
+
+        private class CallbackHelper implements BossaAPIInterface.SetCallbackOutlookDummy {
+            @Override
+            public void invoke(String outlook) {
+                OutlookObservable.this.outlook = outlook;
+                setChanged();
+                notifyObservers();
+            }
+        }
     }
 }

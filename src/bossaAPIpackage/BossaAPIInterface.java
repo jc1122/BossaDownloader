@@ -248,8 +248,9 @@ interface BossaAPIInterface extends Library {
     int ReleaseTickersList(NolTickers ptrtickers);
 
     interface SetCallbackStatusDummy extends Callback {
-        void invoke(int var);
+        void invoke(Nol3State var);
     }
 
     int SetCallbackStatus(SetCallbackStatusDummy dummy);
+
 }

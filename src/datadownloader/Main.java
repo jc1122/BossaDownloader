@@ -1,10 +1,8 @@
 package datadownloader;
 
-import bossaAPIpackage.BossaAPI;
-import bossaAPIpackage.TypeofList;
+import gui.Controller;
+import gui.Model;
 
-import java.util.Map;
-import java.util.Scanner;
 /** Simple example of JNA interface mapping and usage. */
 @SuppressWarnings("Convert2Lambda")
 public class Main {
@@ -12,7 +10,10 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("start");
-        //System.out.println(BossaAPI.Initialize());
+        Model model = new Model();
+        Controller controller = new Controller(model);
+
+ /*       //System.out.println(BossaAPI.Initialize());
         String response = BossaAPI.SetCallbackStatus(
                 var -> System.out.println("SetCallbackStatus of callback function: " + var));
 
@@ -146,6 +147,6 @@ public class Main {
         System.out.println("SetCallback returned: " + response);
         Scanner keyboard = new Scanner(System.in);
         System.out.println("enter an integer");
-        @SuppressWarnings("unused") int myint = keyboard.nextInt();
+        @SuppressWarnings("unused") int myint = keyboard.nextInt();*/
     }
 }
