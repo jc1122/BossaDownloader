@@ -27,8 +27,6 @@ public class View {
         this.model = model;
     }
 
-    ;
-
     public void createGUI() {
         frame = new JFrame("BossaDownloader");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,13 +73,49 @@ public class View {
         return menuBar;
     }
 
+    private interface SimpleActionListenerFunctionalHelper {
+        void execute();
+    }
+
+    private class SimpleActionListener implements ActionListener {
+        SimpleActionListenerFunctionalHelper helper;
+
+        public SimpleActionListener(SimpleActionListenerFunctionalHelper helper) {
+            this.helper = helper;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            SwingWorker worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() {
+                    try {
+                        helper.execute();
+                    } catch (Exception exc) {
+                        exceptionDialog(exc);
+                    }
+                    return null;
+                }
+            };
+            worker.execute();
+        }
+
+    }
     private void addEventListeners() {
-        startApiMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.start();
-            }
-        });
+        startApiMenuItem.addActionListener(new SimpleActionListener(() -> controller.startAPI()));
+        stopApiMenuItem.addActionListener(new SimpleActionListener(() -> controller.stopAPI()));
+    }
+
+    private void exceptionDialog(Exception exc) {
+        String stackTrace = "";
+        for (StackTraceElement element : exc.getStackTrace()) {
+            stackTrace += element + System.lineSeparator();
+        }
+        JTextArea textArea = new JTextArea(exc.getMessage() + System.lineSeparator() + stackTrace);
+        textArea.setEditable(false);
+        JOptionPane.showMessageDialog(null,
+                textArea,
+                "Exception!", JOptionPane.ERROR_MESSAGE);
     }
 
     public void disableStartApiMenuItem() {

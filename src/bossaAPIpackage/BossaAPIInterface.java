@@ -206,7 +206,7 @@ interface BossaAPIInterface extends Library {
     String Get_Version();
 
     // shutdown function
-    String Shutdown();
+    int Shutdown();
 
     interface SetCallbackAccountDummy extends Callback {
         void invoke(NolAggrStatement nolaggrstatement);

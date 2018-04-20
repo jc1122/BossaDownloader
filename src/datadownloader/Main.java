@@ -8,8 +8,9 @@ import gui.Model;
 public class Main {
 
 
-    public static void main(String[] args) {
-        System.out.println("start");
+    public static void main(String[] args) throws Exception {
+
+        System.out.println("startAPI");
         Model model = new Model();
         Controller controller = new Controller(model);
 
@@ -63,7 +64,6 @@ public class Main {
 
 
         System.out.println(BossaAPI.Get_Version());
-        //#TODO api działa - teraz należy przetestować każdą funkcję z osobna i napisać ściągacz danych
 
 
         BossaAPI.NolTickersAPI tickers = BossaAPI.GetTickers(TypeofList.All, null);
@@ -100,7 +100,7 @@ public class Main {
                     @Override
                     public void invoke(BossaAPI.NolRecentInfoAPI nolrecentinfo) {
                         System.out.println("SetCallback of callback function: " + nolrecentinfo);
-                        //int offerSize = nolrecentinfo.getOffers().getBidask_table().size(); //TODO integrate getoffers and getbidasktable
+                        //int offerSize = nolrecentinfo.getOffers().getBidask_table().size();
                         System.out.println(" ISIN " + nolrecentinfo.getTicker().getIsin());
                         System.out.println(" phase: " + nolrecentinfo.getPhase());
                         System.out.println(" status: " + nolrecentinfo.getStatus());

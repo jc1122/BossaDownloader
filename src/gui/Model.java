@@ -1,19 +1,32 @@
 package gui;
 
 import bossaAPIpackage.BossaAPI;
-import bossaAPIpackage.Nol3State;
 
 public class Model {
-    BossaAPI api;
-    Nol3State nol3State;
+    BossaAPI.AccountsObservable accountsObservable;
+    BossaAPI.DelayObservable delayObservable;
+    BossaAPI.OrderObservable orderObservable;
+    BossaAPI.OutlookObservable outlookObservable;
+    BossaAPI.QuotesObservable quotesObservable;
+    BossaAPI.StatusObservable statusObservable;
 
-    public void start() {
-        api.SetCallbackStatus(new BossaAPI.SetCallbackStatusDummyAPI() {
-            @Override
-            public void invoke(Nol3State var) {
-                nol3State = var;
-            }
-        });
-        System.out.println("Im here " + nol3State);
+    public void startAPI() {
+        System.out.println(BossaAPI.Get_Version());
+        System.out.println(BossaAPI.Initialize());
+        System.out.println(BossaAPI.InitializeObservables());
+        setObservables();
+    }
+
+    public void stopAPI() {
+        System.out.println(BossaAPI.Shutdown());
+    }
+
+    private void setObservables() {
+        accountsObservable = BossaAPI.AccountsObservable.getInstance();
+        delayObservable = BossaAPI.DelayObservable.getInstance();
+        orderObservable = BossaAPI.OrderObservable.getInstance();
+        outlookObservable = BossaAPI.OutlookObservable.getInstance();
+        quotesObservable = BossaAPI.QuotesObservable.getInstance();
+        statusObservable = BossaAPI.StatusObservable.getInstance();
     }
 }
