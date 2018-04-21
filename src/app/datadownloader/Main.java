@@ -11,6 +11,7 @@ import java.util.logging.LogManager;
 public class Main {
 
 
+
     public static void main(String[] args) throws Exception {
         FileInputStream loggingProperties = new FileInputStream("./lib/logging.properties");
         LogManager.getLogManager().readConfiguration(loggingProperties);

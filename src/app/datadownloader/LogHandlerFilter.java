@@ -1,12 +1,13 @@
 package app.datadownloader;
 
+import java.util.Arrays;
 import java.util.logging.Filter;
 import java.util.logging.LogRecord;
 
 public class LogHandlerFilter implements Filter {
     @Override
     public boolean isLoggable(LogRecord record) {
-        //record.getSourceClassName().split();
-        return false;
+        String[] name = record.getSourceClassName().split("\\.");
+        return name[0].equals("app");
     }
 }

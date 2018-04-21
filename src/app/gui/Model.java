@@ -11,9 +11,9 @@ public class Model {
     BossaAPI.StatusObservable statusObservable;
 
     public void startAPI() {
-        System.out.println(BossaAPI.Get_Version());
-        System.out.println(BossaAPI.Initialize());
-        System.out.println(BossaAPI.InitializeObservables());
+        BossaAPI.Get_Version();
+        BossaAPI.Initialize();
+        BossaAPI.InitializeObservables();
         setObservables();
     }
 
