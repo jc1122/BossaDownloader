@@ -1,6 +1,9 @@
 package app.gui;
 
+import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -59,7 +62,7 @@ public class View {
             statementAccountsMenuItem = new JMenuItem("Statement");
             accountsMenu.add(statementAccountsMenuItem);
 
-            menuBar.add(statementAccountsMenuItem);
+            menuBar.add(accountsMenu);
         }
 
         {
@@ -69,7 +72,6 @@ public class View {
 
             menuBar.add(helpMenu);
         }
-
         return menuBar;
     }
 
@@ -80,13 +82,14 @@ public class View {
     private class SimpleActionListener implements ActionListener {
         SimpleActionListenerFunctionalHelper helper;
 
-        public SimpleActionListener(SimpleActionListenerFunctionalHelper helper) {
+        SimpleActionListener(SimpleActionListenerFunctionalHelper helper) {
             this.helper = helper;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             SwingWorker worker = new SwingWorker<Void, Void>() {
+                @Nullable
                 @Override
                 protected Void doInBackground() {
                     try {
@@ -107,9 +110,9 @@ public class View {
     }
 
     private void exceptionDialog(Throwable exc) {
-        String stackTrace = "";
+        StringBuilder stackTrace = new StringBuilder();
         for (StackTraceElement element : exc.getStackTrace()) {
-            stackTrace += element + System.lineSeparator();
+            stackTrace.append(element).append(System.lineSeparator());
         }
         JTextArea textArea = new JTextArea(exc.getMessage() + System.lineSeparator() + stackTrace);
         textArea.setEditable(false);
