@@ -91,7 +91,7 @@ public class View {
                 protected Void doInBackground() {
                     try {
                         helper.execute();
-                    } catch (Exception exc) {
+                    } catch (Throwable exc) {
                         exceptionDialog(exc);
                     }
                     return null;
@@ -106,7 +106,7 @@ public class View {
         stopApiMenuItem.addActionListener(new SimpleActionListener(() -> controller.stopAPI()));
     }
 
-    private void exceptionDialog(Exception exc) {
+    private void exceptionDialog(Throwable exc) {
         String stackTrace = "";
         for (StackTraceElement element : exc.getStackTrace()) {
             stackTrace += element + System.lineSeparator();

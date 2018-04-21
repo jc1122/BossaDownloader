@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -23,6 +24,8 @@ public enum BossaAPI {
             Logger.getLogger(BossaAPI.class.getName());
 
     static {
+        System.out.println("loggable: " + logger.isLoggable(Level.FINEST));
+        logger.finest("Initializing static");
         Map<String, String> functionNames = new HashMap<>();
 
         //map method names to mangled dll library function names
@@ -57,11 +60,19 @@ public enum BossaAPI {
                 addTypeConverter(JnaEnum.class, new EnumConverter());
             }
         });
-
-        INSTANCE = (BossaAPIInterface)
-                Native.loadLibrary("nolclientapi",
-                        BossaAPIInterface.class,
-                        options);
+        try {
+            INSTANCE = (BossaAPIInterface)
+                    Native.loadLibrary("nolclientapi123",
+                            BossaAPIInterface.class,
+                            options);
+        } catch (UnsatisfiedLinkError e) {
+            String stackTrace = "";
+            for (StackTraceElement element : e.getStackTrace()) {
+                stackTrace += element + System.lineSeparator();
+            }
+            logger.severe(e.getMessage() + stackTrace);
+            throw e;
+        }
     }
 
 
