@@ -1,7 +1,7 @@
-package datadownloader;
+package app.datadownloader;
 
-import gui.Controller;
-import gui.Model;
+import app.gui.Controller;
+import app.gui.Model;
 
 /** Simple example of JNA interface mapping and usage. */
 @SuppressWarnings("Convert2Lambda")

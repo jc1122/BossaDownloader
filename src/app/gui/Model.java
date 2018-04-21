@@ -1,6 +1,6 @@
-package gui;
+package app.gui;
 
-import bossaAPIpackage.BossaAPI;
+import app.bossaAPI.BossaAPI;
 
 public class Model {
     BossaAPI.AccountsObservable accountsObservable;

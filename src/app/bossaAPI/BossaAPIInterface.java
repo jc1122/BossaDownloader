@@ -1,4 +1,4 @@
-package bossaAPIpackage;
+package app.bossaAPI;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Library;

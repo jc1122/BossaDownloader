@@ -1,4 +1,4 @@
-package bossaAPIpackage;
+package app.bossaAPI;
 
 import com.sun.jna.*;
 import org.jetbrains.annotations.Contract;
@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * This class is a wrapper for <a href="https://github.com/java-native-access/jna">JNA</a> mapping
@@ -18,6 +19,8 @@ import java.util.*;
 public enum BossaAPI {
     ;
     private static BossaAPIInterface INSTANCE;
+    private static final Logger logger =
+            Logger.getLogger(BossaAPI.class.getName());
 
     static {
         Map<String, String> functionNames = new HashMap<>();
