@@ -1,18 +1,26 @@
-package datadownloader;
+package app.datadownloader;
 
-import bossaAPIpackage.BossaAPI;
-import bossaAPIpackage.TypeofList;
+import app.gui.Controller;
+import app.gui.Model;
 
-import java.util.Map;
-import java.util.Scanner;
+import java.io.FileInputStream;
+import java.util.logging.LogManager;
+
 /** Simple example of JNA interface mapping and usage. */
 @SuppressWarnings("Convert2Lambda")
 public class Main {
 
 
-    public static void main(String[] args) {
-        System.out.println("start");
-        //System.out.println(BossaAPI.Initialize());
+
+    public static void main(String[] args) throws Exception {
+        FileInputStream loggingProperties = new FileInputStream("./lib/logging.properties");
+        LogManager.getLogManager().readConfiguration(loggingProperties);
+
+        System.out.println("startAPI");
+        Model model = new Model();
+        Controller controller = new Controller(model);
+
+ /*       //System.out.println(BossaAPI.Initialize());
         String response = BossaAPI.SetCallbackStatus(
                 var -> System.out.println("SetCallbackStatus of callback function: " + var));
 
@@ -62,7 +70,6 @@ public class Main {
 
 
         System.out.println(BossaAPI.Get_Version());
-        //#TODO api działa - teraz należy przetestować każdą funkcję z osobna i napisać ściągacz danych
 
 
         BossaAPI.NolTickersAPI tickers = BossaAPI.GetTickers(TypeofList.All, null);
@@ -99,7 +106,7 @@ public class Main {
                     @Override
                     public void invoke(BossaAPI.NolRecentInfoAPI nolrecentinfo) {
                         System.out.println("SetCallback of callback function: " + nolrecentinfo);
-                        //int offerSize = nolrecentinfo.getOffers().getBidask_table().size(); //TODO integrate getoffers and getbidasktable
+                        //int offerSize = nolrecentinfo.getOffers().getBidask_table().size();
                         System.out.println(" ISIN " + nolrecentinfo.getTicker().getIsin());
                         System.out.println(" phase: " + nolrecentinfo.getPhase());
                         System.out.println(" status: " + nolrecentinfo.getStatus());
@@ -146,6 +153,6 @@ public class Main {
         System.out.println("SetCallback returned: " + response);
         Scanner keyboard = new Scanner(System.in);
         System.out.println("enter an integer");
-        @SuppressWarnings("unused") int myint = keyboard.nextInt();
+        @SuppressWarnings("unused") int myint = keyboard.nextInt();*/
     }
 }

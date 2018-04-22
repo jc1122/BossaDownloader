@@ -1,4 +1,4 @@
-package bossaAPIpackage;
+package app.bossaAPI;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
@@ -206,7 +206,7 @@ interface BossaAPIInterface extends Library {
     String Get_Version();
 
     // shutdown function
-    String Shutdown();
+    int Shutdown();
 
     interface SetCallbackAccountDummy extends Callback {
         void invoke(NolAggrStatement nolaggrstatement);
@@ -248,8 +248,9 @@ interface BossaAPIInterface extends Library {
     int ReleaseTickersList(NolTickers ptrtickers);
 
     interface SetCallbackStatusDummy extends Callback {
-        void invoke(int var);
+        void invoke(Nol3State var);
     }
 
     int SetCallbackStatus(SetCallbackStatusDummy dummy);
+
 }

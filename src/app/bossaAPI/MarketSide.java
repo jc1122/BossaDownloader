@@ -1,4 +1,4 @@
-package bossaAPIpackage;
+package app.bossaAPI;
 
 public enum MarketSide {
     BID(1),
