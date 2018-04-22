@@ -1,4 +1,4 @@
-package app.bossaAPI;
+package app.API;
 
 import com.sun.jna.FromNativeContext;
 import com.sun.jna.ToNativeContext;

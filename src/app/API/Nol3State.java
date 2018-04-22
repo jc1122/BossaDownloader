@@ -1,4 +1,4 @@
-package app.bossaAPI;
+package app.API;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;

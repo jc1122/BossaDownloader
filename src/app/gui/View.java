@@ -1,5 +1,7 @@
 package app.gui;
 
+import app.API.BossaAPI;
+import app.API.BossaAPI.NolStatementAPI;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -124,19 +126,64 @@ public class View {
 
     private class StatementDialog implements Observer {
         private JDialog dialog;
-        private JComboBox<String> comboBox;
+        private JComboBox<String> accountNameComboBox;
+        private JPanel comboBoxPanel;
         StatementDialog() {
-            String[] accounts = {"a","b"};
-            dialog = new JDialog(frame, "Statement");
-            comboBox = new JComboBox<>(accounts);
-            dialog.add(comboBox);
+            model.getAccountsObservable().addObserver(this);
+            accountNameComboBox = new JComboBox<>();
+            java.util.List<NolStatementAPI> accountList = model.getAccountsObservable().getStatements();
 
-            dialog.setSize(new Dimension(300, 150));
+            for (NolStatementAPI account : accountList) {
+                accountNameComboBox.addItem(account.getName());
+            }
+            String[] accounts = {"asdf", "basdfafdasdfasdfasdfasbasdfafdasdfasdfasdfasdd"};
+            dialog = new JDialog(frame, "Statement");
+
+            Container pane = dialog.getContentPane();
+            pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+
+            comboBoxPanel = new JPanel();
+            comboBoxPanel.setBackground(new Color(100, 100, 100));
+            comboBoxPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+            dialog.getContentPane().add(comboBoxPanel);
+
+
+            comboBoxPanel.add(accountNameComboBox);
+
+            JPanel statementPanel = new JPanel();
+            GridLayout gridLayout = new GridLayout(0, 2);
+            gridLayout.setHgap(20);
+            statementPanel.setLayout(gridLayout);
+            statementPanel.setBackground(new Color(200, 200, 200));
+
+            JLabel label1 = new JLabel("asdfasdfasdfa");
+
+            label1.setHorizontalAlignment(SwingConstants.RIGHT);
+            JLabel label2 = new JLabel("asdfasdfa");
+
+            label2.setHorizontalAlignment(SwingConstants.RIGHT);
+            JLabel label3 = new JLabel("asdfafa");
+
+            JLabel label4 = new JLabel("asdfasdfasdfa");
+
+            statementPanel.add(label1);
+            statementPanel.add(label2);
+            statementPanel.add(label3);
+            statementPanel.add(label4);
+            dialog.getContentPane().add(statementPanel);
+
+            //dialog.setSize(new Dimension(300, 150));
             dialog.setLocationRelativeTo(frame);
             dialog.setVisible(true);
+
+            dialog.setMinimumSize(new Dimension(accountNameComboBox.getWidth() + 100, accountNameComboBox.getHeight() + 100));
+            comboBoxPanel.setMaximumSize(new Dimension(accountNameComboBox.getWidth() + 100, accountNameComboBox.getHeight() + 100));
+            gridLayout.setHgap(accountNameComboBox.getWidth() / 2);
+
         }
         @Override
         public void update(Observable o, Object arg) {
+            BossaAPI.AccountsObservable accountsObservable = (BossaAPI.AccountsObservable) o;
 
         }
     }

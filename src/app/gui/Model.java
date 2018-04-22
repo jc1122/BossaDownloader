@@ -1,6 +1,6 @@
 package app.gui;
 
-import app.bossaAPI.BossaAPI;
+import app.API.BossaAPI;
 
 public class Model {
     private BossaAPI.AccountsObservable accountsObservable;
@@ -11,8 +11,9 @@ public class Model {
     private BossaAPI.StatusObservable statusObservable;
 
     public void startAPI() {
-        BossaAPI.Initialize();
         BossaAPI.InitializeObservables();
+        BossaAPI.Initialize();
+        //BossaAPI.InitializeObservables();
         setObservables();
     }
 

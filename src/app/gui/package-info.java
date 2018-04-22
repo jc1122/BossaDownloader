@@ -3,6 +3,6 @@
  * *
  *
  * @author jc1122
- * @see app.bossaAPI.BossaAPI
+ * @see app.API.BossaAPI
  */
 package app.gui;

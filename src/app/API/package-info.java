@@ -6,6 +6,6 @@
  * to use the functionality of this package.
  *
  * @author jc1122
- * @see app.bossaAPI.BossaAPI
+ * @see app.API.BossaAPI
  */
-package app.bossaAPI;
+package app.API;

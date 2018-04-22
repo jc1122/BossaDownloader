@@ -1,4 +1,4 @@
-package app.bossaAPI;
+package app.API;
 
 import com.sun.jna.*;
 import org.jetbrains.annotations.Contract;
@@ -129,7 +129,7 @@ public enum BossaAPI {
      * Initializes library, should be called before calling any other methods.
      * Will fail if called, when <a href="http://bossa.pl/oferta/internet/pomoc/nol">NOL3</a>
      * is not running. To check status of NOL3, use {@link BossaAPI.StatusObservable}
-     * before calling this method.
+     * before calling this method. This method initialized {@link BossaAPI.QuotesObservable}
      *
      * @return intialization comment
      * @throws IllegalStateException if unsuccessful
@@ -145,24 +145,44 @@ public enum BossaAPI {
             throw e;
         }
         SetTradingSess(true);
+        //the observable below must be initialized after the lib is initialized, otherwise "lib is not inicialized" error
+        InitializeObservablesHelper("Quotes callback: ",
+                INSTANCE.SetCallback(QuotesObservable.getInstance().new CallbackHelper()));
         return output;
     }
 
+    private static String InitializeObservablesHelper(String message, int errorCode) {
+        String errorMessage = GetResultCodeDesc(errorCode);
+        if (errorCode < 0) {
+            IllegalStateException e = new IllegalStateException(message + errorMessage);
+            logger.severe(e.getMessage());
+            throw e;
+        }
+        return errorMessage;
+    }
+
+    /**
+     * Call to initialize callbacks of the api. Callbacks are stored in observables.
+     * Quotes observable is initialized by {@link BossaAPI#Initialize()}
+     * otherwise API complains about lib not being initialized.
+     *
+     * @return success or error message for each initialized callback
+     */
     public static List<String> InitializeObservables() {
         logger.entering(BossaAPI.class.getName(), "InitializeObservers");
+        List<Integer> errorCodes = new ArrayList<>();
         List<String> results = new ArrayList<>();
-        results.add("Quotes callback: " +
-                INSTANCE.GetResultCodeDesc(INSTANCE.SetCallback(QuotesObservable.getInstance().new CallbackHelper())));
-        results.add("Status callback: " +
-                INSTANCE.GetResultCodeDesc(INSTANCE.SetCallbackStatus(StatusObservable.getInstance().new CallbackHelper())));
-        results.add("Accounts callback: " +
-                INSTANCE.GetResultCodeDesc(INSTANCE.SetCallbackAccount(AccountsObservable.getInstance().new CallbackHelper())));
-        results.add("Delay callback: " +
-                INSTANCE.GetResultCodeDesc(INSTANCE.SetCallbackDelay(DelayObservable.getInstance().new CallbackHelper())));
-        results.add("Order callback: " +
-                INSTANCE.GetResultCodeDesc(INSTANCE.SetCallbackOrder(OrderObservable.getInstance().new CallbackHelper())));
-        results.add("Outlook callback: " +
-                INSTANCE.GetResultCodeDesc(INSTANCE.SetCallbackOutlook(OutlookObservable.getInstance().new CallbackHelper())));
+
+        results.add(InitializeObservablesHelper("Status callback: ",
+                INSTANCE.SetCallbackStatus(StatusObservable.getInstance().new CallbackHelper())));
+        results.add(InitializeObservablesHelper("Accounts callback: ",
+                INSTANCE.SetCallbackAccount(AccountsObservable.getInstance().new CallbackHelper())));
+        results.add(InitializeObservablesHelper("Delay callback: ",
+                INSTANCE.SetCallbackDelay(DelayObservable.getInstance().new CallbackHelper())));
+        results.add(InitializeObservablesHelper("Order callback: ",
+                INSTANCE.SetCallbackOrder(OrderObservable.getInstance().new CallbackHelper())));
+        results.add(InitializeObservablesHelper("Outlook callback: ",
+                INSTANCE.SetCallbackOutlook(OutlookObservable.getInstance().new CallbackHelper())));
         logger.exiting(BossaAPI.class.getName(), "InitializeObservers", results);
         return results;
     }
@@ -1401,11 +1421,11 @@ public enum BossaAPI {
         /**
          * Call this method by observer, once updated, to get fresh data.
          *
-         * @return accounts statements
+         * @return list of accounts statements
          */
-        public NolAggrStatementAPI getNolAggrStatementAPI() {
+        public List<NolStatementAPI> getStatements() {
             logger.exiting(AccountsObservable.class.getName(), "getNolAggrStatementAPI");
-            return nolAggrStatementAPI;
+            return nolAggrStatementAPI.getStatements();
         }
 
         private class CallbackHelper implements BossaAPIInterface.SetCallbackAccountDummy {

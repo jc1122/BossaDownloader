@@ -1,4 +1,4 @@
-package app.bossaAPI;
+package app.API;
 
 //http://technofovea.com/blog/archives/815
 public interface JnaEnum<T> {
