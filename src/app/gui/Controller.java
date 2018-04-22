@@ -1,10 +1,6 @@
 package app.gui;
 
-import app.bossaAPI.BossaAPI;
-
 import javax.swing.*;
-import java.util.Observable;
-import java.util.Observer;
 
 public class Controller {
     Model model;
@@ -18,6 +14,7 @@ public class Controller {
             public void run() {
                 view.createGUI();
                 view.disableStopApiMenuItem();
+                //view.disableStatementAccountsMenuItem(); TODO uncomment
             }
         });
     }
@@ -25,6 +22,7 @@ public class Controller {
     public void startAPI() {
         model.startAPI();
         view.enableStopApiMenuItem();
+        view.enableStatementAccountsMenuItem();
         view.disableStartApiMenuItem();
     }
 
@@ -34,30 +32,16 @@ public class Controller {
         view.enableStartApiMenuItem();
     }
 
+    public void showVersion() {
+        view.showVersionDialog();
+    }
+
+    public void showStatement() {
+        view.showStatementDialog();
+    }
     //TODO add status bar and logging of init functions
 //TODO add GUI exception handling
     //TODO add window with statement
-    public class OutlookObserver implements Observer {
-        @Override
-        public void update(Observable o, Object arg) {
-            BossaAPI.OutlookObservable observable = (BossaAPI.OutlookObservable) o;
-            System.out.println(observable.getOutlook());
-        }
-    }
 
-    public class OrderObserver implements Observer {
-        @Override
-        public void update(Observable o, Object arg) {
-            BossaAPI.OrderObservable observable = (BossaAPI.OrderObservable) o;
-            System.out.println("order info: " + observable.getNolOrderReportAPI());
-        }
-    }
 
-    public class QuotesObserver implements Observer {
-        @Override
-        public void update(Observable o, Object arg) {
-            BossaAPI.QuotesObservable info = (BossaAPI.QuotesObservable) o;
-            System.out.println("quote: " + info.getNolRecentInfoAPI());
-        }
-    }
 }

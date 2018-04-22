@@ -113,7 +113,11 @@ public enum BossaAPI {
                 wrappedAPIList.add(wrapperConstructor.newInstance(element));
             }
         } catch (Exception e) {
-            logger.severe("Pointer is of different class than the wrapper: " + e);
+            StringBuilder stackTrace = new StringBuilder();
+            for (StackTraceElement element : e.getStackTrace()) {
+                stackTrace.append(element).append(System.lineSeparator());
+            }
+            logger.severe("Pointer is of different class than the wrapper: " + e + "\n" + stackTrace);
             throw new RuntimeException(e);
         }
 
@@ -177,7 +181,7 @@ public enum BossaAPI {
      * {@link BossaAPI.QuotesObservable} will be updated after calling this method.
      * </p>
      *
-     * @param TickersToAdd ISIN or name (name doesn't seem to work as of version 1.0.0.70 of native library)
+     * @param TickersToAdd ISIN or name (name doesn't seem to work as of showVersion 1.0.0.70 of native library)
      * @param Flush        {@code false} for ISIN, {@code true} for name
      * @return success message
      * @throws IllegalStateException if failed
@@ -281,9 +285,9 @@ public enum BossaAPI {
     }
 
     /**
-     * Returns the version of Bossa API dll.
+     * Returns the showVersion of Bossa API dll.
      *
-     * @return version
+     * @return showVersion
      */
     // function for getting the information about verson of dll
     public static String Get_Version() {
@@ -1416,7 +1420,7 @@ public enum BossaAPI {
     }
 
     /**
-     * Stores delsy time to server.
+     * Stores delay time to server.
      */
     public static final class DelayObservable extends Observable {
         private float delay;

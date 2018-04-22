@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 public class View {
     Controller controller;
@@ -40,6 +42,7 @@ public class View {
 
         addEventListeners();
     }
+
 
     private JMenuBar createMainMenubar() {
         menuBar = new JMenuBar();
@@ -88,14 +91,14 @@ public class View {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            SwingWorker worker = new SwingWorker<Void, Void>() {
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
                 @Nullable
                 @Override
                 protected Void doInBackground() {
                     try {
                         helper.execute();
                     } catch (Throwable exc) {
-                        exceptionDialog(exc);
+                        showExceptionDialog(exc);
                     }
                     return null;
                 }
@@ -107,9 +110,38 @@ public class View {
     private void addEventListeners() {
         startApiMenuItem.addActionListener(new SimpleActionListener(() -> controller.startAPI()));
         stopApiMenuItem.addActionListener(new SimpleActionListener(() -> controller.stopAPI()));
+        versionHelpMenuitem.addActionListener(new SimpleActionListener(() -> controller.showVersion()));
+        statementAccountsMenuItem.addActionListener(new SimpleActionListener(() -> controller.showStatement()));
     }
 
-    private void exceptionDialog(Throwable exc) {
+    public void showVersionDialog() {
+        JOptionPane.showMessageDialog(frame, "API showVersion: \n" + model.getAPIversion());
+    }
+
+    public void showStatementDialog() {
+        new StatementDialog();
+    }
+
+    private class StatementDialog implements Observer {
+        private JDialog dialog;
+        private JComboBox<String> comboBox;
+        StatementDialog() {
+            String[] accounts = {"a","b"};
+            dialog = new JDialog(frame, "Statement");
+            comboBox = new JComboBox<>(accounts);
+            dialog.add(comboBox);
+
+            dialog.setSize(new Dimension(300, 150));
+            dialog.setLocationRelativeTo(frame);
+            dialog.setVisible(true);
+        }
+        @Override
+        public void update(Observable o, Object arg) {
+
+        }
+    }
+
+    private void showExceptionDialog(Throwable exc) {
         StringBuilder stackTrace = new StringBuilder();
         for (StackTraceElement element : exc.getStackTrace()) {
             stackTrace.append(element).append(System.lineSeparator());
@@ -136,4 +168,8 @@ public class View {
     public void enableStopApiMenuItem() {
         stopApiMenuItem.setEnabled(true);
     }
+
+    public void disableStatementAccountsMenuItem() { statementAccountsMenuItem.setEnabled(false);}
+
+    public void enableStatementAccountsMenuItem() { statementAccountsMenuItem.setEnabled(true);}
 }
