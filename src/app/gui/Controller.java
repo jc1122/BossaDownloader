@@ -40,8 +40,6 @@ public class Controller {
         view.showStatementDialog();
     }
     //TODO add status bar and logging of init functions
-//TODO add GUI exception handling
-    //TODO add window with statement
 
 
 }

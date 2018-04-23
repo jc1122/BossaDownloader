@@ -4,6 +4,8 @@ import com.sun.jna.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -128,8 +130,8 @@ public enum BossaAPI {
     /**
      * Initializes library, should be called before calling any other methods.
      * Will fail if called, when <a href="http://bossa.pl/oferta/internet/pomoc/nol">NOL3</a>
-     * is not running. To check status of NOL3, use {@link BossaAPI.StatusObservable}
-     * before calling this method. This method initialized {@link BossaAPI.QuotesObservable}
+     * is not running. To check status of NOL3, use {@link Status}
+     * before calling this method. This method initialized {@link Quotes}
      *
      * @return intialization comment
      * @throws IllegalStateException if unsuccessful
@@ -147,7 +149,7 @@ public enum BossaAPI {
         SetTradingSess(true);
         //the observable below must be initialized after the lib is initialized, otherwise "lib is not inicialized" error
         InitializeObservablesHelper("Quotes callback: ",
-                INSTANCE.SetCallback(QuotesObservable.getInstance().new CallbackHelper()));
+                INSTANCE.SetCallback(Quotes.getInstance().new CallbackHelper()));
         return output;
     }
 
@@ -172,24 +174,25 @@ public enum BossaAPI {
         logger.entering(BossaAPI.class.getName(), "InitializeObservers");
         List<Integer> errorCodes = new ArrayList<>();
         List<String> results = new ArrayList<>();
-
+        //this below is messy, and could easily be cleaned using generics, however JNA will complain about
+        //custom type mapping of Object type if you try to use generics
         results.add(InitializeObservablesHelper("Status callback: ",
-                INSTANCE.SetCallbackStatus(StatusObservable.getInstance().new CallbackHelper())));
+                INSTANCE.SetCallbackStatus(Status.getInstance().new CallbackHelper())));
         results.add(InitializeObservablesHelper("Accounts callback: ",
-                INSTANCE.SetCallbackAccount(AccountsObservable.getInstance().new CallbackHelper())));
+                INSTANCE.SetCallbackAccount(Accounts.getInstance().new CallbackHelper())));
         results.add(InitializeObservablesHelper("Delay callback: ",
-                INSTANCE.SetCallbackDelay(DelayObservable.getInstance().new CallbackHelper())));
+                INSTANCE.SetCallbackDelay(Delay.getInstance().new CallbackHelper())));
         results.add(InitializeObservablesHelper("Order callback: ",
-                INSTANCE.SetCallbackOrder(OrderObservable.getInstance().new CallbackHelper())));
+                INSTANCE.SetCallbackOrder(Order.getInstance().new CallbackHelper())));
         results.add(InitializeObservablesHelper("Outlook callback: ",
-                INSTANCE.SetCallbackOutlook(OutlookObservable.getInstance().new CallbackHelper())));
+                INSTANCE.SetCallbackOutlook(Outlook.getInstance().new CallbackHelper())));
         logger.exiting(BossaAPI.class.getName(), "InitializeObservers", results);
         return results;
     }
 
     /**
      * Adds tickers to watch (order and transactions).
-     * To receive market data, this method should be called after {@link BossaAPI.QuotesObservable} is set up.
+     * To receive market data, this method should be called after {@link Quotes} is set up.
      * <p>
      * To receive market data, this method should be called after setting {@link BossaAPI#SetTradingSess(boolean)}
      * to {@code true}.
@@ -198,7 +201,7 @@ public enum BossaAPI {
      * If there are any tickers already in the filter, they will be removed.
      * </p>
      * <p>
-     * {@link BossaAPI.QuotesObservable} will be updated after calling this method.
+     * {@link Quotes} will be updated after calling this method.
      * </p>
      *
      * @param TickersToAdd ISIN or name (name doesn't seem to work as of showVersion 1.0.0.70 of native library)
@@ -557,7 +560,7 @@ public enum BossaAPI {
 
     /**
      * Stores market info about given ticker. <br>
-     * This object is returned by {@link BossaAPI.QuotesObservable}
+     * This object is returned by {@link Quotes}
      * Data returned in this class is shattered. Not all fields are filled in each instance!
      * Throws {@link IllegalStateException} on construct on errornous received message.
      */
@@ -1330,19 +1333,30 @@ public enum BossaAPI {
 
     }
 
+    private static class PropertyChangeSupportHelper {
+        protected final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+
+        public void addPropertyChangeListener(PropertyChangeListener listener) {
+            propertyChangeSupport.addPropertyChangeListener(listener);
+        }
+
+        public void removePropertyChangeListener(PropertyChangeListener listener) {
+            propertyChangeSupport.removePropertyChangeListener(listener);
+        }
+    }
     /**
      * Stores market data: info about price levels and trades.
      */
-    public static final class QuotesObservable extends Observable {
+    public static final class Quotes extends PropertyChangeSupportHelper {
 
-        private static final QuotesObservable INSTANCE = new QuotesObservable();
+        private static final Quotes INSTANCE = new Quotes();
         private NolRecentInfoAPI nolRecentInfoAPI;
 
-        private QuotesObservable() {
+        private Quotes() {
         }
 
-        public static QuotesObservable getInstance() {
-            logger.exiting(QuotesObservable.class.getName(), "getInstance");
+        public static Quotes getInstance() {
+            logger.exiting(Quotes.class.getName(), "getInstance");
             return INSTANCE;
         }
 
@@ -1352,7 +1366,7 @@ public enum BossaAPI {
          * @return info
          */
         public NolRecentInfoAPI getNolRecentInfoAPI() {
-            logger.exiting(QuotesObservable.class.getName(), "getNolRecentInfoAPI");
+            logger.exiting(Quotes.class.getName(), "getNolRecentInfoAPI");
             return nolRecentInfoAPI;
         }
 
@@ -1360,9 +1374,13 @@ public enum BossaAPI {
             @Override
             public void invoke(BossaAPIInterface.NolRecentInfo nolrecentinfo) {
                 logger.entering(CallbackHelper.class.getName(), "invoke");
-                nolRecentInfoAPI = new NolRecentInfoAPI(nolrecentinfo);
-                setChanged();
-                notifyObservers();
+                NolRecentInfoAPI oldValue = Quotes.this.nolRecentInfoAPI;
+                Quotes.this.nolRecentInfoAPI = new NolRecentInfoAPI(nolrecentinfo);
+                Quotes
+                        .this
+                        .propertyChangeSupport
+                        .firePropertyChange("nolRecentInfoAPI", oldValue, nolRecentInfoAPI);
+
             }
         }
     }
@@ -1370,15 +1388,16 @@ public enum BossaAPI {
     /**
      * Stores info about current NOL3 app status.
      */
-    public static final class StatusObservable extends Observable {
-        private Nol3State nol3State;
-        private static StatusObservable INSTANCE = new StatusObservable();
+    public static final class Status extends PropertyChangeSupportHelper {
 
-        private StatusObservable() {
+        private Nol3State nol3State;
+        private static Status INSTANCE = new Status();
+
+        private Status() {
         }
 
-        public static StatusObservable getInstance() {
-            logger.exiting(StatusObservable.class.getName(), "getInstance");
+        public static Status getInstance() {
+            logger.exiting(Status.class.getName(), "getInstance");
             return INSTANCE;
         }
 
@@ -1388,7 +1407,7 @@ public enum BossaAPI {
          * @return state
          */
         public Nol3State getNol3State() {
-            logger.exiting(StatusObservable.class.getName(), "getNol3State");
+            logger.exiting(Status.class.getName(), "getNol3State");
             return nol3State;
         }
 
@@ -1396,9 +1415,9 @@ public enum BossaAPI {
             @Override
             public void invoke(Nol3State nol3State) {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
-                StatusObservable.this.nol3State = nol3State;
-                setChanged();
-                notifyObservers();
+                Nol3State oldVal = nol3State;
+                Status.this.nol3State = Status.this.nol3State;
+                Status.this.propertyChangeSupport.firePropertyChange("nol3State", oldVal, nol3State);
             }
         }
     }
@@ -1406,15 +1425,15 @@ public enum BossaAPI {
     /**
      * Updates account statement information once received data from NOL3.
      */
-    public static final class AccountsObservable extends Observable {
+    public static final class Accounts extends PropertyChangeSupportHelper {
         private NolAggrStatementAPI nolAggrStatementAPI;
-        private static AccountsObservable INSTANCE = new AccountsObservable();
+        private static Accounts INSTANCE = new Accounts();
 
-        private AccountsObservable() {
+        private Accounts() {
         }
 
-        public static AccountsObservable getInstance() {
-            logger.exiting(AccountsObservable.class.getName(), "getInstance");
+        public static Accounts getInstance() {
+            logger.exiting(Accounts.class.getName(), "getInstance");
             return INSTANCE;
         }
 
@@ -1424,7 +1443,7 @@ public enum BossaAPI {
          * @return list of accounts statements
          */
         public List<NolStatementAPI> getStatements() {
-            logger.exiting(AccountsObservable.class.getName(), "getNolAggrStatementAPI");
+            logger.exiting(Accounts.class.getName(), "getNolAggrStatementAPI");
             return nolAggrStatementAPI.getStatements();
         }
 
@@ -1432,9 +1451,13 @@ public enum BossaAPI {
             @Override
             public void invoke(BossaAPIInterface.NolAggrStatement nolAggrStatement) {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
-                AccountsObservable.this.nolAggrStatementAPI = new NolAggrStatementAPI(nolAggrStatement);
-                setChanged();
-                notifyObservers();
+                NolAggrStatementAPI oldVal = Accounts.this.nolAggrStatementAPI;
+                Accounts.this.nolAggrStatementAPI = new NolAggrStatementAPI(nolAggrStatement);
+                Accounts
+                        .this
+                        .propertyChangeSupport
+                        .firePropertyChange(
+                                "statements", oldVal.getStatements(), nolAggrStatementAPI.getStatements());
             }
         }
     }
@@ -1442,15 +1465,15 @@ public enum BossaAPI {
     /**
      * Stores delay time to server.
      */
-    public static final class DelayObservable extends Observable {
+    public static final class Delay extends PropertyChangeSupportHelper {
         private float delay;
-        private static DelayObservable INSTANCE = new DelayObservable();
+        private static Delay INSTANCE = new Delay();
 
-        private DelayObservable() {
+        private Delay() {
         }
 
-        public static DelayObservable getInstance() {
-            logger.exiting(DelayObservable.class.getName(), "getInstance");
+        public static Delay getInstance() {
+            logger.exiting(Delay.class.getName(), "getInstance");
             return INSTANCE;
         }
 
@@ -1460,7 +1483,7 @@ public enum BossaAPI {
          * @return time to server
          */
         public float getDelay() {
-            logger.exiting(DelayObservable.class.getName(), "getDelay", delay);
+            logger.exiting(Delay.class.getName(), "getDelay", delay);
             return delay;
         }
 
@@ -1468,9 +1491,9 @@ public enum BossaAPI {
             @Override
             public void invoke(float delay) {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
-                DelayObservable.this.delay = delay;
-                setChanged();
-                notifyObservers();
+                float oldVal = Delay.this.delay;
+                Delay.this.delay = delay;
+                Delay.this.propertyChangeSupport.firePropertyChange("delay", oldVal, delay);
             }
         }
     }
@@ -1478,15 +1501,15 @@ public enum BossaAPI {
     /**
      * Stores information about current orders.
      */
-    public static final class OrderObservable extends Observable {
+    public static final class Order extends PropertyChangeSupportHelper {
         private NolOrderReportAPI nolOrderReportAPI;
-        private static OrderObservable INSTANCE = new OrderObservable();
+        private static Order INSTANCE = new Order();
 
-        private OrderObservable() {
+        private Order() {
         }
 
-        public static OrderObservable getInstance() {
-            logger.exiting(OrderObservable.class.getName(), "getInstance");
+        public static Order getInstance() {
+            logger.exiting(Order.class.getName(), "getInstance");
             return INSTANCE;
         }
 
@@ -1496,7 +1519,7 @@ public enum BossaAPI {
          * @return order info
          */
         public NolOrderReportAPI getNolOrderReportAPI() {
-            logger.exiting(OrderObservable.class.getName(), "getNolOrderReportAPI");
+            logger.exiting(Order.class.getName(), "getNolOrderReportAPI");
             return nolOrderReportAPI;
         }
 
@@ -1504,9 +1527,12 @@ public enum BossaAPI {
             @Override
             public void invoke(BossaAPIInterface.NolOrderReport nolOrderReport) {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
-                OrderObservable.this.nolOrderReportAPI = new NolOrderReportAPI(nolOrderReport);
-                setChanged();
-                notifyObservers();
+                NolOrderReportAPI oldVal = Order.this.nolOrderReportAPI;
+                Order.this.nolOrderReportAPI = new NolOrderReportAPI(nolOrderReport);
+                Order
+                        .this
+                        .propertyChangeSupport
+                        .firePropertyChange("orderReport", oldVal, Order.this.nolOrderReportAPI);
             }
         }
     }
@@ -1514,15 +1540,15 @@ public enum BossaAPI {
     /**
      * Stores diagnostic data from NOL3
      */
-    public static final class OutlookObservable extends Observable {
+    public static final class Outlook extends PropertyChangeSupportHelper {
         private String outlook;
-        private static OutlookObservable INSTANCE = new OutlookObservable();
+        private static Outlook INSTANCE = new Outlook();
 
-        private OutlookObservable() {
+        private Outlook() {
         }
 
-        public static OutlookObservable getInstance() {
-            logger.exiting(OutlookObservable.class.getName(), "getInstance");
+        public static Outlook getInstance() {
+            logger.exiting(Outlook.class.getName(), "getInstance");
             return INSTANCE;
         }
 
@@ -1532,7 +1558,7 @@ public enum BossaAPI {
          * @return message
          */
         public String getOutlook() {
-            logger.exiting(OutlookObservable.class.getName(), "getOutlook");
+            logger.exiting(Outlook.class.getName(), "getOutlook");
             return outlook;
         }
 
@@ -1540,9 +1566,9 @@ public enum BossaAPI {
             @Override
             public void invoke(String outlook) {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
-                OutlookObservable.this.outlook = outlook;
-                setChanged();
-                notifyObservers();
+                String oldVal = Outlook.this.outlook;
+                Outlook.this.outlook = outlook;
+                Outlook.this.propertyChangeSupport.firePropertyChange("outlook", oldVal, outlook);
             }
         }
     }

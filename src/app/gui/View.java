@@ -1,7 +1,6 @@
 package app.gui;
 
 import app.API.BossaAPI;
-import app.API.BossaAPI.NolStatementAPI;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -127,63 +126,75 @@ public class View {
     private class StatementDialog implements Observer {
         private JDialog dialog;
         private JComboBox<String> accountNameComboBox;
-        private JPanel comboBoxPanel;
+        private JPanel accountComboBoxPanel;
+        private JPanel statementPanel;
+        private JLabel ikeLabel;
+        private JLabel ikeStatusLabel;
+        private JLabel accountTypeLabel;
+        private JLabel accountTypeStatusLabel;
+
         StatementDialog() {
-            model.getAccountsObservable().addObserver(this);
-            accountNameComboBox = new JComboBox<>();
-            java.util.List<NolStatementAPI> accountList = model.getAccountsObservable().getStatements();
-
-            for (NolStatementAPI account : accountList) {
-                accountNameComboBox.addItem(account.getName());
+            try {
+                //model.getAccountsObservable().addObserver(this);
+            } catch (NullPointerException e) {
+                throw new NullPointerException("Unable to get accounts! Is API initialized?");
             }
-            String[] accounts = {"asdf", "basdfafdasdfasdfasdfasbasdfafdasdfasdfasdfasdd"};
+            //TODO this constructor is ugly, refactor it to more simple methods; refactor to implement the law of demeter
+            ikeLabel = new JLabel("Indywidualne Konto Emerytalne :");
+            ikeStatusLabel = new JLabel(); //text will be set later
+            accountTypeLabel = new JLabel("Account type :");
+            accountTypeStatusLabel = new JLabel(); //text will be set later
+
             dialog = new JDialog(frame, "Statement");
+            dialog.setLayout(new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
 
-            Container pane = dialog.getContentPane();
-            pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+            accountComboBoxPanel = new JPanel();
+            accountComboBoxPanel.setBackground(new Color(100, 100, 100));
+            accountComboBoxPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-            comboBoxPanel = new JPanel();
-            comboBoxPanel.setBackground(new Color(100, 100, 100));
-            comboBoxPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-            dialog.getContentPane().add(comboBoxPanel);
+            dialog.add(accountComboBoxPanel);
 
-
-            comboBoxPanel.add(accountNameComboBox);
-
-            JPanel statementPanel = new JPanel();
+            statementPanel = new JPanel();
             GridLayout gridLayout = new GridLayout(0, 2);
             gridLayout.setHgap(20);
             statementPanel.setLayout(gridLayout);
-            statementPanel.setBackground(new Color(200, 200, 200));
+            statementPanel.setBackground(new Color(100, 200, 200));
 
-            JLabel label1 = new JLabel("asdfasdfasdfa");
+            dialog.add(statementPanel);
 
-            label1.setHorizontalAlignment(SwingConstants.RIGHT);
-            JLabel label2 = new JLabel("asdfasdfa");
+            accountNameComboBox = new JComboBox<>();
+            //java.util.List<NolStatementAPI> accountList = model.getAccountsObservable().getStatements(); //TODO will cause error when api is in investor offline status
+//            for (NolStatementAPI account : accountList) {
+//                accountNameComboBox.addItem(account.getName());
+//            }
+            accountComboBoxPanel.add(new JLabel("Account: "));
+            accountComboBoxPanel.add(accountNameComboBox);
 
-            label2.setHorizontalAlignment(SwingConstants.RIGHT);
-            JLabel label3 = new JLabel("asdfafa");
+            //ikeStatusLabel.setText(accountList.get(0).getIke() ? "True" : "False");
+            //accountTypeStatusLabel.setText(accountList.get(0).getType().equals("M") ? "Cash" : "Futures");
 
-            JLabel label4 = new JLabel("asdfasdfasdfa");
+            statementPanel.add(ikeLabel);
+            statementPanel.add(ikeStatusLabel);
 
-            statementPanel.add(label1);
-            statementPanel.add(label2);
-            statementPanel.add(label3);
-            statementPanel.add(label4);
-            dialog.getContentPane().add(statementPanel);
+            statementPanel.add(accountTypeLabel);
+            statementPanel.add(accountTypeStatusLabel);
+
+            //for(Entry<String,Double> fund : accountList.get(0).getFundMap().entrySet()) {
+//TODO fill code
+            //}
 
             //dialog.setSize(new Dimension(300, 150));
             dialog.setLocationRelativeTo(frame);
             dialog.setVisible(true);
 
             dialog.setMinimumSize(new Dimension(accountNameComboBox.getWidth() + 100, accountNameComboBox.getHeight() + 100));
-            comboBoxPanel.setMaximumSize(new Dimension(accountNameComboBox.getWidth() + 100, accountNameComboBox.getHeight() + 100));
+            accountComboBoxPanel.setMaximumSize(new Dimension(accountNameComboBox.getWidth() + 100, accountNameComboBox.getHeight() + 100));
             gridLayout.setHgap(accountNameComboBox.getWidth() / 2);
 
         }
         @Override
         public void update(Observable o, Object arg) {
-            BossaAPI.AccountsObservable accountsObservable = (BossaAPI.AccountsObservable) o;
+            BossaAPI.Accounts accounts = (BossaAPI.Accounts) o;
 
         }
     }

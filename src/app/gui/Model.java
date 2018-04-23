@@ -3,12 +3,12 @@ package app.gui;
 import app.API.BossaAPI;
 
 public class Model {
-    private BossaAPI.AccountsObservable accountsObservable;
-    private BossaAPI.DelayObservable delayObservable;
-    private BossaAPI.OrderObservable orderObservable;
-    private BossaAPI.OutlookObservable outlookObservable;
-    private BossaAPI.QuotesObservable quotesObservable;
-    private BossaAPI.StatusObservable statusObservable;
+    private BossaAPI.Accounts accounts;
+    private BossaAPI.Delay delay;
+    private BossaAPI.Order order;
+    private BossaAPI.Outlook outlook;
+    private BossaAPI.Quotes quotes;
+    private BossaAPI.Status status;
 
     public void startAPI() {
         BossaAPI.InitializeObservables();
@@ -22,39 +22,16 @@ public class Model {
     }
 
     private void setObservables() {
-        accountsObservable = BossaAPI.AccountsObservable.getInstance();
-        delayObservable = BossaAPI.DelayObservable.getInstance();
-        orderObservable = BossaAPI.OrderObservable.getInstance();
-        outlookObservable = BossaAPI.OutlookObservable.getInstance();
-        quotesObservable = BossaAPI.QuotesObservable.getInstance();
-        statusObservable = BossaAPI.StatusObservable.getInstance();
+        accounts = BossaAPI.Accounts.getInstance();
+        delay = BossaAPI.Delay.getInstance();
+        order = BossaAPI.Order.getInstance();
+        outlook = BossaAPI.Outlook.getInstance();
+        quotes = BossaAPI.Quotes.getInstance();
+        status = BossaAPI.Status.getInstance();
     }
 
     public String getAPIversion() {
         return BossaAPI.Get_Version();
     }
 
-    public BossaAPI.AccountsObservable getAccountsObservable() {
-        return accountsObservable;
-    }
-
-    public BossaAPI.DelayObservable getDelayObservable() {
-        return delayObservable;
-    }
-
-    public BossaAPI.OrderObservable getOrderObservable() {
-        return orderObservable;
-    }
-
-    public BossaAPI.OutlookObservable getOutlookObservable() {
-        return outlookObservable;
-    }
-
-    public BossaAPI.QuotesObservable getQuotesObservable() {
-        return quotesObservable;
-    }
-
-    public BossaAPI.StatusObservable getStatusObservable() {
-        return statusObservable;
-    }
 }
