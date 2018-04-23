@@ -2,6 +2,9 @@ package app.gui;
 
 import app.API.BossaAPI;
 
+import java.beans.PropertyChangeListener;
+import java.util.List;
+
 public class Model {
     private BossaAPI.Accounts accounts;
     private BossaAPI.Delay delay;
@@ -13,7 +16,6 @@ public class Model {
     public void startAPI() {
         BossaAPI.InitializeObservables();
         BossaAPI.Initialize();
-        //BossaAPI.InitializeObservables();
         setObservables();
     }
 
@@ -34,4 +36,11 @@ public class Model {
         return BossaAPI.Get_Version();
     }
 
+    public void addAccountsListener(PropertyChangeListener listener) {
+        accounts.addPropertyChangeListener(listener);
+    }
+
+    public List<BossaAPI.NolStatementAPI> getStatements() {
+        return accounts.getStatements();
+    }
 }

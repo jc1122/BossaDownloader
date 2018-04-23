@@ -1415,8 +1415,8 @@ public enum BossaAPI {
             @Override
             public void invoke(Nol3State nol3State) {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
-                Nol3State oldVal = nol3State;
-                Status.this.nol3State = Status.this.nol3State;
+                Nol3State oldVal = Status.this.nol3State;
+                Status.this.nol3State = nol3State;
                 Status.this.propertyChangeSupport.firePropertyChange("nol3State", oldVal, nol3State);
             }
         }
@@ -1453,11 +1453,12 @@ public enum BossaAPI {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
                 NolAggrStatementAPI oldVal = Accounts.this.nolAggrStatementAPI;
                 Accounts.this.nolAggrStatementAPI = new NolAggrStatementAPI(nolAggrStatement);
+                List<NolStatementAPI> statementList = (oldVal == null) ? Collections.emptyList() : oldVal.getStatements();
                 Accounts
                         .this
                         .propertyChangeSupport
                         .firePropertyChange(
-                                "statements", oldVal.getStatements(), nolAggrStatementAPI.getStatements());
+                                "statements", statementList, nolAggrStatementAPI.getStatements());
             }
         }
     }
