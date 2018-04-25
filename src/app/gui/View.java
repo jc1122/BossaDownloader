@@ -8,80 +8,47 @@ import java.util.logging.Logger;
 //TODO this class is a mess, tidy the code
 public class View {
     Controller controller;
-    Model model;
+    private Model model;
     private static final Logger logger =
             Logger.getLogger(BossaAPI.class.getName());
 
     private JFrame frame;
-    private JMenuBar menuBar;
-
-    private JMenu apiMenu;
-    private JMenuItem startApiMenuItem;
-    private JMenuItem logsApiMenuItem;
-    private JMenuItem stopApiMenuItem;
-
-    private JMenu accountsMenu;
-    private JMenuItem statementAccountsMenuItem;
-
-    private JMenu helpMenu;
-    private JMenuItem versionHelpMenuitem;
 
     public View(Controller controller, Model model) {
         this.controller = controller;
         this.model = model;
     }
 
-    public void createGUI() {
+    private void createFrame() {
         frame = new JFrame("BossaDownloader");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setJMenuBar(createMainMenubar());
-
         frame.setSize(600, 300);
         frame.setVisible(true);
 
+    }
+
+    public void createGUI() {
+        createFrame();
+
+        frame.setJMenuBar(new MainMenuBarFactory("MenuBar").getContainer());
+
+        //TODO cache gui component names and use in search
         addEventListeners();
     }
 
-
-    private JMenuBar createMainMenubar() {
-        menuBar = new JMenuBar();
-
-        {
-            apiMenu = new JMenu("API");
-            startApiMenuItem = new JMenuItem("Start");
-            logsApiMenuItem = new JMenuItem("Logs");
-            stopApiMenuItem = new JMenuItem("Stop");
-            apiMenu.add(startApiMenuItem);
-            apiMenu.add(logsApiMenuItem);
-            apiMenu.add(stopApiMenuItem);
-
-            menuBar.add(apiMenu);
-        }
-
-        {
-            JMenu accountsMenu = new JMenu("Accounts");
-
-            statementAccountsMenuItem = new JMenuItem("Statement");
-            accountsMenu.add(statementAccountsMenuItem);
-
-            menuBar.add(accountsMenu);
-        }
-
-        {
-            helpMenu = new JMenu("Help");
-            versionHelpMenuitem = new JMenuItem("Version");
-            helpMenu.add(versionHelpMenuitem);
-
-            menuBar.add(helpMenu);
-        }
-        return menuBar;
-    }
-
+    //TODO replace indexes with something more meaningful; this will crash badly when new items are added to menubar
     private void addEventListeners() {
-        startApiMenuItem.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.startAPI()));
-        stopApiMenuItem.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.stopAPI()));
-        versionHelpMenuitem.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.showVersion()));
-        statementAccountsMenuItem.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.showStatement()));
+        JMenuItem start = frame.getJMenuBar().getMenu(0).getItem(0); // API/start
+        start.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.startAPI()));
+
+        JMenuItem stop = frame.getJMenuBar().getMenu(0).getItem(2); // API/stop
+        stop.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.stopAPI()));
+
+        JMenuItem statement = frame.getJMenuBar().getMenu(1).getItem(0); // Account/statement
+        statement.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.showStatement()));
+
+        JMenuItem version = frame.getJMenuBar().getMenu(2).getItem(0); // Help/version
+        version.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.showVersion()));
     }
 
     public void showVersionDialog() {
@@ -94,22 +61,30 @@ public class View {
 
 
     public void disableStartApiMenuItem() {
-        startApiMenuItem.setEnabled(false);
+        frame.getJMenuBar().getMenu(0).getItem(0).setEnabled(false);
     }
 
     public void enableStartApiMenuItem() {
-        startApiMenuItem.setEnabled(true);
+        frame.getJMenuBar().getMenu(0).getItem(0).setEnabled(true);
     }
 
     public void disableStopApiMenuItem() {
-        stopApiMenuItem.setEnabled(false);
+        frame.getJMenuBar().getMenu(0).getItem(2).setEnabled(false);
     }
 
     public void enableStopApiMenuItem() {
-        stopApiMenuItem.setEnabled(true);
+        frame.getJMenuBar().getMenu(0).getItem(2).setEnabled(true);
     }
 
-    public void disableStatementAccountsMenuItem() { statementAccountsMenuItem.setEnabled(false);}
+    public void disableStatementAccountsMenuItem() {
+        frame.getJMenuBar().getMenu(1).getItem(0).setEnabled(false);
+    }
 
-    public void enableStatementAccountsMenuItem() { statementAccountsMenuItem.setEnabled(true);}
+    public void enableStatementAccountsMenuItem() {
+        frame.getJMenuBar().getMenu(1).getItem(0).setEnabled(true);
+    }
+
+    public Model getModel() {
+        return model;
+    }
 }
