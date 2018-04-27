@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,12 +20,15 @@ class StatementDialog implements PropertyChangeListener {
 
     private JPanel accountPanel;
     private JPanel statementPanel;
+    private JPanel positionsPanel; //TODO add positions to interface
 
     private JLabel ikeLabel;
     private JLabel ikeStatusLabel;
     private JLabel accountTypeLabel;
     private JLabel accountTypeStatusLabel;
     private JLabel accountLabel;
+    private Map<String, JLabel> statementLabels;
+    private Map<String, JLabel> statementValues;
 
     private GridLayout statementPanelLayout;
     private ActionListener accountNameComboBoxActionListener = new ActionListener() {
@@ -90,15 +94,38 @@ class StatementDialog implements PropertyChangeListener {
         statementPanel.setLayout(statementPanelLayout);
         statementPanel.setBackground(new Color(100, 200, 200));
 
-    }
-
-    private void refreshStatementPane() {
-        statementPanel.removeAll();
         statementPanel.add(ikeLabel);
         statementPanel.add(ikeStatusLabel);
 
         statementPanel.add(accountTypeLabel);
         statementPanel.add(accountTypeStatusLabel);
+
+        statementLabels = new HashMap();
+        statementLabels.put("Deposit", new JLabel("Deposit:"));
+        statementLabels.put("CashBlocked", new JLabel("Cash blocked:"));
+        statementLabels.put("BlockedDeposit", new JLabel("Blocked deposit:"));
+        statementLabels.put("FreeDeposit", new JLabel("Free deposit:"));
+        statementLabels.put("SecSafetiesUsed", new JLabel("SecSafetiesUsed change to meaningful label:"));
+        statementLabels.put("PortfolioValue", new JLabel("Portfolio value: "));
+        statementLabels.put("SecValueSum", new JLabel("SevValSum:"));
+        statementLabels.put("SecSafeties", new JLabel("SecSafeties:"));
+        statementLabels.put("OptionBonus", new JLabel("OptionBonus:"));
+        statementLabels.put("MaxBuy", new JLabel("MaxBuy:"));
+        statementLabels.put("LiabilitiesLimitMax", new JLabel("LiabilitiesLimitMax:"));
+        statementLabels.put("Recivables", new JLabel("Recivables:"));
+        statementLabels.put("Liabilities", new JLabel("Liabilities:"));
+        statementLabels.put("MaxOtpBuy", new JLabel("MaxOtpBuy:"));
+        statementLabels.put("RecivablesBlocked", new JLabel("RecivablesBlocked:"));
+        statementLabels.put("CashRecivables", new JLabel("CashRecivables:"));
+        statementLabels.put("Cash", new JLabel("Cash:"));
+
+        statementValues = new HashMap<>();
+        for (String key : statementLabels.keySet()) {
+            statementValues.put(key, new JLabel());
+
+            statementPanel.add(statementLabels.get(key));
+            statementPanel.add(statementValues.get(key));
+        }
     }
 
     private void createDialog() {
@@ -109,8 +136,6 @@ class StatementDialog implements PropertyChangeListener {
         dialog.add(accountPanel);
         dialog.add(statementPanel);
 
-        //dialog.setSize(new Dimension(300, 150));
-        //dialog.setLocationRelativeTo(frame);
         dialog.pack();
         dialog.setResizable(false);
         dialog.setVisible(true);
@@ -136,20 +161,27 @@ class StatementDialog implements PropertyChangeListener {
 
     //TODO add all known positions from map, add position list
     private void populateStatementPanel(int index) {
+
         BossaAPI.NolStatementAPI defaultAccount = accountList.get(Math.max(index, 0)); //Max is just in case, when no element = -1  selected
         ikeStatusLabel.setText(defaultAccount.getIke() ? "True" : "False");
         accountTypeStatusLabel.setText(defaultAccount.getType().equals("M") ? "Cash" : "Futures");
 
+        for (JLabel value : statementLabels.values()) {
+            value.setEnabled(false); //grey out labels
+        }
+        for (JLabel value : statementValues.values()) {
+            value.setText(""); //remove text
+        }
+
         for (Map.Entry<String, Double> fund : defaultAccount.getFundMap().entrySet()) {
-            statementPanel.add(new JLabel(fund.getKey()));
-            statementPanel.add(new JLabel(fund.getValue().toString()));
+            statementLabels.get(fund.getKey()).setEnabled(true);
+            statementValues.get(fund.getKey()).setText(fund.getValue().toString());
         }
     }
 
     private void updateStatementPanel(int index) {
-
         refreshAccountNameComboBox(index);
-        refreshStatementPane();
         populateStatementPanel(index);
     }
 }
+
