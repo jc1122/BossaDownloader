@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,7 @@ class StatementDialog implements PropertyChangeListener {
     private void resizePanels() {
         dialog.setMinimumSize(new Dimension(accountNameComboBox.getWidth() + 100, accountNameComboBox.getHeight() + 100));
         dialog.setMinimumSize(new Dimension(new Double(statementPanel.getPreferredSize().getWidth() * 1.5).intValue(),
-                new Double(statementPanel.getPreferredSize().getHeight() * 2).intValue()));
+                 Double.valueOf(statementPanel.getPreferredSize().getHeight() * 2).intValue()));
         accountPanel.setMaximumSize(
                 new Dimension(3 * (accountNameComboBox.getWidth() + accountLabel.getWidth()), 4 * accountNameComboBox.getHeight()));
         statementPanelLayout.setHgap(accountNameComboBox.getWidth() / 2);
@@ -100,24 +101,25 @@ class StatementDialog implements PropertyChangeListener {
         statementPanel.add(accountTypeLabel);
         statementPanel.add(accountTypeStatusLabel);
 
-        statementLabels = new HashMap();
+        statementLabels = new LinkedHashMap<>();
+        statementLabels.put("Cash", new JLabel("Cash total:"));
+        statementLabels.put("CashBlocked", new JLabel("Cash blocked for orders:"));
         statementLabels.put("Deposit", new JLabel("Deposit:"));
-        statementLabels.put("CashBlocked", new JLabel("Cash blocked:"));
-        statementLabels.put("BlockedDeposit", new JLabel("Blocked deposit:"));
         statementLabels.put("FreeDeposit", new JLabel("Free deposit:"));
-        statementLabels.put("SecSafetiesUsed", new JLabel("SecSafetiesUsed change to meaningful label:"));
-        statementLabels.put("PortfolioValue", new JLabel("Portfolio value: "));
-        statementLabels.put("SecValueSum", new JLabel("SevValSum:"));
-        statementLabels.put("SecSafeties", new JLabel("SecSafeties:"));
+        statementLabels.put("BlockedDeposit", new JLabel("Blocked deposit:"));
+        statementLabels.put("SecSafetiesUsed", new JLabel("Usable deposit:"));
+        statementLabels.put("SecSafeties", new JLabel("Total deposit:"));
         statementLabels.put("OptionBonus", new JLabel("OptionBonus:"));
-        statementLabels.put("MaxBuy", new JLabel("MaxBuy:"));
-        statementLabels.put("LiabilitiesLimitMax", new JLabel("LiabilitiesLimitMax:"));
+        statementLabels.put("CashRecivables", new JLabel("Buying power:"));
         statementLabels.put("Recivables", new JLabel("Recivables:"));
+        statementLabels.put("RecivablesBlocked", new JLabel("Recivables blocked for orders:"));
+        statementLabels.put("MaxBuy", new JLabel("Max buying power:"));
+        statementLabels.put("MaxOtpBuy", new JLabel("Max OTP buying power:"));
         statementLabels.put("Liabilities", new JLabel("Liabilities:"));
-        statementLabels.put("MaxOtpBuy", new JLabel("MaxOtpBuy:"));
-        statementLabels.put("RecivablesBlocked", new JLabel("RecivablesBlocked:"));
-        statementLabels.put("CashRecivables", new JLabel("CashRecivables:"));
-        statementLabels.put("Cash", new JLabel("Cash:"));
+        statementLabels.put("LiabilitiesLimitMax", new JLabel("Available liabilities increase limit:"));
+        statementLabels.put("SecValueSum", new JLabel("Total securities value:"));
+        statementLabels.put("PortfolioValue", new JLabel("Portfolio value: "));
+
 
         statementValues = new HashMap<>();
         for (String key : statementLabels.keySet()) {
