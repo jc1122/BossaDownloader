@@ -1362,7 +1362,7 @@ public enum BossaAPI {
             return INSTANCE;
         }
 
-        public static CallbackHelper getCallbackHelper() {
+        private static CallbackHelper getCallbackHelper() {
             return CALLBACK_HELPER;
         }
 
@@ -1408,7 +1408,7 @@ public enum BossaAPI {
             return INSTANCE;
         }
 
-        public static CallbackHelper getCallbackHelper() {
+        private static CallbackHelper getCallbackHelper() {
             return CALLBACK_HELPER;
         }
 
@@ -1449,7 +1449,7 @@ public enum BossaAPI {
             return INSTANCE;
         }
 
-        public static CallbackHelper getCallbackHelper() {
+        private static CallbackHelper getCallbackHelper() {
             return CALLBACK_HELPER;
         }
 
@@ -1495,7 +1495,7 @@ public enum BossaAPI {
             return INSTANCE;
         }
 
-        public static CallbackHelper getCallbackHelper() {
+        private static CallbackHelper getCallbackHelper() {
             return CALLBACK_HELPER;
         }
 
@@ -1536,7 +1536,7 @@ public enum BossaAPI {
             return INSTANCE;
         }
 
-        public static CallbackHelper getCallbackHelper() {
+        private static CallbackHelper getCallbackHelper() {
             return CALLBACK_HELPER;
         }
 

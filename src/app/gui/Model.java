@@ -40,6 +40,10 @@ public class Model {
         accounts.addPropertyChangeListener(listener);
     }
 
+    public void addQuotesListener(PropertyChangeListener listener) {
+        quotes.addPropertyChangeListener(listener);
+    }
+
     public List<BossaAPI.NolStatementAPI> getStatements() {
         return accounts.getStatements();
     }
