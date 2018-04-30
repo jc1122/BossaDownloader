@@ -74,4 +74,9 @@ class AccountPane implements PropertyChangeListener {
             accountNameComboBox.addItem(account.getName());
         }
     }
+
+    public JPanel getPane() {
+        return accountPanel;
+    }
+
 }

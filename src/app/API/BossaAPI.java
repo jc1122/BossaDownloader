@@ -1385,7 +1385,7 @@ public enum BossaAPI {
                 Quotes
                         .this
                         .propertyChangeSupport
-                        .firePropertyChange("nolRecentInfoAPI", oldValue, nolRecentInfoAPI);
+                        .firePropertyChange("Quotes", oldValue, nolRecentInfoAPI);
 
             }
         }
@@ -1428,7 +1428,7 @@ public enum BossaAPI {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
                 Nol3State oldVal = Status.this.nol3State;
                 Status.this.nol3State = nol3State;
-                Status.this.propertyChangeSupport.firePropertyChange("nol3State", oldVal, nol3State);
+                Status.this.propertyChangeSupport.firePropertyChange("Status", oldVal, nol3State);
             }
         }
     }
@@ -1474,7 +1474,7 @@ public enum BossaAPI {
                         .this
                         .propertyChangeSupport
                         .firePropertyChange(
-                                "statements", statementList, nolAggrStatementAPI.getStatements());
+                                "Accounts", statementList, nolAggrStatementAPI.getStatements());
             }
         }
     }
@@ -1515,7 +1515,7 @@ public enum BossaAPI {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
                 float oldVal = Delay.this.delay;
                 Delay.this.delay = delay;
-                Delay.this.propertyChangeSupport.firePropertyChange("delay", oldVal, delay);
+                Delay.this.propertyChangeSupport.firePropertyChange("Delay", oldVal, delay);
             }
         }
     }
@@ -1559,7 +1559,7 @@ public enum BossaAPI {
                 Order
                         .this
                         .propertyChangeSupport
-                        .firePropertyChange("orderReport", oldVal, Order.this.nolOrderReportAPI);
+                        .firePropertyChange("Order", oldVal, Order.this.nolOrderReportAPI);
             }
         }
     }
@@ -1600,7 +1600,7 @@ public enum BossaAPI {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
                 String oldVal = Outlook.this.outlook;
                 Outlook.this.outlook = outlook;
-                Outlook.this.propertyChangeSupport.firePropertyChange("outlook", oldVal, outlook);
+                Outlook.this.propertyChangeSupport.firePropertyChange("Outlook", oldVal, outlook);
             }
         }
     }

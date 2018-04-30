@@ -30,6 +30,7 @@ public class StatementPane implements PropertyChangeListener, ActionListener {
     StatementPane(Model model) {
         this.model = model;
         this.model.addAccountsListener(this);
+        this.accountList = model.getStatements();
 
         ikeLabel = new JLabel("Indywidualne Konto Emerytalne :");
         ikeStatusLabel = new JLabel(); //text will be set later
@@ -74,6 +75,7 @@ public class StatementPane implements PropertyChangeListener, ActionListener {
             statementPanel.add(statementLabels.get(key));
             statementPanel.add(statementValues.get(key));
         }
+        updateStatementPanel(0);
     }
 
     private void updateStatementPanel(int index) {
@@ -105,5 +107,9 @@ public class StatementPane implements PropertyChangeListener, ActionListener {
         JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
         this.selectedAccount = comboBox.getSelectedIndex();
         updateStatementPanel(this.selectedAccount);
+    }
+
+    public JPanel getPane() {
+        return statementPanel;
     }
 }
