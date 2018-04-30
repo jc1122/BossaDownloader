@@ -14,7 +14,6 @@ import java.util.Map;
 
 //TODO this is ugly, refactor
 class StatementDialog implements PropertyChangeListener {
-
     private View view;
     private List<BossaAPI.NolStatementAPI> accountList;
     private JDialog dialog;
