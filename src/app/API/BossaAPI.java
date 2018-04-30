@@ -20,10 +20,11 @@ import java.util.logging.Logger;
 @SuppressWarnings({"WeakerAccess", "unused", "Convert2MethodRef", "Convert2Lambda"})
 public enum BossaAPI {
     ;
-    private static BossaAPIInterface INSTANCE;
+    static BossaAPIInterface INSTANCE;
     private static final Logger logger =
             Logger.getLogger(BossaAPI.class.getName());
 
+    //initialize
     static {
         logger.finest("Initializing static");
         Map<String, String> functionNames = new HashMap<>();
@@ -148,12 +149,12 @@ public enum BossaAPI {
         }
         SetTradingSess(true);
         //the observable below must be initialized after the lib is initialized, otherwise "lib is not inicialized" error
-        InitializeObservablesHelper("Quotes callback: ",
-                INSTANCE.SetCallback(Quotes.getInstance().new CallbackHelper()));
+        InitializeObserversHelper("Quotes callback: ",
+                INSTANCE.SetCallback(Quotes.getCallbackHelper()));
         return output;
     }
 
-    private static String InitializeObservablesHelper(String message, int errorCode) {
+    private static String InitializeObserversHelper(String message, int errorCode) {
         String errorMessage = GetResultCodeDesc(errorCode);
         if (errorCode < 0) {
             IllegalStateException e = new IllegalStateException(message + errorMessage);
@@ -170,22 +171,22 @@ public enum BossaAPI {
      *
      * @return success or error message for each initialized callback
      */
-    public static List<String> InitializeObservables() {
+    public static List<String> InitializeObservers() {
         logger.entering(BossaAPI.class.getName(), "InitializeObservers");
         List<Integer> errorCodes = new ArrayList<>();
         List<String> results = new ArrayList<>();
         //this below is messy, and could easily be cleaned using generics, however JNA will complain about
         //custom type mapping of Object type if you try to use generics
-        results.add(InitializeObservablesHelper("Status callback: ",
-                INSTANCE.SetCallbackStatus(Status.getInstance().new CallbackHelper())));
-        results.add(InitializeObservablesHelper("Accounts callback: ",
-                INSTANCE.SetCallbackAccount(Accounts.getInstance().new CallbackHelper())));
-        results.add(InitializeObservablesHelper("Delay callback: ",
-                INSTANCE.SetCallbackDelay(Delay.getInstance().new CallbackHelper())));
-        results.add(InitializeObservablesHelper("Order callback: ",
-                INSTANCE.SetCallbackOrder(Order.getInstance().new CallbackHelper())));
-        results.add(InitializeObservablesHelper("Outlook callback: ",
-                INSTANCE.SetCallbackOutlook(Outlook.getInstance().new CallbackHelper())));
+        results.add(InitializeObserversHelper("Status callback: ",
+                INSTANCE.SetCallbackStatus(Status.getCallbackHelper())));
+        results.add(InitializeObserversHelper("Accounts callback: ",
+                INSTANCE.SetCallbackAccount(Accounts.getCallbackHelper())));
+        results.add(InitializeObserversHelper("Delay callback: ",
+                INSTANCE.SetCallbackDelay(Delay.getCallbackHelper())));
+        results.add(InitializeObserversHelper("Order callback: ",
+                INSTANCE.SetCallbackOrder(Order.getCallbackHelper())));
+        results.add(InitializeObserversHelper("Outlook callback: ",
+                INSTANCE.SetCallbackOutlook(Outlook.getCallbackHelper())));
         logger.exiting(BossaAPI.class.getName(), "InitializeObservers", results);
         return results;
     }
@@ -1350,6 +1351,7 @@ public enum BossaAPI {
     public static final class Quotes extends PropertyChangeSupportHelper {
 
         private static final Quotes INSTANCE = new Quotes();
+        private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
         private NolRecentInfoAPI nolRecentInfoAPI;
 
         private Quotes() {
@@ -1358,6 +1360,10 @@ public enum BossaAPI {
         public static Quotes getInstance() {
             logger.exiting(Quotes.class.getName(), "getInstance");
             return INSTANCE;
+        }
+
+        public static CallbackHelper getCallbackHelper() {
+            return CALLBACK_HELPER;
         }
 
         /**
@@ -1370,7 +1376,7 @@ public enum BossaAPI {
             return nolRecentInfoAPI;
         }
 
-        class CallbackHelper implements BossaAPIInterface.SetCallbackDummy {
+        private class CallbackHelper implements BossaAPIInterface.SetCallbackDummy {
             @Override
             public void invoke(BossaAPIInterface.NolRecentInfo nolrecentinfo) {
                 logger.entering(CallbackHelper.class.getName(), "invoke");
@@ -1391,7 +1397,8 @@ public enum BossaAPI {
     public static final class Status extends PropertyChangeSupportHelper {
 
         private Nol3State nol3State;
-        private static Status INSTANCE = new Status();
+        private static final Status INSTANCE = new Status();
+        private static final Status.CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
 
         private Status() {
         }
@@ -1399,6 +1406,10 @@ public enum BossaAPI {
         public static Status getInstance() {
             logger.exiting(Status.class.getName(), "getInstance");
             return INSTANCE;
+        }
+
+        public static CallbackHelper getCallbackHelper() {
+            return CALLBACK_HELPER;
         }
 
         /**
@@ -1427,7 +1438,8 @@ public enum BossaAPI {
      */
     public static final class Accounts extends PropertyChangeSupportHelper {
         private NolAggrStatementAPI nolAggrStatementAPI;
-        private static Accounts INSTANCE = new Accounts();
+        private static final Accounts INSTANCE = new Accounts();
+        private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
 
         private Accounts() {
         }
@@ -1435,6 +1447,10 @@ public enum BossaAPI {
         public static Accounts getInstance() {
             logger.exiting(Accounts.class.getName(), "getInstance");
             return INSTANCE;
+        }
+
+        public static CallbackHelper getCallbackHelper() {
+            return CALLBACK_HELPER;
         }
 
         /**
@@ -1468,7 +1484,8 @@ public enum BossaAPI {
      */
     public static final class Delay extends PropertyChangeSupportHelper {
         private float delay;
-        private static Delay INSTANCE = new Delay();
+        private static final Delay INSTANCE = new Delay();
+        private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
 
         private Delay() {
         }
@@ -1476,6 +1493,10 @@ public enum BossaAPI {
         public static Delay getInstance() {
             logger.exiting(Delay.class.getName(), "getInstance");
             return INSTANCE;
+        }
+
+        public static CallbackHelper getCallbackHelper() {
+            return CALLBACK_HELPER;
         }
 
         /**
@@ -1504,7 +1525,8 @@ public enum BossaAPI {
      */
     public static final class Order extends PropertyChangeSupportHelper {
         private NolOrderReportAPI nolOrderReportAPI;
-        private static Order INSTANCE = new Order();
+        private static final Order INSTANCE = new Order();
+        private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
 
         private Order() {
         }
@@ -1512,6 +1534,10 @@ public enum BossaAPI {
         public static Order getInstance() {
             logger.exiting(Order.class.getName(), "getInstance");
             return INSTANCE;
+        }
+
+        public static CallbackHelper getCallbackHelper() {
+            return CALLBACK_HELPER;
         }
 
         /**
@@ -1543,7 +1569,8 @@ public enum BossaAPI {
      */
     public static final class Outlook extends PropertyChangeSupportHelper {
         private String outlook;
-        private static Outlook INSTANCE = new Outlook();
+        private static final Outlook INSTANCE = new Outlook();
+        private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
 
         private Outlook() {
         }
@@ -1551,6 +1578,10 @@ public enum BossaAPI {
         public static Outlook getInstance() {
             logger.exiting(Outlook.class.getName(), "getInstance");
             return INSTANCE;
+        }
+
+        public static CallbackHelper getCallbackHelper() {
+            return CALLBACK_HELPER;
         }
 
         /**

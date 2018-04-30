@@ -14,7 +14,7 @@ public class Model {
     private BossaAPI.Status status;
 
     public void startAPI() {
-        BossaAPI.InitializeObservables();
+        BossaAPI.InitializeObservers();
         BossaAPI.Initialize();
         setObservables();
     }
