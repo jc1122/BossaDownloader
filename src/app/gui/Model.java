@@ -3,18 +3,19 @@ package app.gui;
 import app.API.BossaAPI;
 
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Model {
-    //private Map<String, >
-    private BossaAPI.Accounts accounts;
-    private BossaAPI.Delay delay;
-    private BossaAPI.Order order;
-    private BossaAPI.Outlook outlook;
-    private BossaAPI.Quotes quotes;
-    private BossaAPI.Status status;
+    private Map<String, BossaAPI.PropertyAPI> propertyMap = new HashMap<>();
+//    private BossaAPI.Accounts accounts;
+//    private BossaAPI.Delay delay;
+//    private BossaAPI.Order order;
+//    private BossaAPI.Outlook outlook;
+//    private BossaAPI.Quotes quotes;
+//    private BossaAPI.Status status;
 
     private Set<String> tickersInFilter = new HashSet<>();
 
@@ -49,12 +50,19 @@ public class Model {
     }
 
     private void setObservables() {
-        accounts = BossaAPI.Accounts.getInstance();
-        delay = BossaAPI.Delay.getInstance();
-        order = BossaAPI.Order.getInstance();
-        outlook = BossaAPI.Outlook.getInstance();
-        quotes = BossaAPI.Quotes.getInstance();
-        status = BossaAPI.Status.getInstance();
+        propertyMap.put("Accounts", BossaAPI.Accounts.getInstance());
+        propertyMap.put("Delay", BossaAPI.Delay.getInstance());
+        propertyMap.put("Order", BossaAPI.Order.getInstance());
+        propertyMap.put("Outlook", BossaAPI.Outlook.getInstance());
+        propertyMap.put("Quotes", BossaAPI.Quotes.getInstance());
+        propertyMap.put("Status", BossaAPI.Status.getInstance());
+
+//        accounts = BossaAPI.Accounts.getInstance();
+//        delay = BossaAPI.Delay.getInstance();
+//        order = BossaAPI.Order.getInstance();
+//        outlook = BossaAPI.Outlook.getInstance();
+//        quotes = BossaAPI.Quotes.getInstance();
+//        status = BossaAPI.Status.getInstance();
     }
 
     public String getAPIversion() {
@@ -62,15 +70,12 @@ public class Model {
     }
 
     public void addPropertyListener(PropertyChangeListener listener) {
-        accounts.addPropertyChangeListener(listener);
-        delay.addPropertyChangeListener(listener);
-        order.addPropertyChangeListener(listener);
-        outlook.addPropertyChangeListener(listener);
-        quotes.addPropertyChangeListener(listener);
-        status.addPropertyChangeListener(listener);
+        for (String property : propertyMap.keySet()) {
+            propertyMap.get(property).addPropertyChangeListener(listener);
+        }
     }
 
-    public List<BossaAPI.NolStatementAPI> getStatements() {
-        return accounts.getProperty();
+    public Object getProperty(String property) {
+        return propertyMap.get(property).getProperty();
     }
 }

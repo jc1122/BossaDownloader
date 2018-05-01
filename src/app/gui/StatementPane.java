@@ -36,7 +36,7 @@ public class StatementPane implements PropertyChangeListener, ActionListener {
             throw new NullPointerException("Unable to get accounts! Is API initialized?");
         }
 
-        this.accountList = model.getStatements();
+        this.accountList = (List<BossaAPI.NolStatementAPI>) model.getProperty("Accounts");
 
         ikeLabel = new JLabel("Indywidualne Konto Emerytalne :");
         ikeStatusLabel = new JLabel(); //text will be set later

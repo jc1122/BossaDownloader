@@ -36,7 +36,7 @@ class AccountPane implements PropertyChangeListener {
             throw new NullPointerException("Unable to get accounts! Is API initialized?");
         }
 
-        this.accountList = model.getStatements(); //TODO will cause error when api is in investor offline status
+        this.accountList = (List<BossaAPI.NolStatementAPI>) model.getProperty("Accounts"); //TODO will cause error when api is in investor offline status
 
         addAccountsToComboBox(accountList);
 

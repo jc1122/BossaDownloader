@@ -39,7 +39,7 @@ public class PositionsPane implements PropertyChangeListener, ActionListener {
         positionIsinsLabels = new HashMap<>();
         positionIsinsCount = new HashMap<>();
 
-        this.accountList = model.getStatements(); //TODO will cause error when api is in investor offline status
+        this.accountList = (List<BossaAPI.NolStatementAPI>) model.getProperty("Accounts"); //TODO will cause error when api is in investor offline status
         //TODO this may be buggy
         updatePanel(0);
     }
