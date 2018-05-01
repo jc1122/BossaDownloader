@@ -31,7 +31,7 @@ public class StatementPane implements PropertyChangeListener, ActionListener {
         this.model = model;
 
         try {
-            this.model.addAccountsListener(this);
+            this.model.addPropertyListener(this);
         } catch (NullPointerException e) {
             throw new NullPointerException("Unable to get accounts! Is API initialized?");
         }

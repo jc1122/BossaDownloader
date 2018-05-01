@@ -60,12 +60,13 @@ public class Model {
         return BossaAPI.Get_Version();
     }
 
-    public void addAccountsListener(PropertyChangeListener listener) {
+    public void addPropertyListener(PropertyChangeListener listener) {
         accounts.addPropertyChangeListener(listener);
-    }
-
-    public void addQuotesListener(PropertyChangeListener listener) {
+        delay.addPropertyChangeListener(listener);
+        order.addPropertyChangeListener(listener);
+        outlook.addPropertyChangeListener(listener);
         quotes.addPropertyChangeListener(listener);
+        status.addPropertyChangeListener(listener);
     }
 
     public List<BossaAPI.NolStatementAPI> getStatements() {
