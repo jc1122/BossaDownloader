@@ -1,6 +1,7 @@
 package app.gui;
 
 import app.API.BossaAPI;
+import app.gui.menu.MainMenuBarFactory;
 import app.gui.statement.StatementDialog;
 
 import javax.swing.*;

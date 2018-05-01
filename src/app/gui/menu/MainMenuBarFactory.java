@@ -1,10 +1,10 @@
-package app.gui;
+package app.gui.menu;
 
 import javax.swing.*;
 
 
-class MainMenuBarFactory extends AbstractGuiFactory<JMenuBar, JMenu> {
-    MainMenuBarFactory(String name) {
+public class MainMenuBarFactory extends AbstractGuiFactory<JMenuBar, JMenu> {
+    public MainMenuBarFactory(String name) {
         container = new JMenuBar();
         container.setName(name);
 

@@ -1,4 +1,4 @@
-package app.gui;
+package app.gui.menu;
 
 import javax.swing.*;
 

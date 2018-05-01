@@ -1,4 +1,4 @@
-package app.gui;
+package app.gui.menu;
 
 import javax.swing.*;
 
@@ -18,7 +18,7 @@ abstract class AbstractGuiFactory<T extends JComponent, K extends JComponent> {
     }
 
     //if container is created in constructor:
-    T getContainer() {
+    public T getContainer() {
         return container;
     }
 
