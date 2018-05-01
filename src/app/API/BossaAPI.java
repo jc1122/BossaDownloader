@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -17,7 +16,7 @@ import java.util.logging.Logger;
  *
  * <p> All methods of this class are <i>static</i></p>
  */
-@SuppressWarnings({"WeakerAccess", "unused", "Convert2MethodRef", "Convert2Lambda"})
+@SuppressWarnings({"unused", "Convert2MethodRef", "Convert2Lambda", "WeakerAccess"})
 public enum BossaAPI {
     ;
     static BossaAPIInterface INSTANCE;
@@ -50,11 +49,8 @@ public enum BossaAPI {
         functionNames.put("Shutdown", "_Shutdown@0");
 
         Map<String, Object> options = new HashMap<>();
-        options.put(Library.OPTION_FUNCTION_MAPPER, new FunctionMapper() {
-            public String getFunctionName(NativeLibrary library, Method method) {
-                return functionNames.get(method.getName());
-            }
-        });
+        options.put(Library.OPTION_FUNCTION_MAPPER,
+                (FunctionMapper) (library, method) -> functionNames.get(method.getName()));
 
         options.put(Library.OPTION_TYPE_MAPPER, new DefaultTypeMapper() {
             {
@@ -331,7 +327,7 @@ public enum BossaAPI {
 
     //extracted to help composition
     private static abstract class BossaAPIClassWrapper<T, Q extends Structure> {
-        protected Q wrappee;
+        Q wrappee;
     }
 
     /**
@@ -986,7 +982,7 @@ public enum BossaAPI {
          */
         @Contract(pure = true)
         public List<NolStatementAPI> getStatements() {
-            logger.exiting(NolAggrStatementAPI.class.getName(), "getStatements", statementList);
+            logger.exiting(NolAggrStatementAPI.class.getName(), "getProperty", statementList);
             return statementList;
         }
 
@@ -1313,8 +1309,9 @@ public enum BossaAPI {
 
     }
 
-    private static class PropertyChangeSupportHelper {
+    private static class PropertyChangeSupportHelper<T> {
         protected final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+        protected T property;
 
         public void addPropertyChangeListener(PropertyChangeListener listener) {
             propertyChangeSupport.addPropertyChangeListener(listener);
@@ -1323,16 +1320,21 @@ public enum BossaAPI {
         public void removePropertyChangeListener(PropertyChangeListener listener) {
             propertyChangeSupport.removePropertyChangeListener(listener);
         }
+
+        public T getProperty() {
+            logger.exiting(this.getClass().getName(), "getProperty");
+            return property;
+        }
     }
 
     /**
      * Stores market data: info about price levels and trades.
      */
-    public static final class Quotes extends PropertyChangeSupportHelper {
+    public static final class Quotes extends PropertyChangeSupportHelper<NolRecentInfoAPI> {
 
         private static final Quotes INSTANCE = new Quotes();
         private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
-        private NolRecentInfoAPI nolRecentInfoAPI;
+        //private NolRecentInfoAPI nolRecentInfoAPI;
 
         private Quotes() {
         }
@@ -1346,26 +1348,16 @@ public enum BossaAPI {
             return CALLBACK_HELPER;
         }
 
-        /**
-         * Call to get current info on update.
-         *
-         * @return info
-         */
-        public NolRecentInfoAPI getNolRecentInfoAPI() {
-            logger.exiting(Quotes.class.getName(), "getNolRecentInfoAPI");
-            return nolRecentInfoAPI;
-        }
-
         private class CallbackHelper implements BossaAPIInterface.SetCallbackDummy {
             @Override
             public void invoke(BossaAPIInterface.NolRecentInfo nolrecentinfo) {
                 logger.entering(CallbackHelper.class.getName(), "invoke");
-                NolRecentInfoAPI oldValue = Quotes.this.nolRecentInfoAPI;
-                Quotes.this.nolRecentInfoAPI = new NolRecentInfoAPI(nolrecentinfo);
+                NolRecentInfoAPI oldValue = Quotes.this.property;
+                Quotes.this.property = new NolRecentInfoAPI(nolrecentinfo);
                 Quotes
                         .this
                         .propertyChangeSupport
-                        .firePropertyChange("Quotes", oldValue, nolRecentInfoAPI);
+                        .firePropertyChange("Quotes", oldValue, property);
 
             }
         }
@@ -1374,9 +1366,8 @@ public enum BossaAPI {
     /**
      * Stores info about current NOL3 app status.
      */
-    public static final class Status extends PropertyChangeSupportHelper {
+    public static final class Status extends PropertyChangeSupportHelper<Nol3State> {
 
-        private Nol3State nol3State;
         private static final Status INSTANCE = new Status();
         private static final Status.CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
 
@@ -1392,23 +1383,13 @@ public enum BossaAPI {
             return CALLBACK_HELPER;
         }
 
-        /**
-         * Get NOL3 state on update.
-         *
-         * @return state
-         */
-        public Nol3State getNol3State() {
-            logger.exiting(Status.class.getName(), "getNol3State");
-            return nol3State;
-        }
-
         private class CallbackHelper implements BossaAPIInterface.SetCallbackStatusDummy {
             @Override
             public void invoke(Nol3State nol3State) {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
-                Nol3State oldVal = Status.this.nol3State;
-                Status.this.nol3State = nol3State;
-                Status.this.propertyChangeSupport.firePropertyChange("Status", oldVal, nol3State);
+                Nol3State oldVal = Status.this.property;
+                Status.this.property = nol3State;
+                Status.this.propertyChangeSupport.firePropertyChange("Status", oldVal, property);
             }
         }
     }
@@ -1416,8 +1397,8 @@ public enum BossaAPI {
     /**
      * Updates account statement information once received data from NOL3.
      */
-    public static final class Accounts extends PropertyChangeSupportHelper {
-        private NolAggrStatementAPI nolAggrStatementAPI;
+    public static final class Accounts extends PropertyChangeSupportHelper<List<NolStatementAPI>> {
+        //private NolAggrStatementAPI nolAggrStatementAPI;
         private static final Accounts INSTANCE = new Accounts();
         private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
 
@@ -1433,28 +1414,18 @@ public enum BossaAPI {
             return CALLBACK_HELPER;
         }
 
-        /**
-         * Call this method by observer, once updated, to get fresh data.
-         *
-         * @return list of accounts statements
-         */
-        public List<NolStatementAPI> getStatements() {
-            logger.exiting(Accounts.class.getName(), "getNolAggrStatementAPI");
-            return nolAggrStatementAPI.getStatements();
-        }
-
         private class CallbackHelper implements BossaAPIInterface.SetCallbackAccountDummy {
             @Override
             public void invoke(BossaAPIInterface.NolAggrStatement nolAggrStatement) {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
-                NolAggrStatementAPI oldVal = Accounts.this.nolAggrStatementAPI;
-                Accounts.this.nolAggrStatementAPI = new NolAggrStatementAPI(nolAggrStatement);
-                List<NolStatementAPI> statementList = (oldVal == null) ? Collections.emptyList() : oldVal.getStatements();
+                List<NolStatementAPI> oldVal = Accounts.this.property;
+                Accounts.this.property = new NolAggrStatementAPI(nolAggrStatement).getStatements();
+                List<NolStatementAPI> statementList = (oldVal == null) ? Collections.emptyList() : oldVal;
                 Accounts
                         .this
                         .propertyChangeSupport
                         .firePropertyChange(
-                                "Accounts", statementList, nolAggrStatementAPI.getStatements());
+                                "Accounts", statementList, Accounts.this.property);
             }
         }
     }
@@ -1462,7 +1433,7 @@ public enum BossaAPI {
     /**
      * Stores delay time to server.
      */
-    public static final class Delay extends PropertyChangeSupportHelper {
+    public static final class Delay extends PropertyChangeSupportHelper<Float> {
         private float delay;
         private static final Delay INSTANCE = new Delay();
         private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
@@ -1479,22 +1450,12 @@ public enum BossaAPI {
             return CALLBACK_HELPER;
         }
 
-        /**
-         * Call this method by observer to get current delay.
-         *
-         * @return time to server
-         */
-        public float getDelay() {
-            logger.exiting(Delay.class.getName(), "getDelay", delay);
-            return delay;
-        }
-
         private class CallbackHelper implements BossaAPIInterface.SetCallbackDelayDummy {
             @Override
             public void invoke(float delay) {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
-                float oldVal = Delay.this.delay;
-                Delay.this.delay = delay;
+                float oldVal = Delay.this.property;
+                Delay.this.property = delay;
                 Delay.this.propertyChangeSupport.firePropertyChange("Delay", oldVal, delay);
             }
         }
@@ -1503,8 +1464,8 @@ public enum BossaAPI {
     /**
      * Stores information about current orders.
      */
-    public static final class Order extends PropertyChangeSupportHelper {
-        private NolOrderReportAPI nolOrderReportAPI;
+    public static final class Order extends PropertyChangeSupportHelper<NolOrderReportAPI> {
+        //private NolOrderReportAPI nolOrderReportAPI;
         private static final Order INSTANCE = new Order();
         private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
 
@@ -1520,26 +1481,16 @@ public enum BossaAPI {
             return CALLBACK_HELPER;
         }
 
-        /**
-         * Call to get order info by observer.
-         *
-         * @return order info
-         */
-        public NolOrderReportAPI getNolOrderReportAPI() {
-            logger.exiting(Order.class.getName(), "getNolOrderReportAPI");
-            return nolOrderReportAPI;
-        }
-
         private class CallbackHelper implements BossaAPIInterface.SetCallbackOrderDummy {
             @Override
             public void invoke(BossaAPIInterface.NolOrderReport nolOrderReport) {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
-                NolOrderReportAPI oldVal = Order.this.nolOrderReportAPI;
-                Order.this.nolOrderReportAPI = new NolOrderReportAPI(nolOrderReport);
+                NolOrderReportAPI oldVal = Order.this.property;
+                Order.this.property = new NolOrderReportAPI(nolOrderReport);
                 Order
                         .this
                         .propertyChangeSupport
-                        .firePropertyChange("Order", oldVal, Order.this.nolOrderReportAPI);
+                        .firePropertyChange("Order", oldVal, Order.this.property);
             }
         }
     }
@@ -1547,8 +1498,8 @@ public enum BossaAPI {
     /**
      * Stores diagnostic data from NOL3
      */
-    public static final class Outlook extends PropertyChangeSupportHelper {
-        private String outlook;
+    public static final class Outlook extends PropertyChangeSupportHelper<String> {
+        //private String outlook;
         private static final Outlook INSTANCE = new Outlook();
         private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
 
@@ -1560,26 +1511,16 @@ public enum BossaAPI {
             return INSTANCE;
         }
 
-        public static CallbackHelper getCallbackHelper() {
+        static CallbackHelper getCallbackHelper() {
             return CALLBACK_HELPER;
-        }
-
-        /**
-         * Call to get current info on update.
-         *
-         * @return message
-         */
-        public String getOutlook() {
-            logger.exiting(Outlook.class.getName(), "getOutlook");
-            return outlook;
         }
 
         private class CallbackHelper implements BossaAPIInterface.SetCallbackOutlookDummy {
             @Override
             public void invoke(String outlook) {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
-                String oldVal = Outlook.this.outlook;
-                Outlook.this.outlook = outlook;
+                String oldVal = Outlook.this.property;
+                Outlook.this.property = outlook;
                 Outlook.this.propertyChangeSupport.firePropertyChange("Outlook", oldVal, outlook);
             }
         }
