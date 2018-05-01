@@ -1311,9 +1311,12 @@ public enum BossaAPI {
 
     //refactoring CallbackHelpers to generic class impossible due to type erasure...
     //cannot map Object type in JNA to multiple classes with typemapper, it would break ordinary type mapping
-    private static class PropertyChangeSupportHelper<T> {
+    public static class PropertyAPI<T> {
         protected final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
         protected T property;
+
+        private PropertyAPI() {
+        }
 
         public void addPropertyChangeListener(PropertyChangeListener listener) {
             propertyChangeSupport.addPropertyChangeListener(listener);
@@ -1332,7 +1335,7 @@ public enum BossaAPI {
     /**
      * Stores market data: info about price levels and trades.
      */
-    public static final class Quotes extends PropertyChangeSupportHelper<NolRecentInfoAPI> {
+    public static final class Quotes extends PropertyAPI<NolRecentInfoAPI> {
 
         private static final Quotes INSTANCE = new Quotes();
         private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
@@ -1368,7 +1371,7 @@ public enum BossaAPI {
     /**
      * Stores info about current NOL3 app status.
      */
-    public static final class Status extends PropertyChangeSupportHelper<Nol3State> {
+    public static final class Status extends PropertyAPI<Nol3State> {
 
         private static final Status INSTANCE = new Status();
         private static final Status.CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
@@ -1399,7 +1402,7 @@ public enum BossaAPI {
     /**
      * Updates account statement information once received data from NOL3.
      */
-    public static final class Accounts extends PropertyChangeSupportHelper<List<NolStatementAPI>> {
+    public static final class Accounts extends PropertyAPI<List<NolStatementAPI>> {
         //private NolAggrStatementAPI nolAggrStatementAPI;
         private static final Accounts INSTANCE = new Accounts();
         private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
@@ -1435,7 +1438,7 @@ public enum BossaAPI {
     /**
      * Stores delay time to server.
      */
-    public static final class Delay extends PropertyChangeSupportHelper<Float> {
+    public static final class Delay extends PropertyAPI<Float> {
         private float delay;
         private static final Delay INSTANCE = new Delay();
         private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
@@ -1466,7 +1469,7 @@ public enum BossaAPI {
     /**
      * Stores information about current orders.
      */
-    public static final class Order extends PropertyChangeSupportHelper<NolOrderReportAPI> {
+    public static final class Order extends PropertyAPI<NolOrderReportAPI> {
         //private NolOrderReportAPI nolOrderReportAPI;
         private static final Order INSTANCE = new Order();
         private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
@@ -1500,7 +1503,7 @@ public enum BossaAPI {
     /**
      * Stores diagnostic data from NOL3
      */
-    public static final class Outlook extends PropertyChangeSupportHelper<String> {
+    public static final class Outlook extends PropertyAPI<String> {
         //private String outlook;
         private static final Outlook INSTANCE = new Outlook();
         private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();

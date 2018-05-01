@@ -105,6 +105,8 @@ public class StatementPane implements PropertyChangeListener, ActionListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        if (!evt.getPropertyName().equals("Accounts"))
+            return;
         this.accountList = (List<BossaAPI.NolStatementAPI>) evt.getNewValue();
         updateStatementPanel(this.selectedAccount);
     }

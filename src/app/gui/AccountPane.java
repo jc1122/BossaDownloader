@@ -46,6 +46,9 @@ class AccountPane implements PropertyChangeListener {
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
+        if (!evt.getPropertyName().equals("Accounts"))
+            return;
+
         int index = accountNameComboBox.getSelectedIndex();
 
         this.accountList = (List<BossaAPI.NolStatementAPI>) evt.getNewValue();

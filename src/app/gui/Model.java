@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Model {
+    //private Map<String, >
     private BossaAPI.Accounts accounts;
     private BossaAPI.Delay delay;
     private BossaAPI.Order order;
