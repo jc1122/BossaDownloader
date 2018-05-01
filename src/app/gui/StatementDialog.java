@@ -9,10 +9,10 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+//TODO this is ugly, refactor -> use SimplifiedStatementDialog instead
 class StatementDialog implements PropertyChangeListener {
     private View view;
     private List<BossaAPI.NolStatementAPI> accountList;
@@ -32,6 +32,9 @@ class StatementDialog implements PropertyChangeListener {
     private Map<String, JLabel> statementValues;
 
     private GridLayout statementPanelLayout;
+    private GridLayout positionsPanelLayout;
+
+    private Map<String, JLabel> positionIsins = new HashMap<>();
     private ActionListener accountNameComboBoxActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -40,6 +43,7 @@ class StatementDialog implements PropertyChangeListener {
             int index = comboBox.getSelectedIndex();
 
             updateStatementPanel(index);
+            populatePositionsPanel(index);
         }
     };
 
@@ -48,25 +52,43 @@ class StatementDialog implements PropertyChangeListener {
         this.view = view;
         try {
             this.view.getModel().addAccountsListener(this);
+            this.view.getModel().addQuotesListener(this);
         } catch (NullPointerException e) {
             throw new NullPointerException("Unable to get accounts! Is API initialized?");
         }
         initDialogElements();
         accountList = view.getModel().getStatements(); //TODO will cause error when api is in investor offline status
         updateStatementPanel(0);
+        populatePositionsPanel(0);
         resizePanels();
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        accountList = (List<BossaAPI.NolStatementAPI>) evt.getNewValue();
-        updateStatementPanel(accountNameComboBox.getSelectedIndex());
+        switch (evt.getPropertyName()) {
+            case "statements":
+                accountList = (List<BossaAPI.NolStatementAPI>) evt.getNewValue();
+                updateStatementPanel(accountNameComboBox.getSelectedIndex());
+                break;
+            case "nolRecentInfoAPI":
+                System.out.println("changing price!");
+                BossaAPI.NolRecentInfoAPI quote = (BossaAPI.NolRecentInfoAPI) evt.getNewValue();
+                synchronized (positionIsins) {
+                    String isin = quote.getTicker().getIsin();
+                    if (positionIsins.containsKey(isin)) {
+                        positionIsins.get(isin).setText(Double.toString(quote.getReferPrice()));
+                    }
+                    positionIsins.notifyAll();
+                }
+                break;
+        }
+
     }
 
     private void resizePanels() {
         dialog.setMinimumSize(new Dimension(accountNameComboBox.getWidth() + 100, accountNameComboBox.getHeight() + 100));
         dialog.setMinimumSize(new Dimension(new Double(statementPanel.getPreferredSize().getWidth() * 1.5).intValue(),
-                 Double.valueOf(statementPanel.getPreferredSize().getHeight() * 2).intValue()));
+                new Double(statementPanel.getPreferredSize().getHeight() * 2).intValue()));
         accountPanel.setMaximumSize(
                 new Dimension(3 * (accountNameComboBox.getWidth() + accountLabel.getWidth()), 4 * accountNameComboBox.getHeight()));
         statementPanelLayout.setHgap(accountNameComboBox.getWidth() / 2);
@@ -101,25 +123,24 @@ class StatementDialog implements PropertyChangeListener {
         statementPanel.add(accountTypeLabel);
         statementPanel.add(accountTypeStatusLabel);
 
-        statementLabels = new LinkedHashMap<>();
-        statementLabels.put("Cash", new JLabel("Cash total:"));
-        statementLabels.put("CashBlocked", new JLabel("Cash blocked for orders:"));
+        statementLabels = new HashMap<>();
         statementLabels.put("Deposit", new JLabel("Deposit:"));
-        statementLabels.put("FreeDeposit", new JLabel("Free deposit:"));
+        statementLabels.put("CashBlocked", new JLabel("Cash blocked:"));
         statementLabels.put("BlockedDeposit", new JLabel("Blocked deposit:"));
-        statementLabels.put("SecSafetiesUsed", new JLabel("Usable deposit:"));
-        statementLabels.put("SecSafeties", new JLabel("Total deposit:"));
-        statementLabels.put("OptionBonus", new JLabel("OptionBonus:"));
-        statementLabels.put("CashRecivables", new JLabel("Buying power:"));
-        statementLabels.put("Recivables", new JLabel("Recivables:"));
-        statementLabels.put("RecivablesBlocked", new JLabel("Recivables blocked for orders:"));
-        statementLabels.put("MaxBuy", new JLabel("Max buying power:"));
-        statementLabels.put("MaxOtpBuy", new JLabel("Max OTP buying power:"));
-        statementLabels.put("Liabilities", new JLabel("Liabilities:"));
-        statementLabels.put("LiabilitiesLimitMax", new JLabel("Available liabilities increase limit:"));
-        statementLabels.put("SecValueSum", new JLabel("Total securities value:"));
+        statementLabels.put("FreeDeposit", new JLabel("Free deposit:"));
+        statementLabels.put("SecSafetiesUsed", new JLabel("SecSafetiesUsed change to meaningful label:"));
         statementLabels.put("PortfolioValue", new JLabel("Portfolio value: "));
-
+        statementLabels.put("SecValueSum", new JLabel("SevValSum:"));
+        statementLabels.put("SecSafeties", new JLabel("SecSafeties:"));
+        statementLabels.put("OptionBonus", new JLabel("OptionBonus:"));
+        statementLabels.put("MaxBuy", new JLabel("MaxBuy:"));
+        statementLabels.put("LiabilitiesLimitMax", new JLabel("LiabilitiesLimitMax:"));
+        statementLabels.put("Recivables", new JLabel("Recivables:"));
+        statementLabels.put("Liabilities", new JLabel("Liabilities:"));
+        statementLabels.put("MaxOtpBuy", new JLabel("MaxOtpBuy:"));
+        statementLabels.put("RecivablesBlocked", new JLabel("RecivablesBlocked:"));
+        statementLabels.put("CashRecivables", new JLabel("CashRecivables:"));
+        statementLabels.put("Cash", new JLabel("Cash:"));
 
         statementValues = new HashMap<>();
         for (String key : statementLabels.keySet()) {
@@ -130,6 +151,13 @@ class StatementDialog implements PropertyChangeListener {
         }
     }
 
+    private void createPositionsPane() {
+        positionsPanel = new JPanel();
+        positionsPanel.setBackground(new Color(133, 133, 233));
+        positionsPanelLayout = new GridLayout(0, 4);
+        positionsPanel.setLayout(positionsPanelLayout);
+    }
+
     private void createDialog() {
         dialog = new JDialog();
         dialog.setTitle("Statement");
@@ -137,6 +165,7 @@ class StatementDialog implements PropertyChangeListener {
 
         dialog.add(accountPanel);
         dialog.add(statementPanel);
+        dialog.add(positionsPanel);
 
         dialog.pack();
         dialog.setResizable(false);
@@ -147,6 +176,7 @@ class StatementDialog implements PropertyChangeListener {
         //logger.entering(StatementDialog.class.getName(), "initDialogElements");
         createAccountSelectionPane();
         createStatementPane();
+        createPositionsPane();
         createDialog();
     }
 
@@ -184,6 +214,37 @@ class StatementDialog implements PropertyChangeListener {
     private void updateStatementPanel(int index) {
         refreshAccountNameComboBox(index);
         populateStatementPanel(index);
+    }
+
+    private void populatePositionsPanel(int index) {
+        BossaAPI.NolStatementAPI currentAccount = accountList.get(index);
+        List<BossaAPI.NolPosAPI> positions = currentAccount.getPositions();
+
+        positionsPanel.removeAll();
+        positionsPanel.add(new JLabel("Ticker"));
+        positionsPanel.add(new JLabel("Securities count"));
+        positionsPanel.add(new JLabel("Blocked for sale"));
+        positionsPanel.add(new JLabel("Value"));
+
+        positionIsins = new HashMap<>();
+        String isins = "";
+        for (BossaAPI.NolPosAPI position : positions) {
+            String isin = position.getTicker().getIsin();
+            positionIsins.put(isin, new JLabel());
+            isins = isins + isin + ";";
+        }
+        System.out.println("isins: " + isins);
+        //TODO this is temporary only, delegate it to model; code is ugly and will reset quote filter!
+        if (!isins.equals("")) {
+            for (BossaAPI.NolPosAPI position : positions) {
+                String isin = position.getTicker().getIsin();
+                positionsPanel.add(new JLabel(position.getTicker().getName()));
+                positionsPanel.add(new JLabel(Integer.toString(position.getAcc110())));
+                positionsPanel.add(new JLabel(Integer.toString(position.getAcc120())));
+                positionsPanel.add(positionIsins.get(isin));
+                BossaAPI.AddToFilter(isins, false);
+            }
+        }
     }
 }
 

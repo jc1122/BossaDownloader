@@ -9,9 +9,6 @@ import java.util.logging.LogManager;
 /** Simple example of JNA interface mapping and usage. */
 @SuppressWarnings("Convert2Lambda")
 public class Main {
-
-
-
     public static void main(String[] args) throws Exception {
         FileInputStream loggingProperties = new FileInputStream("./lib/logging.properties");
         LogManager.getLogManager().readConfiguration(loggingProperties);

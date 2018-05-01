@@ -56,7 +56,8 @@ public class View {
     }
 
     public void showStatementDialog() {
-        new StatementDialog(this);
+        new SimplifiedStatementDialog(model);
+        //new StatementDialog(this);
     }
 
 
