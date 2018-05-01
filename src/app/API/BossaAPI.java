@@ -96,7 +96,7 @@ public enum BossaAPI {
             T extends BossaAPIClassWrapper<? extends BossaAPIClassWrapper, U>>
     List<T> convertPointerToListHelper(int size, U pointer, Class<T> wrapperClass) {
         Object[] params = {size, pointer, wrapperClass};
-        logger.entering(BossaAPI.class.toString(), "convertPointerToListHelper",params);
+        logger.entering(BossaAPI.class.toString(), "convertPointerToListHelper", params);
 
         if (size == 0) {
             return Collections.emptyList();
@@ -124,7 +124,7 @@ public enum BossaAPI {
             throw new RuntimeException(e);
         }
 
-        logger.exiting(BossaAPI.class.toString(), "convertPointerToListHelper",wrappedAPIList);
+        logger.exiting(BossaAPI.class.toString(), "convertPointerToListHelper", wrappedAPIList);
         return wrappedAPIList;
     }
 
@@ -149,46 +149,25 @@ public enum BossaAPI {
         }
         SetTradingSess(true);
         //the observable below must be initialized after the lib is initialized, otherwise "lib is not inicialized" error
-        InitializeObserversHelper("Quotes callback: ",
-                INSTANCE.SetCallback(Quotes.getCallbackHelper()));
+        INSTANCE.SetCallback(Quotes.getCallbackHelper());
         return output;
-    }
-
-    private static String InitializeObserversHelper(String message, int errorCode) {
-        String errorMessage = GetResultCodeDesc(errorCode);
-        if (errorCode < 0) {
-            IllegalStateException e = new IllegalStateException(message + errorMessage);
-            logger.severe(e.getMessage());
-            throw e;
-        }
-        return errorMessage;
     }
 
     /**
      * Call to initialize callbacks of the api. Callbacks are stored in observables.
      * Quotes observable is initialized by {@link BossaAPI#Initialize()}
      * otherwise API complains about lib not being initialized.
-     *
-     * @return success or error message for each initialized callback
      */
-    public static List<String> InitializeObservers() {
+    public static void InitializeObservers() {
         logger.entering(BossaAPI.class.getName(), "InitializeObservers");
-        List<Integer> errorCodes = new ArrayList<>();
-        List<String> results = new ArrayList<>();
         //this below is messy, and could easily be cleaned using generics, however JNA will complain about
         //custom type mapping of Object type if you try to use generics
-        results.add(InitializeObserversHelper("Status callback: ",
-                INSTANCE.SetCallbackStatus(Status.getCallbackHelper())));
-        results.add(InitializeObserversHelper("Accounts callback: ",
-                INSTANCE.SetCallbackAccount(Accounts.getCallbackHelper())));
-        results.add(InitializeObserversHelper("Delay callback: ",
-                INSTANCE.SetCallbackDelay(Delay.getCallbackHelper())));
-        results.add(InitializeObserversHelper("Order callback: ",
-                INSTANCE.SetCallbackOrder(Order.getCallbackHelper())));
-        results.add(InitializeObserversHelper("Outlook callback: ",
-                INSTANCE.SetCallbackOutlook(Outlook.getCallbackHelper())));
-        logger.exiting(BossaAPI.class.getName(), "InitializeObservers", results);
-        return results;
+        INSTANCE.SetCallbackStatus(Status.getCallbackHelper());
+        INSTANCE.SetCallbackAccount(Accounts.getCallbackHelper());
+        INSTANCE.SetCallbackDelay(Delay.getCallbackHelper());
+        INSTANCE.SetCallbackOrder(Order.getCallbackHelper());
+        INSTANCE.SetCallbackOutlook(Outlook.getCallbackHelper());
+        logger.exiting(BossaAPI.class.getName(), "InitializeObservers");
     }
 
     /**
@@ -212,7 +191,7 @@ public enum BossaAPI {
      */
     public static String AddToFilter(String TickersToAdd, boolean Flush) throws IllegalStateException {
         Object[] params = {TickersToAdd, Flush};
-        logger.entering(BossaAPI.class.getName(), "AddToFilter",params);
+        logger.entering(BossaAPI.class.getName(), "AddToFilter", params);
 
         ClearFilter();
         int errorCode = INSTANCE.AddToFilter(TickersToAdd, Flush);
@@ -222,7 +201,7 @@ public enum BossaAPI {
             logger.finer(e.getMessage());
             throw e;
         }
-        logger.exiting(BossaAPI.class.getName(),"AddToFilter",output);
+        logger.exiting(BossaAPI.class.getName(), "AddToFilter", output);
         return output;
     }
 
@@ -246,7 +225,7 @@ public enum BossaAPI {
                 nolorderreport.wrappee,
                 Typ);
         String message = GetResultCodeDesc(errorCode);
-        if (errorCode <0) {
+        if (errorCode < 0) {
             IllegalStateException e = new IllegalStateException(message);
             logger.finer(e.getMessage());
             throw e;
@@ -264,7 +243,7 @@ public enum BossaAPI {
      * @throws IllegalStateException if unsuccessful
      */
     private static String SetTradingSess(boolean val) throws IllegalStateException {
-        logger.entering(BossaAPI.class.getName(),"SetTradingSess", val);
+        logger.entering(BossaAPI.class.getName(), "SetTradingSess", val);
         int errorCode = INSTANCE.SetTradingSess(val);
         String output = GetResultCodeDesc(errorCode);
         if (errorCode < 0) {
@@ -273,7 +252,7 @@ public enum BossaAPI {
             throw e;
         }
 
-        logger.exiting(BossaAPI.class.getName(),"SetTradingSess",output);
+        logger.exiting(BossaAPI.class.getName(), "SetTradingSess", output);
         return output;
     }
 
@@ -294,7 +273,7 @@ public enum BossaAPI {
     @NotNull
     public static NolTickersAPI GetTickers(TypeofList typeofList, NolTickerAPI in_ticker) {
         Object[] params = {typeofList, in_ticker};
-        logger.entering(BossaAPI.class.getName(), "GetTickers",params);
+        logger.entering(BossaAPI.class.getName(), "GetTickers", params);
         NolTickersAPI nolTickersAPI = new NolTickersAPI(typeofList, in_ticker);
         logger.exiting(BossaAPI.class.getName(), "GetTickers");
         return nolTickersAPI;
@@ -327,7 +306,7 @@ public enum BossaAPI {
         logger.entering(BossaAPI.class.getName(), "ClearFilter");
         int errorCode = INSTANCE.ClearFilter();
         String message = GetResultCodeDesc(errorCode);
-        if(errorCode <0) {
+        if (errorCode < 0) {
             IllegalStateException e = new IllegalStateException(message);
             logger.finer(e.getMessage());
             throw e;
@@ -439,7 +418,7 @@ public enum BossaAPI {
 
         @NotNull
         private List<NolBidAskTblAPI> getBidask_table() {
-            logger.exiting(NolBidAskStrAPI.class.getName(), "getBidask_table",bidAskList);
+            logger.exiting(NolBidAskStrAPI.class.getName(), "getBidask_table", bidAskList);
             return bidAskList;
         }
 
@@ -493,12 +472,12 @@ public enum BossaAPI {
      */
     public static final class NolTickersAPI
             extends BossaAPIClassWrapper<NolTickersAPI, BossaAPIInterface.NolTickers>
-    implements AutoCloseable {
+            implements AutoCloseable {
         private List<NolTickerAPI> tickerListCache;
 
         private NolTickersAPI(TypeofList typeofList, NolTickerAPI in_ticker) {
-            Object[] params = { typeofList,  in_ticker};
-            logger.entering(NolTickersAPI.class.getName(), "Constructor",params);
+            Object[] params = {typeofList, in_ticker};
+            logger.entering(NolTickersAPI.class.getName(), "Constructor", params);
 
             this.wrappee = INSTANCE.InitListTickers();
             if (in_ticker == null) {
@@ -512,7 +491,7 @@ public enum BossaAPI {
             } else {
                 if (typeofList.isTickerFieldEmpty(in_ticker)) {
                     IllegalArgumentException e =
-                        new IllegalArgumentException("Ticker field " + typeofList.name() + "is empty!");
+                            new IllegalArgumentException("Ticker field " + typeofList.name() + "is empty!");
                     logger.finer(e.getMessage());
                     throw e;
                 }
@@ -530,7 +509,7 @@ public enum BossaAPI {
         public void close() {
             int errorCode = INSTANCE.ReleaseTickersList(wrappee);
             wrappee = null;
-            if(errorCode <0) {
+            if (errorCode < 0) {
                 String message = GetResultCodeDesc(errorCode);
                 IllegalStateException e = new IllegalStateException(message);
                 logger.finer(e.getMessage());
@@ -570,7 +549,7 @@ public enum BossaAPI {
         private NolRecentInfoAPI(BossaAPIInterface.NolRecentInfo nolRecentInfo) {
             logger.entering(NolRecentInfoAPI.class.getName(), "Constructor");
             this.wrappee = nolRecentInfo;
-            if(this.getError() <0) {
+            if (this.getError() < 0) {
                 String message = GetResultCodeDesc(this.getError());
                 IllegalStateException e = new IllegalStateException(message);
                 logger.finer(e.getMessage());
@@ -587,13 +566,13 @@ public enum BossaAPI {
          */
         @Contract(pure = true)
         public int getBitMask() {
-            logger.exiting(NolRecentInfoAPI.class.getName(),"getBitMask", wrappee.BitMask);
+            logger.exiting(NolRecentInfoAPI.class.getName(), "getBitMask", wrappee.BitMask);
             return wrappee.BitMask;
         }
 
         @NotNull
         public NolTickerAPI getTicker() {
-            logger.exiting(NolTickerAPI.class.getName(),"getTicker");
+            logger.exiting(NolTickerAPI.class.getName(), "getTicker");
             return new NolTickerAPI(wrappee.ticker);
         }
 
@@ -604,7 +583,7 @@ public enum BossaAPI {
          */
         @Contract(pure = true)
         public double getValoLT() {
-            logger.exiting(NolTickerAPI.class.getName(),"getValoLT",wrappee.ValoLT);
+            logger.exiting(NolTickerAPI.class.getName(), "getValoLT", wrappee.ValoLT);
             return wrappee.ValoLT;
         }
 
@@ -615,7 +594,7 @@ public enum BossaAPI {
          */
         @Contract(pure = true)
         public int getVoLT() {
-            logger.exiting(NolTickerAPI.class.getName(),"getVoLT",wrappee.VoLT);
+            logger.exiting(NolTickerAPI.class.getName(), "getVoLT", wrappee.VoLT);
             return wrappee.VoLT;
         }
 
@@ -626,7 +605,7 @@ public enum BossaAPI {
          */
         @NotNull
         public String getToLT() {
-            logger.exiting(NolTickerAPI.class.getName(),"getToLT");
+            logger.exiting(NolTickerAPI.class.getName(), "getToLT");
             return new String(wrappee.ToLT).trim();
         }
 
@@ -637,7 +616,7 @@ public enum BossaAPI {
          */
         @Contract(pure = true)
         public double getOpen() {
-            logger.exiting(NolTickerAPI.class.getName(),"getOpen");
+            logger.exiting(NolTickerAPI.class.getName(), "getOpen");
             return wrappee.Open;
         }
 
@@ -648,7 +627,7 @@ public enum BossaAPI {
          */
         @Contract(pure = true)
         public double getHigh() {
-            logger.exiting(NolTickerAPI.class.getName(),"getHigh",wrappee.High);
+            logger.exiting(NolTickerAPI.class.getName(), "getHigh", wrappee.High);
             return wrappee.High;
         }
 
@@ -659,7 +638,7 @@ public enum BossaAPI {
          */
         @Contract(pure = true)
         public double getLow() {
-            logger.exiting(NolTickerAPI.class.getName(),"getLow",wrappee.Low);
+            logger.exiting(NolTickerAPI.class.getName(), "getLow", wrappee.Low);
             return wrappee.Low;
         }
 
@@ -670,7 +649,7 @@ public enum BossaAPI {
          */
         @Contract(pure = true)
         public double getClose() {
-            logger.exiting(NolTickerAPI.class.getName(),"getClose",wrappee.Close);
+            logger.exiting(NolTickerAPI.class.getName(), "getClose", wrappee.Close);
             return wrappee.Close;
         }
 
@@ -681,7 +660,7 @@ public enum BossaAPI {
          */
         @Contract(pure = true)
         public double getBid() {
-            logger.exiting(NolTickerAPI.class.getName(),"getBid",wrappee.Bid);
+            logger.exiting(NolTickerAPI.class.getName(), "getBid", wrappee.Bid);
             return wrappee.Bid;
         }
 
@@ -692,7 +671,7 @@ public enum BossaAPI {
          */
         @Contract(pure = true)
         public double getAsk() {
-            logger.exiting(NolTickerAPI.class.getName(),"getAsk",wrappee.Ask);
+            logger.exiting(NolTickerAPI.class.getName(), "getAsk", wrappee.Ask);
             return wrappee.Ask;
         }
 
@@ -703,7 +682,7 @@ public enum BossaAPI {
          */
         @Contract(pure = true)
         public int getBidSize() {
-            logger.exiting(NolTickerAPI.class.getName(),"getBidSize",wrappee.BidSize);
+            logger.exiting(NolTickerAPI.class.getName(), "getBidSize", wrappee.BidSize);
             return wrappee.BidSize;
         }
 
@@ -713,7 +692,7 @@ public enum BossaAPI {
          * @return size
          */
         public int getAskSize() {
-            logger.exiting(NolTickerAPI.class.getName(),"getAskSize",wrappee.AskSize);
+            logger.exiting(NolTickerAPI.class.getName(), "getAskSize", wrappee.AskSize);
             return wrappee.AskSize;
         }
 
@@ -723,7 +702,7 @@ public enum BossaAPI {
          * @return cumulative volume
          */
         public int getTotalVolume() {
-            logger.exiting(NolTickerAPI.class.getName(),"getTotalVolume",wrappee.TotalVolume);
+            logger.exiting(NolTickerAPI.class.getName(), "getTotalVolume", wrappee.TotalVolume);
             return wrappee.TotalVolume;
         }
 
@@ -733,7 +712,7 @@ public enum BossaAPI {
          * @return turnover
          */
         public double getTotalValue() {
-            logger.exiting(NolTickerAPI.class.getName(),"getTotalValue",wrappee.TotalValue);
+            logger.exiting(NolTickerAPI.class.getName(), "getTotalValue", wrappee.TotalValue);
             return wrappee.TotalValue;
         }
 
@@ -743,7 +722,7 @@ public enum BossaAPI {
          * @return open interest
          */
         public int getOpenInterest() {
-            logger.exiting(NolTickerAPI.class.getName(),"getOpenInterest",wrappee.OpenInterest);
+            logger.exiting(NolTickerAPI.class.getName(), "getOpenInterest", wrappee.OpenInterest);
             return wrappee.OpenInterest;
         }
 
@@ -753,7 +732,7 @@ public enum BossaAPI {
          * @return phase
          */
         public String getPhase() {
-            logger.exiting(NolTickerAPI.class.getName(),"getPhase",wrappee.Phase);
+            logger.exiting(NolTickerAPI.class.getName(), "getPhase", wrappee.Phase);
             return new String(wrappee.Phase).trim();
         }
 
@@ -763,7 +742,7 @@ public enum BossaAPI {
          * @return status
          */
         public String getStatus() {
-            logger.exiting(NolTickerAPI.class.getName(),"getStatus",wrappee.Status);
+            logger.exiting(NolTickerAPI.class.getName(), "getStatus", wrappee.Status);
             return new String(wrappee.Status).trim();
         }
 
@@ -775,7 +754,7 @@ public enum BossaAPI {
          */
         @Deprecated
         public int getBidAmount() {
-            logger.exiting(NolTickerAPI.class.getName(),"getBidAmount",wrappee.BidAmount);
+            logger.exiting(NolTickerAPI.class.getName(), "getBidAmount", wrappee.BidAmount);
             return wrappee.BidAmount;
         }
 
@@ -787,7 +766,7 @@ public enum BossaAPI {
          */
         @Deprecated
         public int getAskAmount() {
-            logger.exiting(NolTickerAPI.class.getName(),"getAskAmount",wrappee.AskAmount);
+            logger.exiting(NolTickerAPI.class.getName(), "getAskAmount", wrappee.AskAmount);
             return wrappee.AskAmount;
         }
 
@@ -797,7 +776,7 @@ public enum BossaAPI {
          * @return turnover
          */
         public double getOpenValue() {
-            logger.exiting(NolTickerAPI.class.getName(),"getOpenValue",wrappee.OpenValue);
+            logger.exiting(NolTickerAPI.class.getName(), "getOpenValue", wrappee.OpenValue);
             return wrappee.OpenValue;
         }
 
@@ -807,7 +786,7 @@ public enum BossaAPI {
          * @return turnover
          */
         public double getCloseValue() {
-            logger.exiting(NolTickerAPI.class.getName(),"getCloseValue",wrappee.CloseValue);
+            logger.exiting(NolTickerAPI.class.getName(), "getCloseValue", wrappee.CloseValue);
             return wrappee.CloseValue;
         }
 
@@ -817,7 +796,7 @@ public enum BossaAPI {
          * @return reference price
          */
         public double getReferPrice() {
-            logger.exiting(NolTickerAPI.class.getName(),"getReferPrice",wrappee.ReferPrice);
+            logger.exiting(NolTickerAPI.class.getName(), "getReferPrice", wrappee.ReferPrice);
             return wrappee.ReferPrice;
         }
 
@@ -828,7 +807,7 @@ public enum BossaAPI {
          * @see NolBidAskTblAPI
          */
         public List<NolBidAskTblAPI> getOffers() {
-            logger.exiting(NolTickerAPI.class.getName(),"getOffers",wrappee.offers);
+            logger.exiting(NolTickerAPI.class.getName(), "getOffers", wrappee.offers);
             return new NolBidAskStrAPI(wrappee.offers).getBidask_table();
         }
 
@@ -1215,120 +1194,120 @@ public enum BossaAPI {
     public static final class NolOrderRequestAPI extends BossaAPIClassWrapper<NolOrderRequestAPI, BossaAPIInterface.NolOrderRequest> {
 
         private NolOrderRequestAPI(BossaAPIInterface.NolOrderRequest nolOrderRequest) {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"Constructor");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "Constructor");
             this.wrappee = nolOrderRequest;
         }
 
         public int getBitMask() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getBitMask",wrappee.BitMask);
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getBitMask", wrappee.BitMask);
             return wrappee.BitMask;
         }
 
         @NotNull
         public String getOrigID() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getOrigID");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getOrigID");
             return new String(wrappee.OrigID).trim();
         }
 
         @NotNull
         public String getOrdID() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getOrdID");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getOrdID");
             return new String(wrappee.OrdID).trim();
         }
 
         @NotNull
         public String getOrdID2() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getOrdID2");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getOrdID2");
             return new String(wrappee.OrdID2).trim();
         }
 
         @NotNull
         public String getAcct() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getAcct");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getAcct");
             return new String(wrappee.Acct).trim();
         }
 
         public int getMinQty() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getMinQty",wrappee.MinQty);
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getMinQty", wrappee.MinQty);
             return wrappee.MinQty;
         }
 
         public int getDisplayQty() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getDisplayQty",wrappee.DisplayQty);
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getDisplayQty", wrappee.DisplayQty);
             return wrappee.DisplayQty;
         }
 
         @NotNull
         public NolTickerAPI getTicker() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getTicker");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getTicker");
             return new NolTickerAPI(wrappee.ticker);
         }
 
         @NotNull
         public String getSide() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getSide");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getSide");
             return new String(wrappee.Side).trim();
         }
 
         public int getQty() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getQty");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getQty");
             return wrappee.Qty;
         }
 
         @NotNull
         public String getOrdTyp() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getOrdTyp");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getOrdTyp");
             return new String(wrappee.OrdTyp).trim();
         }
 
         public float getPx() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getPx");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getPx");
             return wrappee.Px;
         }
 
         public float getStopPx() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getStopPx");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getStopPx");
             return wrappee.StopPx;
         }
 
         @NotNull
         public String getCcy() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getCcy");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getCcy");
             return new String(wrappee.Ccy).trim();
         }
 
         @NotNull
         public String getTmInForce() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getTmInForce");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getTmInForce");
             return new String(wrappee.TmInForce).trim();
         }
 
         @NotNull
         public String getExpireDt() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getExpireDt");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getExpireDt");
             return new String(wrappee.ExpireDt).trim();
         }
 
         public float getTrgrPx() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getTrgrPx");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getTrgrPx");
             return wrappee.TrgrPx;
         }
 
         @NotNull
         public String getDefPayTyp() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getDefPayTyp");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getDefPayTyp");
             return new String(wrappee.DefPayTyp).trim();
         }
 
         @NotNull
         public String getSessionDt() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getSessionDt");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getSessionDt");
             return new String(wrappee.SessionDt).trim();
         }
 
         @NotNull
         public String getExpireTm() {
-            logger.exiting(NolOrderRequestAPI.class.getName(),"getExpireTm");
+            logger.exiting(NolOrderRequestAPI.class.getName(), "getExpireTm");
             return new String(wrappee.ExpireTm).trim();
         }
 
@@ -1345,6 +1324,7 @@ public enum BossaAPI {
             propertyChangeSupport.removePropertyChangeListener(listener);
         }
     }
+
     /**
      * Stores market data: info about price levels and trades.
      */
