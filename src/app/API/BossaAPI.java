@@ -1309,6 +1309,8 @@ public enum BossaAPI {
 
     }
 
+    //refactoring CallbackHelpers to generic class impossible due to type erasure...
+    //cannot map Object type in JNA to multiple classes with typemapper, it would break ordinary type mapping
     private static class PropertyChangeSupportHelper<T> {
         protected final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
         protected T property;
