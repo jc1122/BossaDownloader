@@ -11,6 +11,7 @@ public enum OrderType implements JnaEnum<OrderType> {
     DelOrder, //= 2;
     StatOrder; //= 3;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private static int start = -1;
 
     @Contract(pure = true)

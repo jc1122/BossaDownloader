@@ -11,7 +11,7 @@ class ActionListenerShowsDialogOnException implements ActionListener {
         void invoke();
     }
 
-    Callback callback;
+    private Callback callback;
 
     ActionListenerShowsDialogOnException(Callback callback) {
         this.callback = callback;

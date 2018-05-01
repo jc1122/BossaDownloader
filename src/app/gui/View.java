@@ -7,27 +7,27 @@ import java.util.logging.Logger;
 
 //TODO this class is a mess, tidy the code
 public class View {
-    Controller controller;
+    private Controller controller;
     private Model model;
     private static final Logger logger =
             Logger.getLogger(BossaAPI.class.getName());
 
     private JFrame frame;
 
-    public View(Controller controller, Model model) {
+    View(Controller controller, Model model) {
         this.controller = controller;
         this.model = model;
     }
 
     private void createFrame() {
         frame = new JFrame("BossaDownloader");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(600, 300);
         frame.setVisible(true);
 
     }
 
-    public void createGUI() {
+    void createGUI() {
         createFrame();
 
         frame.setJMenuBar(new MainMenuBarFactory("MenuBar").getContainer());
@@ -51,29 +51,28 @@ public class View {
         version.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.showVersion()));
     }
 
-    public void showVersionDialog() {
+    void showVersionDialog() {
         JOptionPane.showMessageDialog(frame, "API showVersion: \n" + model.getAPIversion());
     }
 
-    public void showStatementDialog() {
+    void showStatementDialog() {
         new SimplifiedStatementDialog(model);
-        //new StatementDialog(this);
     }
 
 
-    public void disableStartApiMenuItem() {
+    void disableStartApiMenuItem() {
         frame.getJMenuBar().getMenu(0).getItem(0).setEnabled(false);
     }
 
-    public void enableStartApiMenuItem() {
+    void enableStartApiMenuItem() {
         frame.getJMenuBar().getMenu(0).getItem(0).setEnabled(true);
     }
 
-    public void disableStopApiMenuItem() {
+    void disableStopApiMenuItem() {
         frame.getJMenuBar().getMenu(0).getItem(2).setEnabled(false);
     }
 
-    public void enableStopApiMenuItem() {
+    void enableStopApiMenuItem() {
         frame.getJMenuBar().getMenu(0).getItem(2).setEnabled(true);
     }
 
@@ -81,7 +80,7 @@ public class View {
         frame.getJMenuBar().getMenu(1).getItem(0).setEnabled(false);
     }
 
-    public void enableStatementAccountsMenuItem() {
+    void enableStatementAccountsMenuItem() {
         frame.getJMenuBar().getMenu(1).getItem(0).setEnabled(true);
     }
 

@@ -44,8 +44,10 @@ class AccountPane implements PropertyChangeListener {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
         int index = accountNameComboBox.getSelectedIndex();
+
         this.accountList = (List<BossaAPI.NolStatementAPI>) evt.getNewValue();
         synchronized (this) {
             //need to remove listeners before calling removeAllItems, or listeners will be notified of that
@@ -65,7 +67,7 @@ class AccountPane implements PropertyChangeListener {
         }
     }
 
-    public void addAccountSelectionListener(ActionListener listener) {
+    void addAccountSelectionListener(ActionListener listener) {
         accountNameComboBox.addActionListener(listener);
     }
 
@@ -75,7 +77,7 @@ class AccountPane implements PropertyChangeListener {
         }
     }
 
-    public JPanel getPane() {
+    JPanel getPane() {
         return accountPanel;
     }
 

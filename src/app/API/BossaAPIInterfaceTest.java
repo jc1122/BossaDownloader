@@ -5,16 +5,15 @@ import org.junit.jupiter.api.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class BossaAPIInterfaceTest {
-    static BossaAPIInterface INSTANCE;
+    private static BossaAPIInterface INSTANCE;
 
-    static boolean checkIfNolIsRunning() {
+    private static boolean checkIfNolIsRunning() {
         String line;
-        String pidInfo = "";
+        StringBuilder pidInfo = new StringBuilder();
 
         System.out.println("Checking if NOL3 is running.");
         try {
@@ -23,30 +22,29 @@ class BossaAPIInterfaceTest {
 
 
             while ((line = input.readLine()) != null) {
-                pidInfo += line;
+                pidInfo.append(line);
             }
             input.close();
 
         } catch (Exception e) {
             System.out.println("IO exception " + e);
         }
-        return pidInfo.contains("NOL3.exe");
+        return pidInfo.toString().contains("NOL3.exe");
     }
 
-    static String getMessage(int code) {
+    private static String getMessage(int code) {
         return INSTANCE.GetResultCodeDesc(code);
     }
 
     @BeforeAll
-    static void setUp() throws InterruptedException {
-        final Nol3State[] nol3State = new Nol3State[1];
+    static void setUp() {
         assumeTrue(checkIfNolIsRunning(), () -> "NOL is not running");
         INSTANCE = BossaAPI.INSTANCE;
         INSTANCE.Initialize("BOS;BOS");
     }
 
     @AfterAll
-    static void tearDown() throws InterruptedException {
+    static void tearDown() {
         INSTANCE.Shutdown();
     }
 
@@ -55,7 +53,7 @@ class BossaAPIInterfaceTest {
     void initialize() {
         int result = INSTANCE.Initialize("BOS;BOS");
         String message = INSTANCE.GetResultCodeDesc(result);
-        assertTrue(result >= 0, () -> message);
+        assertTrue(result >= 0, message);
     }
 
     @Test
@@ -82,18 +80,15 @@ class BossaAPIInterfaceTest {
         int[] invoked = new int[1];
         invoked[0] = 0;
         //INSTANCE.SetTradingSess(true);
-        BossaAPIInterface.SetCallbackDummy callback = new BossaAPIInterface.SetCallbackDummy() {
-            @Override
-            public void invoke(BossaAPIInterface.NolRecentInfo nolrecentinfo) {
-                synchronized (invoked) {
-                    invoked[0]++;
-                    if (invoked[0] > 10) {
-                        invoked.notifyAll();
-                    }
-                    System.out.println("invoked!");
+        BossaAPIInterface.SetCallbackDummy callback = nolrecentinfo -> {
+            synchronized (invoked) {
+                invoked[0]++;
+                if (invoked[0] > 10) {
+                    invoked.notifyAll();
                 }
             }
         };
+
         System.out.println(INSTANCE.SetCallback(callback));
         String[] isins = {
                 "PLVCAOC00015",
@@ -120,7 +115,7 @@ class BossaAPIInterfaceTest {
         synchronized (invoked) {
             invoked.wait(1000);
         }
-        assertTrue(invoked[0] == isins.length * repeats, () -> "invoked count: " + invoked[0]);
+        assertEquals(invoked[0], isins.length * repeats, () -> "invoked count: " + invoked[0]);
         INSTANCE.ClearFilter();
         INSTANCE.SetCallback(null);
     }
@@ -134,7 +129,7 @@ class BossaAPIInterfaceTest {
 
     @Test
     void getResultCodeDesc() {
-        assertTrue(INSTANCE.GetResultCodeDesc(8).equals("clear filter"));
+        assertEquals("clear filter", INSTANCE.GetResultCodeDesc(8));
     }
 
     @Test

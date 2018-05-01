@@ -42,6 +42,7 @@ public enum TypeofList implements JnaEnum<TypeofList> {
         }
     }; //= 4;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private static int start = -1;
 
     @Contract(pure = true)

@@ -3,6 +3,7 @@ package app.API;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public enum Nol3State implements JnaEnum<Nol3State> {
     NOL3_CLOSED_WHILE_API_RUNNING {
         @Override
@@ -35,6 +36,7 @@ public enum Nol3State implements JnaEnum<Nol3State> {
         }
     }; //= 5;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private static int start = 1;
 
     @Contract(pure = true)

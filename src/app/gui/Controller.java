@@ -3,40 +3,37 @@ package app.gui;
 import javax.swing.*;
 
 public class Controller {
-    Model model;
-    View view;
+    private Model model;
+    private View view;
 
     public Controller(Model model) {
         this.model = model;
         view = new View(this, model);
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                view.createGUI();
-                view.disableStopApiMenuItem();
-                //view.disableStatementAccountsMenuItem(); TODO uncomment
-            }
+        SwingUtilities.invokeLater(() -> {
+            view.createGUI();
+            view.disableStopApiMenuItem();
+            //view.disableStatementAccountsMenuItem();
         });
     }
 
-    public void startAPI() {
+    void startAPI() {
         model.startAPI();
         view.enableStopApiMenuItem();
         view.enableStatementAccountsMenuItem();
         view.disableStartApiMenuItem();
     }
 
-    public void stopAPI() {
+    void stopAPI() {
         model.stopAPI();
         view.disableStopApiMenuItem();
         view.enableStartApiMenuItem();
     }
 
-    public void showVersion() {
+    void showVersion() {
         view.showVersionDialog();
     }
 
-    public void showStatement() {
+    void showStatement() {
         view.showStatementDialog();
     }
     //TODO add status bar and logging of init functions

@@ -3,7 +3,7 @@ package app.gui;
 import javax.swing.*;
 
 
-public class MainMenuBarFactory extends AbstractGuiFactory<JMenuBar, JMenu> {
+class MainMenuBarFactory extends AbstractGuiFactory<JMenuBar, JMenu> {
     MainMenuBarFactory(String name) {
         container = new JMenuBar();
         container.setName(name);
