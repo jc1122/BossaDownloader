@@ -69,6 +69,6 @@ public class Model {
     }
 
     public List<BossaAPI.NolStatementAPI> getStatements() {
-        return accounts.getStatements();
+        return accounts.getProperty();
     }
 }
