@@ -1,10 +1,12 @@
-package app.gui;
+package app.gui.statement;
+
+import app.gui.Model;
 
 import javax.swing.*;
 
-class SimplifiedStatementDialog {
+public class StatementDialog {
 
-    SimplifiedStatementDialog(Model model) {
+    public StatementDialog(Model model) {
         JDialog dialog = new JDialog();
         dialog.setTitle("Statement");
         dialog.setLayout(new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));

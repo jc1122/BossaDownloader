@@ -1,6 +1,7 @@
-package app.gui;
+package app.gui.statement;
 
 import app.API.BossaAPI;
+import app.gui.Model;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StatementPane implements PropertyChangeListener, ActionListener {
+class StatementPane implements PropertyChangeListener, ActionListener {
     private JPanel statementPanel;
     private JLabel ikeLabel;
     private JLabel ikeStatusLabel;

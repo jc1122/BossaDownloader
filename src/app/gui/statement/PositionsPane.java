@@ -1,6 +1,7 @@
-package app.gui;
+package app.gui.statement;
 
 import app.API.BossaAPI;
+import app.gui.Model;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PositionsPane implements PropertyChangeListener, ActionListener {
+class PositionsPane implements PropertyChangeListener, ActionListener {
     private JPanel positionsPanel; //TODO add positions to interface
     private GridLayout positionsPanelLayout;
     private Model model;

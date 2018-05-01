@@ -1,6 +1,7 @@
-package app.gui;
+package app.gui.statement;
 
 import app.API.BossaAPI;
+import app.gui.Model;
 
 import javax.swing.*;
 import java.awt.*;

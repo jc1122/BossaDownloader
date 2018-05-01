@@ -1,6 +1,7 @@
 package app.gui;
 
 import app.API.BossaAPI;
+import app.gui.statement.StatementDialog;
 
 import javax.swing.*;
 import java.util.logging.Logger;
@@ -31,8 +32,6 @@ public class View {
         createFrame();
 
         frame.setJMenuBar(new MainMenuBarFactory("MenuBar").getContainer());
-
-        //TODO cache gui component names and use in search
         addEventListeners();
     }
 
@@ -56,7 +55,7 @@ public class View {
     }
 
     void showStatementDialog() {
-        new SimplifiedStatementDialog(model);
+        new StatementDialog(model);
     }
 
 
