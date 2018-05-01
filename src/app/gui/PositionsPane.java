@@ -20,11 +20,13 @@ public class PositionsPane implements PropertyChangeListener, ActionListener {
     private List<BossaAPI.NolStatementAPI> accountList;
     private Map<String, Double> positionIsinsPrices;
     private Map<String, JLabel> positionIsinsLabels;
+    private Map<String, Integer> positionIsinsCount;
 
     PositionsPane(Model model) {
-
+        this.model = model;
         try {
             this.model.addAccountsListener(this);
+            this.model.addQuotesListener(this);
         } catch (NullPointerException e) {
             throw new NullPointerException("Unable to get accounts! Is API initialized?");
         }
@@ -36,6 +38,9 @@ public class PositionsPane implements PropertyChangeListener, ActionListener {
 
         positionIsinsPrices = new HashMap<>();
         positionIsinsLabels = new HashMap<>();
+        positionIsinsCount = new HashMap<>();
+
+        this.accountList = model.getStatements(); //TODO will cause error when api is in investor offline status
         //TODO this may be buggy
         updatePanel(0);
     }
@@ -51,24 +56,27 @@ public class PositionsPane implements PropertyChangeListener, ActionListener {
 
         positionIsinsPrices.clear();
         positionIsinsLabels.clear();
+        positionIsinsCount.clear();
 
         //TODO refactor to a set of isins
         List<BossaAPI.NolPosAPI> positions = currentAccount.getPositions();
-        for (BossaAPI.NolPosAPI position : positions) {
-            String isin = position.getTicker().getIsin();
-            positionIsinsPrices.put(isin, 0.);
-            positionIsinsLabels.put(isin, new JLabel());
-        }
+        if (!positions.isEmpty()) {
+            for (BossaAPI.NolPosAPI position : positions) {
+                String isin = position.getTicker().getIsin();
+                positionIsinsPrices.put(isin, 0.);
+                positionIsinsLabels.put(isin, new JLabel());
+                positionIsinsCount.put(isin, 0);
+            }
 
-        model.addToFilter(positionIsinsPrices.keySet());
+            model.addToFilter(positionIsinsPrices.keySet());
 
-        if (!positionIsinsPrices.keySet().isEmpty()) {
             for (BossaAPI.NolPosAPI position : positions) {
                 String isin = position.getTicker().getIsin();
                 positionsPanel.add(new JLabel(position.getTicker().getName()));
                 positionsPanel.add(new JLabel(Integer.toString(position.getAcc110())));
                 positionsPanel.add(new JLabel(Integer.toString(position.getAcc120())));
                 positionsPanel.add(positionIsinsLabels.get(isin));
+                positionIsinsCount.replace(isin,position.getAcc110()+position.getAcc120());
             }
         }
     }
@@ -93,10 +101,9 @@ public class PositionsPane implements PropertyChangeListener, ActionListener {
                 updatePanel(this.selectedAccount);
                 break;
             case "Quotes":
-                //TODO add code
                 BossaAPI.NolRecentInfoAPI quote = (BossaAPI.NolRecentInfoAPI) evt.getNewValue();
                 String isin = quote.getTicker().getIsin();
-                this.positionIsinsPrices.replace(isin, quote.getReferPrice());
+                this.positionIsinsPrices.replace(isin, quote.getClose()*this.positionIsinsCount.get(isin));
                 updateValues(isin);
                 break;
         }
