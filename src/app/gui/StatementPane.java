@@ -29,7 +29,13 @@ public class StatementPane implements PropertyChangeListener, ActionListener {
 
     StatementPane(Model model) {
         this.model = model;
-        this.model.addAccountsListener(this);
+
+        try {
+            this.model.addAccountsListener(this);
+        } catch (NullPointerException e) {
+            throw new NullPointerException("Unable to get accounts! Is API initialized?");
+        }
+
         this.accountList = model.getStatements();
 
         ikeLabel = new JLabel("Indywidualne Konto Emerytalne :");
@@ -75,6 +81,7 @@ public class StatementPane implements PropertyChangeListener, ActionListener {
             statementPanel.add(statementLabels.get(key));
             statementPanel.add(statementValues.get(key));
         }
+        //TODO this may be buggy
         updateStatementPanel(0);
     }
 

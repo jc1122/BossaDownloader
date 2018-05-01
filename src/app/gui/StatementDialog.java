@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//TODO this is ugly, refactor
+//TODO this is ugly, refactor -> use SimplifiedStatementDialog instead
 class StatementDialog implements PropertyChangeListener {
     private View view;
     private List<BossaAPI.NolStatementAPI> accountList;
