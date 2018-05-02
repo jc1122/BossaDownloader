@@ -42,13 +42,13 @@ public enum BossaAPI {
 
         //map method names to mangled dll library function names
         functionNames.put("APIOrderRequest", "_APIOrderRequest@12");
-        functionNames.put("AddToFilter", "_AddToFilter@8");
-        functionNames.put("ClearFilter", "_ClearFilter@0");
+        functionNames.put("addToFilter", "_AddToFilter@8");
+        functionNames.put("clearFilter", "_ClearFilter@0");
         functionNames.put("GetResultCodeDesc", "_GetResultCodeDesc@4");
-        functionNames.put("GetTickers", "_GetTickers@12");
-        functionNames.put("Get_Version", "_Get_Version@0");
+        functionNames.put("getTickers", "_GetTickers@12");
+        functionNames.put("getVersion", "_Get_Version@0");
         functionNames.put("InitListTickers", "_InitListTickers@0");
-        functionNames.put("Initialize", "_Initialize@4");
+        functionNames.put("initialize", "_Initialize@4");
         functionNames.put("ReleaseTickersList", "_ReleaseTickersList@4");
         functionNames.put("RemFromFilter", "_RemFromFilter@8");
         functionNames.put("SetCallback", "_SetCallback@4");
@@ -58,7 +58,7 @@ public enum BossaAPI {
         functionNames.put("SetCallbackOutlook", "_SetCallbackOutlook@4");
         functionNames.put("SetCallbackStatus", "_SetCallbackStatus@4");
         functionNames.put("SetTradingSess", "_SetTradingSess@4");
-        functionNames.put("Shutdown", "_Shutdown@0");
+        functionNames.put("shutdown", "_Shutdown@0");
 
         Map<String, Object> options = new HashMap<>();
         options.put(Library.OPTION_FUNCTION_MAPPER,
@@ -146,8 +146,8 @@ public enum BossaAPI {
      * @return intialization comment
      * @throws IllegalStateException if unsuccessful
      */
-    public static String Initialize() throws IllegalStateException {
-        logger.entering(BossaAPI.class.toString(), "Initialize");
+    public static String initialize() throws IllegalStateException {
+        logger.entering(BossaAPI.class.toString(), "initialize");
         InitializeObservers();
         int errorCode = INSTANCE.Initialize("BOS;BOS"); //the only accepted AppId by server
         String output = GetResultCodeDesc(errorCode);
@@ -164,7 +164,7 @@ public enum BossaAPI {
 
     /**
      * Call to initialize callbacks of the api. Callbacks are stored in observables.
-     * Quotes observable is initialized by {@link BossaAPI#Initialize()}
+     * Quotes observable is initialized by {@link BossaAPI#initialize()}
      * otherwise API complains about lib not being initialized.
      */
     private static void InitializeObservers() {
@@ -198,10 +198,10 @@ public enum BossaAPI {
      * @return success message
      * @throws IllegalStateException if failed
      */
-    public static String AddToFilter(Set<String> TickersToAdd, boolean Flush) throws IllegalStateException {
+    public static String addToFilter(Set<String> TickersToAdd, boolean Flush) throws IllegalStateException {
         Object[] params = {TickersToAdd, Flush};
-        logger.entering(BossaAPI.class.getName(), "AddToFilter", params);
-        ClearFilter();
+        logger.entering(BossaAPI.class.getName(), "addToFilter", params);
+        clearFilter();
         tickersInFilter.addAll(TickersToAdd);
 
         String tickerString = isinSetToString(tickersInFilter);
@@ -212,16 +212,16 @@ public enum BossaAPI {
             logger.finer(e.getMessage());
             throw e;
         }
-        logger.exiting(BossaAPI.class.getName(), "AddToFilter", output);
+        logger.exiting(BossaAPI.class.getName(), "addToFilter", output);
         return output;
     }
 
-    public static String RemoveFromFilter(Set<String> tickersToRemove, boolean Flush) throws IllegalStateException {
+    public static String removeFromFilter(Set<String> tickersToRemove, boolean Flush) throws IllegalStateException {
         Object[] params = {tickersToRemove, Flush};
-        logger.entering(BossaAPI.class.getName(), "RemoveFromFilter", params);
-        ClearFilter();
+        logger.entering(BossaAPI.class.getName(), "removeFromFilter", params);
+        clearFilter();
         tickersInFilter.removeAll(tickersToRemove);
-        return AddToFilter(tickersInFilter, Flush);
+        return addToFilter(tickersInFilter, Flush);
     }
 
     /**
@@ -253,7 +253,7 @@ public enum BossaAPI {
     }
 
     /**
-     * This method should be invoked before adding papers to filter {@link BossaAPI#AddToFilter(String, boolean)}.
+     * This method should be invoked before adding papers to filter {@link BossaAPI#addToFilter(Set, boolean)}.
      * Sets the request for trading session phase and status update.
      *
      * @param val true for update request, false for no request
@@ -289,11 +289,11 @@ public enum BossaAPI {
      * @return list of tickers
      */
     @NotNull
-    public static List<NolTickerAPI> GetTickers(TypeofList typeofList, NolTickerAPI in_ticker) {
+    public static List<NolTickerAPI> getTickers(TypeofList typeofList, NolTickerAPI in_ticker) {
         Object[] params = {typeofList, in_ticker};
-        logger.entering(BossaAPI.class.getName(), "GetTickers", params);
+        logger.entering(BossaAPI.class.getName(), "getTickers", params);
         NolTickersAPI nolTickersAPI = new NolTickersAPI(typeofList, in_ticker);
-        logger.exiting(BossaAPI.class.getName(), "GetTickers");
+        logger.exiting(BossaAPI.class.getName(), "getTickers");
         return nolTickersAPI.getTickersList();
     }
 
@@ -311,17 +311,17 @@ public enum BossaAPI {
      * @return showVersion
      */
     // function for getting the information about verson of dll
-    public static String Get_Version() {
-        logger.entering(BossaAPI.class.getName(), "Get_Version");
+    public static String getVersion() {
+        logger.entering(BossaAPI.class.getName(), "getVersion");
         String version = INSTANCE.Get_Version();
-        logger.exiting(BossaAPI.class.getName(), "Get_Version", version);
+        logger.exiting(BossaAPI.class.getName(), "getVersion", version);
         return version;
     }
 
     //clear filter before adding new papers
     @SuppressWarnings("UnusedReturnValue")
-    public static String ClearFilter() {
-        logger.entering(BossaAPI.class.getName(), "ClearFilter");
+    public static String clearFilter() {
+        logger.entering(BossaAPI.class.getName(), "clearFilter");
         tickersInFilter.clear();
         int errorCode = INSTANCE.ClearFilter();
         String message = GetResultCodeDesc(errorCode);
@@ -330,7 +330,7 @@ public enum BossaAPI {
             logger.finer(e.getMessage());
             throw e;
         }
-        logger.exiting(BossaAPI.class.getName(), "ClearFilter", message);
+        logger.exiting(BossaAPI.class.getName(), "clearFilter", message);
         return message;
     }
 
@@ -339,12 +339,12 @@ public enum BossaAPI {
      *
      * @return message
      */
-    public static String Shutdown() {
-        logger.entering(BossaAPI.class.getName(), "Shutdown");
+    public static String shutdown() {
+        logger.entering(BossaAPI.class.getName(), "shutdown");
         int errorCode = INSTANCE.Shutdown();
         String message = GetResultCodeDesc(INSTANCE.Shutdown());
         if (errorCode < 0) throw new IllegalStateException(message);
-        logger.exiting(BossaAPI.class.getName(), "Shutdown", message);
+        logger.exiting(BossaAPI.class.getName(), "shutdown", message);
         return message;
     }
 

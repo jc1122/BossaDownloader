@@ -14,23 +14,23 @@ public class Model {
 
 
     public void addToFilter(Set<String> isins) {
-        BossaAPI.AddToFilter(isins, false);
+        BossaAPI.addToFilter(isins, false);
     }
 
     public void removeFromFilter(Set<String> isins) {
-        BossaAPI.RemoveFromFilter(isins, false);
+        BossaAPI.removeFromFilter(isins, false);
     }
 
     public void startAPI() {
-        BossaAPI.Initialize();
+        BossaAPI.initialize();
     }
 
     public void stopAPI() {
-        System.out.println(BossaAPI.Shutdown());
+        System.out.println(BossaAPI.shutdown());
     }
 
     public String getAPIversion() {
-        return BossaAPI.Get_Version();
+        return BossaAPI.getVersion();
     }
 
     public void addPropertyListener(PropertyChangeListener listener) {

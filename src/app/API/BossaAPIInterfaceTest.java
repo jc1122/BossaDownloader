@@ -108,7 +108,6 @@ class BossaAPIInterfaceTest {
         int repeats = 3;
         for (int i = 0; i < repeats; i++) {
             for (String isin : isins) {
-                System.out.println("add to filter: " + INSTANCE.AddToFilter(isin, false));//PLDMLKR00023;
                 INSTANCE.ClearFilter();
             }
         }
