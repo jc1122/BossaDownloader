@@ -12,24 +12,13 @@ public class Model {
 
     private Set<String> tickersInFilter = new HashSet<>();
 
-    private String isinSetToString(Set<String> isins) {
-        StringBuilder filterFormat = new StringBuilder();
-        for (String isin : isins) {
-            filterFormat.append(isin);
-        }
-        return filterFormat.toString();
-    }
 
     public void addToFilter(Set<String> isins) {
-        tickersInFilter.addAll(isins);
-        String filterFormat = isinSetToString(isins);
-        BossaAPI.AddToFilter(filterFormat, false);
+        BossaAPI.AddToFilter(isins, false);
     }
 
     public void removeFromFilter(Set<String> isins) {
-        if (tickersInFilter.removeAll(isins)) {
-            BossaAPI.AddToFilter(isinSetToString(isins), false);
-        }
+        BossaAPI.RemoveFromFilter(isins, false);
     }
 
     public void startAPI() {

@@ -21,6 +21,7 @@ public enum BossaAPI {
     ;
     static final BossaAPIInterface INSTANCE;
     private static final Map<String, PropertyAPI> propertyMap = new HashMap<>();
+    private static final Set<String> tickersInFilter = new HashSet<>();
 
     private static final Logger logger =
             Logger.getLogger(BossaAPI.class.getName());
@@ -197,12 +198,14 @@ public enum BossaAPI {
      * @return success message
      * @throws IllegalStateException if failed
      */
-    public static String AddToFilter(String TickersToAdd, boolean Flush) throws IllegalStateException {
+    public static String AddToFilter(Set<String> TickersToAdd, boolean Flush) throws IllegalStateException {
         Object[] params = {TickersToAdd, Flush};
         logger.entering(BossaAPI.class.getName(), "AddToFilter", params);
-
         ClearFilter();
-        int errorCode = INSTANCE.AddToFilter(TickersToAdd, Flush);
+        tickersInFilter.addAll(TickersToAdd);
+
+        String tickerString = isinSetToString(tickersInFilter);
+        int errorCode = INSTANCE.AddToFilter(tickerString, Flush);
         String output = GetResultCodeDesc(errorCode);
         if (errorCode < 0) {
             IllegalStateException e = new IllegalStateException(output);
@@ -213,6 +216,13 @@ public enum BossaAPI {
         return output;
     }
 
+    public static String RemoveFromFilter(Set<String> tickersToRemove, boolean Flush) throws IllegalStateException {
+        Object[] params = {tickersToRemove, Flush};
+        logger.entering(BossaAPI.class.getName(), "RemoveFromFilter", params);
+        ClearFilter();
+        tickersInFilter.removeAll(tickersToRemove);
+        return AddToFilter(tickersInFilter, Flush);
+    }
 
     /**
      * TODO test this method, add exception and add javadoc
@@ -310,8 +320,9 @@ public enum BossaAPI {
 
     //clear filter before adding new papers
     @SuppressWarnings("UnusedReturnValue")
-    private static String ClearFilter() {
+    public static String ClearFilter() {
         logger.entering(BossaAPI.class.getName(), "ClearFilter");
+        tickersInFilter.clear();
         int errorCode = INSTANCE.ClearFilter();
         String message = GetResultCodeDesc(errorCode);
         if (errorCode < 0) {
@@ -1545,5 +1556,13 @@ public enum BossaAPI {
                 Outlook.this.propertyChangeSupport.firePropertyChange("Outlook", oldVal, outlook);
             }
         }
+    }
+
+    private static String isinSetToString(Set<String> isins) {
+        StringBuilder filterFormat = new StringBuilder();
+        for (String isin : isins) {
+            filterFormat.append(isin);
+        }
+        return filterFormat.toString();
     }
 }
