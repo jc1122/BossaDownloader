@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 class BossaAPIInterfaceTest {
     private static BossaAPIInterface INSTANCE;
 
-    private static boolean checkIfNolIsRunning() {
+    static boolean checkIfNolIsRunning() {
         String line;
         StringBuilder pidInfo = new StringBuilder();
 
@@ -22,6 +22,7 @@ class BossaAPIInterfaceTest {
 
 
             while ((line = input.readLine()) != null) {
+                //System.out.println(line);
                 pidInfo.append(line);
             }
             input.close();

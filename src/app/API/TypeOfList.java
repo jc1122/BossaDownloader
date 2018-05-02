@@ -4,20 +4,20 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
-public enum TypeofList implements JnaEnum<TypeofList> {
-    UndefList {
+public enum TypeOfList implements JnaEnum<TypeOfList> {
+    UNDEF_LIST {
         @Override
         public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
             return false;
         }
     },// = -1;
-    All {
+    ALL {
         @Override
         public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
             return false;
         }
     }, //= 0;
-    Symbol {
+    SYMBOL {
         @Override
         public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
             return ticker.getName().equals("");
@@ -35,7 +35,7 @@ public enum TypeofList implements JnaEnum<TypeofList> {
             return ticker.getCFI().equals("");
         }
     }, //= 3;
-    MarketCode {
+    MARKET_CODE {
         @Override
         public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
             return ticker.getMarketCode().equals("");
@@ -51,8 +51,8 @@ public enum TypeofList implements JnaEnum<TypeofList> {
     }
 
     @Nullable
-    public TypeofList getForValue(int i) {
-        for (TypeofList o : TypeofList.values()) {
+    public TypeOfList getForValue(int i) {
+        for (TypeOfList o : TypeOfList.values()) {
             if (o.getIntValue() == i) {
                 return o;
             }

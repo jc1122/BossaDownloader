@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * This class is a wrapper for <a href="https://github.com/java-native-access/jna">JNA</a> mapping
  * of <a href="http://bossa.pl/notowania/narzedzia/bossapi/">BossaAPI</a> interface.
  *
- * <p> All methods of this class are <i>static</i></p>
+ * <p> ALL methods of this class are <i>static</i></p>
  */
 @SuppressWarnings({"unused", "Convert2MethodRef", "Convert2Lambda", "WeakerAccess"})
 public enum BossaAPI {
@@ -42,13 +42,13 @@ public enum BossaAPI {
 
         //map method names to mangled dll library function names
         functionNames.put("APIOrderRequest", "_APIOrderRequest@12");
-        functionNames.put("addToFilter", "_AddToFilter@8");
-        functionNames.put("clearFilter", "_ClearFilter@0");
+        functionNames.put("AddToFilter", "_AddToFilter@8");
+        functionNames.put("ClearFilter", "_ClearFilter@0");
         functionNames.put("GetResultCodeDesc", "_GetResultCodeDesc@4");
-        functionNames.put("getTickers", "_GetTickers@12");
-        functionNames.put("getVersion", "_Get_Version@0");
+        functionNames.put("GetTickers", "_GetTickers@12");
+        functionNames.put("Get_Version", "_Get_Version@0");
         functionNames.put("InitListTickers", "_InitListTickers@0");
-        functionNames.put("initialize", "_Initialize@4");
+        functionNames.put("Initialize", "_Initialize@4");
         functionNames.put("ReleaseTickersList", "_ReleaseTickersList@4");
         functionNames.put("RemFromFilter", "_RemFromFilter@8");
         functionNames.put("SetCallback", "_SetCallback@4");
@@ -58,7 +58,7 @@ public enum BossaAPI {
         functionNames.put("SetCallbackOutlook", "_SetCallbackOutlook@4");
         functionNames.put("SetCallbackStatus", "_SetCallbackStatus@4");
         functionNames.put("SetTradingSess", "_SetTradingSess@4");
-        functionNames.put("shutdown", "_Shutdown@0");
+        functionNames.put("Shutdown", "_Shutdown@0");
 
         Map<String, Object> options = new HashMap<>();
         options.put(Library.OPTION_FUNCTION_MAPPER,
@@ -185,7 +185,7 @@ public enum BossaAPI {
      * <p>
      * To receive market data, this method should be called after setting {@link BossaAPI#SetTradingSess(boolean)}
      * to {@code true}.
-     * {@code TickersToAdd} can be single ISIN obtained from ticker: {@link NolTickerAPI#getIsin()}
+     * {@code isins} can be single ISIN obtained from ticker: {@link NolTickerAPI#getIsin()}
      * or may be multiple ISINs separated by {@code ";"} ex. {@code ISIN1;ISIN2 }.
      * If there are any tickers already in the filter, they will be removed.
      * </p>
@@ -193,19 +193,21 @@ public enum BossaAPI {
      * {@link Quotes} will be updated after calling this method.
      * </p>
      *
-     * @param TickersToAdd ISIN or name (name doesn't seem to work as of showVersion 1.0.0.70 of native library)
-     * @param Flush        {@code false} for ISIN, {@code true} for name
+     * @param isins ISIN or name (name doesn't seem to work as of showVersion 1.0.0.70 of native library)
      * @return success message
      * @throws IllegalStateException if failed
      */
-    public static String addToFilter(Set<String> TickersToAdd, boolean Flush) throws IllegalStateException {
-        Object[] params = {TickersToAdd, Flush};
+    public static String addToFilter(Set<String> isins) throws IllegalStateException {
+        Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "addToFilter", params);
+//        if(tickersInFilter.size() + isins.size() > 100) {
+//            throw new IllegalStateException("Trying to exceed 100 tickers in filter! Use smaller amount of tickers.");
+//        }
         clearFilter();
-        tickersInFilter.addAll(TickersToAdd);
+        tickersInFilter.addAll(isins);
 
         String tickerString = isinSetToString(tickersInFilter);
-        int errorCode = INSTANCE.AddToFilter(tickerString, Flush);
+        int errorCode = INSTANCE.AddToFilter(tickerString, false);
         String output = GetResultCodeDesc(errorCode);
         if (errorCode < 0) {
             IllegalStateException e = new IllegalStateException(output);
@@ -216,12 +218,16 @@ public enum BossaAPI {
         return output;
     }
 
-    public static String removeFromFilter(Set<String> tickersToRemove, boolean Flush) throws IllegalStateException {
-        Object[] params = {tickersToRemove, Flush};
+    public static String removeFromFilter(Set<String> isins) throws IllegalStateException {
+        Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "removeFromFilter", params);
-        clearFilter();
-        tickersInFilter.removeAll(tickersToRemove);
-        return addToFilter(tickersInFilter, Flush);
+        if (!tickersInFilter.containsAll(isins)) {
+            throw new IllegalArgumentException(isins.removeAll(tickersInFilter) + " not in filter");
+        }
+        tickersInFilter.removeAll(isins);
+        //must be a new set, because addToFilters clear mapping during assignment!
+        addToFilter(new HashSet<>(tickersInFilter));
+        return "remove from filter"; //safe, exception in addToFilter guards this
     }
 
     /**
@@ -253,7 +259,7 @@ public enum BossaAPI {
     }
 
     /**
-     * This method should be invoked before adding papers to filter {@link BossaAPI#addToFilter(Set, boolean)}.
+     * This method should be invoked before adding papers to filter {@link BossaAPI#addToFilter(Set)}.
      * Sets the request for trading session phase and status update.
      *
      * @param val true for update request, false for no request
@@ -279,20 +285,20 @@ public enum BossaAPI {
      * Returns the requested tickers.
      * <br>
      * Usage: <br>
-     * {@code typeofList.ALL} or {@code typeofList.UndefList} with any {@code in_ticker}
+     * {@code typeOfList.ALL} or {@code typeOfList.UNDEF_LIST} with any {@code in_ticker}
      * to get all tickers from server. <br>
-     * {@code typeofList.ISIN}, {@code typeofList.CFI}, {@code typeofList.MarketCode}, {@code typeofList.Symbol} with
+     * {@code typeOfList.ISIN}, {@code typeOfList.CFI}, {@code typeOfList.MARKET_CODE}, {@code typeOfList.SYMBOL} with
      * non null {@code in_ticker} to get a list filtered by given field.
      *
-     * @param typeofList group filter
+     * @param typeOfList group filter
      * @param in_ticker  null or valid ticker
      * @return list of tickers
      */
     @NotNull
-    public static List<NolTickerAPI> getTickers(TypeofList typeofList, NolTickerAPI in_ticker) {
-        Object[] params = {typeofList, in_ticker};
+    public static List<NolTickerAPI> getTickers(TypeOfList typeOfList, NolTickerAPI in_ticker) {
+        Object[] params = {typeOfList, in_ticker};
         logger.entering(BossaAPI.class.getName(), "getTickers", params);
-        NolTickersAPI nolTickersAPI = new NolTickersAPI(typeofList, in_ticker);
+        NolTickersAPI nolTickersAPI = new NolTickersAPI(typeOfList, in_ticker);
         logger.exiting(BossaAPI.class.getName(), "getTickers");
         return nolTickersAPI.getTickersList();
     }
@@ -498,27 +504,27 @@ public enum BossaAPI {
             implements AutoCloseable {
         private List<NolTickerAPI> tickerListCache;
 
-        private NolTickersAPI(TypeofList typeofList, NolTickerAPI in_ticker) {
-            Object[] params = {typeofList, in_ticker};
+        private NolTickersAPI(TypeOfList typeOfList, NolTickerAPI in_ticker) {
+            Object[] params = {typeOfList, in_ticker};
             logger.entering(NolTickersAPI.class.getName(), "Constructor", params);
 
             this.wrappee = INSTANCE.InitListTickers();
             if (in_ticker == null) {
-                if (typeofList.getIntValue() > 0) {
+                if (typeOfList.getIntValue() > 0) {
                     IllegalArgumentException e =
-                            new IllegalArgumentException(typeofList.name() + " cannot be used with null ticker!");
+                            new IllegalArgumentException(typeOfList.name() + " cannot be used with null ticker!");
                     logger.finer(e.getMessage());
                     throw e;
                 }
-                INSTANCE.GetTickers(wrappee, typeofList, null);
+                INSTANCE.GetTickers(wrappee, typeOfList, null);
             } else {
-                if (typeofList.isTickerFieldEmpty(in_ticker)) {
+                if (typeOfList.isTickerFieldEmpty(in_ticker)) {
                     IllegalArgumentException e =
-                            new IllegalArgumentException("Ticker field " + typeofList.name() + "is empty!");
+                            new IllegalArgumentException("Ticker field " + typeOfList.name() + " is empty!");
                     logger.finer(e.getMessage());
                     throw e;
                 }
-                INSTANCE.GetTickers(wrappee, typeofList, in_ticker.wrappee);
+                INSTANCE.GetTickers(wrappee, typeOfList, in_ticker.wrappee);
             }
             tickerListCache = convertPointerToListHelper(wrappee.size, wrappee.ptrtickerslist,
                     NolTickerAPI.class);
@@ -1355,6 +1361,12 @@ public enum BossaAPI {
 
         public T getProperty() {
             logger.exiting(this.getClass().getName(), "getProperty");
+            if (property == null) {
+                throw new NullPointerException(
+                        "property "
+                                + this.getClass()
+                                + " has not been initialized yet, access through listener!");
+            }
             return property;
         }
     }
@@ -1466,7 +1478,7 @@ public enum BossaAPI {
      * Stores delay time to server.
      */
     public static final class Delay extends PropertyAPI<Float> {
-        private float delay;
+
         private static final Delay INSTANCE = new Delay();
         private static final CallbackHelper CALLBACK_HELPER = INSTANCE.new CallbackHelper();
 
@@ -1562,6 +1574,7 @@ public enum BossaAPI {
         StringBuilder filterFormat = new StringBuilder();
         for (String isin : isins) {
             filterFormat.append(isin);
+            filterFormat.append(";");
         }
         return filterFormat.toString();
     }

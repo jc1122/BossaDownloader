@@ -240,7 +240,7 @@ interface BossaAPIInterface extends Library {
 
     int SetCallbackDelay(SetCallbackDelayDummy dummy);
 
-    int GetTickers(NolTickers ptrtickers, TypeofList typeofList, NolTicker in_ticker);
+    int GetTickers(NolTickers ptrtickers, TypeOfList typeOfList, NolTicker in_ticker);
 
     // function for instantiante an Tickers's object
     NolTickers InitListTickers();

@@ -14,11 +14,11 @@ public class Model {
 
 
     public void addToFilter(Set<String> isins) {
-        BossaAPI.addToFilter(isins, false);
+        BossaAPI.addToFilter(isins);
     }
 
     public void removeFromFilter(Set<String> isins) {
-        BossaAPI.removeFromFilter(isins, false);
+        BossaAPI.removeFromFilter(isins);
     }
 
     public void startAPI() {
