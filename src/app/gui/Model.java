@@ -3,13 +3,12 @@ package app.gui;
 import app.API.BossaAPI;
 
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class Model {
-    private Map<String, BossaAPI.PropertyAPI> propertyMap = new HashMap<>();
+    private Map<String, BossaAPI.PropertyAPI> propertyMap = BossaAPI.getPropertyMap();
 
     private Set<String> tickersInFilter = new HashSet<>();
 
@@ -34,22 +33,11 @@ public class Model {
     }
 
     public void startAPI() {
-        BossaAPI.InitializeObservers();
         BossaAPI.Initialize();
-        setObservables();
     }
 
     public void stopAPI() {
         System.out.println(BossaAPI.Shutdown());
-    }
-
-    private void setObservables() {
-        propertyMap.put("Accounts", BossaAPI.Accounts.getInstance());
-        propertyMap.put("Delay", BossaAPI.Delay.getInstance());
-        propertyMap.put("Order", BossaAPI.Order.getInstance());
-        propertyMap.put("Outlook", BossaAPI.Outlook.getInstance());
-        propertyMap.put("Quotes", BossaAPI.Quotes.getInstance());
-        propertyMap.put("Status", BossaAPI.Status.getInstance());
     }
 
     public String getAPIversion() {

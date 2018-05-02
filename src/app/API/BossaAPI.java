@@ -19,13 +19,24 @@ import java.util.logging.Logger;
 @SuppressWarnings({"unused", "Convert2MethodRef", "Convert2Lambda", "WeakerAccess"})
 public enum BossaAPI {
     ;
-    static BossaAPIInterface INSTANCE;
+    static final BossaAPIInterface INSTANCE;
+    private static final Map<String, PropertyAPI> propertyMap = new HashMap<>();
+
     private static final Logger logger =
             Logger.getLogger(BossaAPI.class.getName());
 
     //initialize
     static {
         logger.finest("Initializing static");
+
+        //add propertyMap to map
+        propertyMap.put("Quotes", Quotes.getInstance());
+        propertyMap.put("Status", Status.getInstance());
+        propertyMap.put("Accounts", Accounts.getInstance());
+        propertyMap.put("Delay", Delay.getInstance());
+        propertyMap.put("Order", Order.getInstance());
+        propertyMap.put("Outlook", Outlook.getInstance());
+
         Map<String, String> functionNames = new HashMap<>();
 
         //map method names to mangled dll library function names
@@ -72,6 +83,7 @@ public enum BossaAPI {
                     + stackTrace);
             throw e;
         }
+
         logger.finest("Finished initializing static");
     }
 
@@ -135,7 +147,7 @@ public enum BossaAPI {
      */
     public static String Initialize() throws IllegalStateException {
         logger.entering(BossaAPI.class.toString(), "Initialize");
-
+        InitializeObservers();
         int errorCode = INSTANCE.Initialize("BOS;BOS"); //the only accepted AppId by server
         String output = GetResultCodeDesc(errorCode);
         if (errorCode < 0) {
@@ -154,7 +166,7 @@ public enum BossaAPI {
      * Quotes observable is initialized by {@link BossaAPI#Initialize()}
      * otherwise API complains about lib not being initialized.
      */
-    public static void InitializeObservers() {
+    private static void InitializeObservers() {
         logger.entering(BossaAPI.class.getName(), "InitializeObservers");
         //this below is messy, and could easily be cleaned using generics, however JNA will complain about
         //custom type mapping of Object type if you try to use generics
@@ -264,15 +276,15 @@ public enum BossaAPI {
      *
      * @param typeofList group filter
      * @param in_ticker  null or valid ticker
-     * @return group of tickers
+     * @return list of tickers
      */
     @NotNull
-    public static NolTickersAPI GetTickers(TypeofList typeofList, NolTickerAPI in_ticker) {
+    public static List<NolTickerAPI> GetTickers(TypeofList typeofList, NolTickerAPI in_ticker) {
         Object[] params = {typeofList, in_ticker};
         logger.entering(BossaAPI.class.getName(), "GetTickers", params);
         NolTickersAPI nolTickersAPI = new NolTickersAPI(typeofList, in_ticker);
         logger.exiting(BossaAPI.class.getName(), "GetTickers");
-        return nolTickersAPI;
+        return nolTickersAPI.getTickersList();
     }
 
     // function for describing errors
@@ -323,6 +335,10 @@ public enum BossaAPI {
         if (errorCode < 0) throw new IllegalStateException(message);
         logger.exiting(BossaAPI.class.getName(), "Shutdown", message);
         return message;
+    }
+
+    public static Map<String, PropertyAPI> getPropertyMap() {
+        return propertyMap;
     }
 
     //extracted to help composition
@@ -466,7 +482,7 @@ public enum BossaAPI {
      * Needs to be closed manually using {@link NolTickersAPI#close()} after finished working with object to release
      * resources.
      */
-    public static final class NolTickersAPI
+    private static final class NolTickersAPI
             extends BossaAPIClassWrapper<NolTickersAPI, BossaAPIInterface.NolTickers>
             implements AutoCloseable {
         private List<NolTickerAPI> tickerListCache;
@@ -964,7 +980,7 @@ public enum BossaAPI {
     /**
      * Contains list of statements for all accessible accounts.
      */
-    public static final class NolAggrStatementAPI extends BossaAPIClassWrapper<NolAggrStatementAPI, BossaAPIInterface.NolAggrStatement> {
+    private static final class NolAggrStatementAPI extends BossaAPIClassWrapper<NolAggrStatementAPI, BossaAPIInterface.NolAggrStatement> {
 
         private List<NolStatementAPI> statementList;
 
@@ -1363,7 +1379,7 @@ public enum BossaAPI {
                         .this
                         .propertyChangeSupport
                         .firePropertyChange("Quotes", oldValue, property);
-
+                logger.exiting(CallbackHelper.class.getName(), "invoke", property);
             }
         }
     }
@@ -1459,7 +1475,7 @@ public enum BossaAPI {
             @Override
             public void invoke(float delay) {
                 logger.exiting(CallbackHelper.class.getName(), "invoke");
-                float oldVal = Delay.this.property;
+                Float oldVal = Delay.this.property; //must be boxed type or InvocationTargetException by JNA callback
                 Delay.this.property = delay;
                 Delay.this.propertyChangeSupport.firePropertyChange("Delay", oldVal, delay);
             }

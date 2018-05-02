@@ -13,8 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//TODO check behavior in concurrency
 class PositionsPane implements PropertyChangeListener, ActionListener {
-    private JPanel positionsPanel; //TODO add positions to interface
+    private JPanel positionsPanel;
     private GridLayout positionsPanelLayout;
     private Model model;
     private int selectedAccount;
@@ -63,7 +64,7 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
         if (!positions.isEmpty()) {
             for (BossaAPI.NolPosAPI position : positions) {
                 String isin = position.getTicker().getIsin();
-                positionIsinsPrices.put(isin, 0.);
+                positionIsinsPrices.put(isin, -1.);
                 positionIsinsLabels.put(isin, new JLabel());
                 positionIsinsCount.put(isin, 0);
             }
