@@ -433,7 +433,7 @@ public enum BossaAPI {
 
         @Override
         public String toString() {
-            return "NolBidAskTblAPI \n" +
+            return "\nNolBidAskTblAPI \n" +
                     "Side: " + getSide() + "\n" +
                     "Depth: " + getDepth() + "\n" +
                     "Price: " + getPrice() + "\n" +
@@ -468,44 +468,50 @@ public enum BossaAPI {
      * Stores data of single ticker.
      */
     public static final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, BossaAPIInterface.NolTicker> {
+        String isin, name, marketCode, cfi, group;
 
         private NolTickerAPI(BossaAPIInterface.NolTicker wrappee) {
             this.wrappee = wrappee;
+            isin = new String(wrappee.Isin).trim();
+            name = new String(wrappee.Name).trim();
+            marketCode = new String(wrappee.MarketCode).trim();
+            cfi = new String(wrappee.CFI).trim();
+            group = new String(wrappee.Group).trim();
         }
 
         @NotNull
         public String getIsin() {
             logger.exiting(NolTickerAPI.class.getName(), "getIsin");
-            return new String(wrappee.Isin).trim();
+            return isin;
         }
 
         @NotNull
         public String getName() {
             logger.exiting(NolTickerAPI.class.getName(), "getName");
-            return new String(wrappee.Name).trim();
+            return name;
         }
 
         @NotNull
         public String getMarketCode() {
             logger.exiting(NolTickerAPI.class.getName(), "getMarketCode");
-            return new String(wrappee.MarketCode).trim();
+            return marketCode;
         }
 
         @NotNull
         public String getCFI() {
             logger.exiting(NolTickerAPI.class.getName(), "getCFI");
-            return new String(wrappee.CFI).trim();
+            return cfi;
         }
 
         @NotNull
         public String getGroup() {
             logger.exiting(NolTickerAPI.class.getName(), "getGroup");
-            return new String(wrappee.Group).trim();
+            return group;
         }
 
         @Override
         public String toString() {
-            return "NolTickerAPI \n" +
+            return "\nNolTickerAPI \n" +
                     "ISIN: " + getIsin() + "\n" +
                     "\nName: " + getName() +
                     "\nMarket code: " + getMarketCode() +
@@ -597,11 +603,17 @@ public enum BossaAPI {
 
         NolBidAskStrAPI offers;
         NolTickerAPI ticker;
+        String bitMask, toLT, phase, status;
         private NolRecentInfoAPI(BossaAPIInterface.NolRecentInfo nolRecentInfo) {
             logger.entering(NolRecentInfoAPI.class.getName(), "Constructor");
             this.wrappee = nolRecentInfo;
             offers = new NolBidAskStrAPI(wrappee.offers);
             ticker = new NolTickerAPI(wrappee.ticker);
+            bitMask = Integer.toBinaryString(wrappee.BitMask);
+            toLT = new String(wrappee.ToLT).trim();
+            phase = new String(wrappee.Phase).trim();
+            status = new String(wrappee.Status).trim();
+
             if (this.getError() < 0) {
                 String message = GetResultCodeDesc(this.getError());
                 IllegalStateException e = new IllegalStateException(message);
@@ -620,7 +632,7 @@ public enum BossaAPI {
         @Contract(pure = true)
         public String getBitMask() {
             logger.exiting(NolRecentInfoAPI.class.getName(), "getBitMask", wrappee.BitMask);
-            return Integer.toBinaryString(wrappee.BitMask);
+            return bitMask;
         }
 
         @NotNull
@@ -659,7 +671,7 @@ public enum BossaAPI {
         @NotNull
         public String getToLT() {
             logger.exiting(NolTickerAPI.class.getName(), "getToLT");
-            return new String(wrappee.ToLT).trim();
+            return toLT;
         }
 
         /**
@@ -786,7 +798,7 @@ public enum BossaAPI {
          */
         public String getPhase() {
             logger.exiting(NolTickerAPI.class.getName(), "getPhase", wrappee.Phase);
-            return new String(wrappee.Phase).trim();
+            return phase;
         }
 
         /**
@@ -796,7 +808,7 @@ public enum BossaAPI {
          */
         public String getStatus() {
             logger.exiting(NolTickerAPI.class.getName(), "getStatus", wrappee.Status);
-            return new String(wrappee.Status).trim();
+            return status;
         }
 
         /**
@@ -875,7 +887,7 @@ public enum BossaAPI {
 
         @Override
         public String toString() {
-            return "NolRecentInfoAPI" +
+            return "\nNolRecentInfoAPI" +
                     "\nBit mask: " + getBitMask() +
                     "\nTicker: " + getTicker() +
                     "\nValue of last transaction: " + getValoLT() +
@@ -908,18 +920,21 @@ public enum BossaAPI {
      */
     private static final class NolFundAPI extends BossaAPIClassWrapper<NolFundAPI, BossaAPIInterface.NolFund> {
 
+        String name, value;
         private NolFundAPI(BossaAPIInterface.NolFund nolFund) {
             this.wrappee = nolFund;
+            name = new String(wrappee.name).trim();
+            value = new String(wrappee.value).trim();
         }
 
         public String getName() {
             logger.exiting(NolFundAPI.class.getName(), "getName");
-            return new String(wrappee.name).trim();
+            return name;
         }
 
         public String getValue() {
             logger.exiting(NolFundAPI.class.getName(), "getValue");
-            return new String(wrappee.value).trim();
+            return value;
         }
 
     }
@@ -968,7 +983,7 @@ public enum BossaAPI {
 
         @Override
         public String toString() {
-            return "NolPosAPI " +
+            return "\nNolPosAPI " +
                     "\nTicker: " + getTicker() +
                     "\nAcc110 shares free: " + getAcc110() +
                     "\nAcc120 shares blocked: " + getAcc120();
@@ -983,9 +998,15 @@ public enum BossaAPI {
         private Map<String, Double> fundMap;
         private List<NolPosAPI> positionList;
 
+        String name, type;
+        boolean ikeStatus;
         private NolStatementAPI(BossaAPIInterface.NolStatement nolStatement) {
             logger.entering(NolStatementAPI.class.getName(), "Constructor");
             this.wrappee = nolStatement;
+            name = new String(wrappee.name).trim();
+            ikeStatus = new String(wrappee.ike).trim().equals("T");
+            type = new String(wrappee.type).trim();
+
             List<NolFundAPI> fundList = convertPointerToListHelper(wrappee.sizefund, wrappee.ptrfund, NolFundAPI.class);
             positionList = convertPointerToListHelper(wrappee.sizepos, wrappee.ptrpos, NolPosAPI.class);
 
@@ -1004,7 +1025,7 @@ public enum BossaAPI {
         @NotNull
         public String getName() {
             logger.exiting(NolStatementAPI.class.getName(), "getName");
-            return new String(wrappee.name).trim();
+            return name;
         }
 
 
@@ -1015,7 +1036,7 @@ public enum BossaAPI {
          */
         public boolean getIke() {
             logger.exiting(NolStatementAPI.class.getName(), "getIke");
-            return new String(wrappee.ike).trim().equals("T");
+            return ikeStatus;
         }
 
         /**
@@ -1028,7 +1049,7 @@ public enum BossaAPI {
         @NotNull
         public String getType() {
             logger.exiting(NolStatementAPI.class.getName(), "getType");
-            return new String(wrappee.type).trim();
+            return type;
         }
 
         /**
@@ -1095,9 +1116,29 @@ public enum BossaAPI {
      * TODO check behavior of this class
      */
     public static final class NolOrderReportAPI extends BossaAPIClassWrapper<NolOrderReportAPI, BossaAPIInterface.NolOrderReport> {
-
+        String ordID, ordID2, statReqID, execID, execTyp, stat, acct, side, ordTyp, ccy, tmInForce, expireDt, txnTm;
+        String defPayTyp, getBizRejRsn, txt, expireTm;
+        NolTickerAPI ticker;
         private NolOrderReportAPI(BossaAPIInterface.NolOrderReport nolOrderReport) {
             this.wrappee = nolOrderReport;
+            ordID = new String(wrappee.OrdID).trim();
+            ordID2 = new String(wrappee.OrdID2).trim();
+            statReqID = new String(wrappee.StatReqID).trim();
+            execID = new String(wrappee.ExecID).trim();
+            execTyp = Byte.toString(wrappee.ExecTyp).trim();
+            stat = Byte.toString(wrappee.Stat).trim();
+            acct = new String(wrappee.Acct).trim();
+            ticker = new NolTickerAPI(wrappee.ticker);
+            side = new String(wrappee.Side).trim();
+            ordTyp = new String(wrappee.OrdTyp).trim();
+            ccy = new String(wrappee.Ccy).trim();
+            tmInForce = new String(wrappee.TmInForce).trim();
+            expireDt = new String(wrappee.ExpireDt).trim();
+            txnTm = new String(wrappee.TxnTm).trim();
+            defPayTyp = new String(wrappee.DefPayTyp).trim();
+            getBizRejRsn = Byte.toString(wrappee.BizRejRsn);
+            txt = new String(wrappee.Txt).trim();
+            expireTm = new String(wrappee.ExpireTm).trim();
         }
 
         public long getBitMask() {
@@ -1113,37 +1154,37 @@ public enum BossaAPI {
         @NotNull
         public String getOrdID() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getOrdID");
-            return new String(wrappee.OrdID).trim();
+            return ordID;
         }
 
         @NotNull
         public String getOrdID2() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getOrdID2");
-            return new String(wrappee.OrdID2).trim();
+            return ordID2;
         }
 
         @NotNull
         public String getStatReqID() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getStatReqID");
-            return new String(wrappee.StatReqID).trim();
+            return statReqID;
         }
 
         @NotNull
         public String getExecID() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getExecID");
-            return new String(wrappee.ExecID).trim();
+            return execID;
         }
 
         @NotNull
         public String getExecTyp() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getExecTyp");
-            return Byte.toString(wrappee.ExecTyp).trim();
+            return execTyp;
         }
 
         @NotNull
         public String getStat() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getStat");
-            return Byte.toString(wrappee.Stat).trim();
+            return stat;
         }
 
         public int getRejRsn() {
@@ -1154,19 +1195,19 @@ public enum BossaAPI {
         @NotNull
         public String getAcct() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getAcct");
-            return new String(wrappee.Acct).trim();
+            return acct;
         }
 
         @NotNull
         public NolTickerAPI getTicker() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getTicker");
-            return new NolTickerAPI(wrappee.ticker);
+            return ticker;
         }
 
         @NotNull
         public String getSide() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getSide");
-            return new String(wrappee.Side).trim();
+            return side;
         }
 
         public int getQty() {
@@ -1177,7 +1218,7 @@ public enum BossaAPI {
         @NotNull
         public String getOrdTyp() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getOrdTyp");
-            return new String(wrappee.OrdTyp).trim();
+            return ordTyp;
         }
 
         public float getPx() {
@@ -1193,19 +1234,19 @@ public enum BossaAPI {
         @NotNull
         public String getCcy() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getCcy");
-            return new String(wrappee.Ccy).trim();
+            return ccy;
         }
 
         @NotNull
         public String getTmInForce() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getTmInForce");
-            return new String(wrappee.TmInForce).trim();
+            return tmInForce;
         }
 
         @NotNull
         public String getExpireDt() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getExpireDt");
-            return new String(wrappee.ExpireDt).trim();
+            return expireDt;
         }
 
         public float getLastPx() {
@@ -1232,7 +1273,7 @@ public enum BossaAPI {
         @NotNull
         public String getTxnTm() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getTxnTm");
-            return new String(wrappee.TxnTm).trim();
+            return txnTm;
         }
 
         public float getComm() {
@@ -1265,36 +1306,49 @@ public enum BossaAPI {
         @NotNull
         public String getDefPayTyp() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getDefPayTyp");
-            return new String(wrappee.DefPayTyp).trim();
+            return defPayTyp;
         }
 
         @NotNull
         public String getBizRejRsn() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getBizRejRsn");
-            return Byte.toString(wrappee.BizRejRsn);
+            return getBizRejRsn;
         }
 
 
         @NotNull
         public String getTxt() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getTxt");
-            return new String(wrappee.Txt).trim();
+            return txt;
         }
 
 
         @NotNull
         public String getExpireTm() {
             logger.exiting(NolOrderReportAPI.class.getName(), "getExpireTm");
-            return new String(wrappee.ExpireTm).trim();
+            return expireTm;
         }
 
     }
 
     public static final class NolOrderRequestAPI extends BossaAPIClassWrapper<NolOrderRequestAPI, BossaAPIInterface.NolOrderRequest> {
-
+        String origID, origID2, acct, side, ordTyp, tmInForce, expireDt, defPayTyp, sessionDt, expireTm;
+        NolTickerAPI ticker;
         private NolOrderRequestAPI(BossaAPIInterface.NolOrderRequest nolOrderRequest) {
             logger.exiting(NolOrderRequestAPI.class.getName(), "Constructor");
             this.wrappee = nolOrderRequest;
+
+            origID = new String(wrappee.OrigID).trim();
+            origID2 = new String(wrappee.OrdID2).trim();
+            acct = new String(wrappee.Acct).trim();
+            side = new String(wrappee.Side).trim();
+            ordTyp = new String(wrappee.OrdTyp).trim();
+            tmInForce = new String(wrappee.TmInForce).trim();
+            expireDt = new String(wrappee.ExpireDt).trim();
+            defPayTyp = new String(wrappee.DefPayTyp).trim();
+            sessionDt = new String(wrappee.SessionDt).trim();
+            expireTm = new String(wrappee.ExpireTm).trim();
+            ticker = new NolTickerAPI(wrappee.ticker);
         }
 
         public int getBitMask() {
@@ -1305,7 +1359,7 @@ public enum BossaAPI {
         @NotNull
         public String getOrigID() {
             logger.exiting(NolOrderRequestAPI.class.getName(), "getOrigID");
-            return new String(wrappee.OrigID).trim();
+            return origID;
         }
 
         @NotNull
@@ -1317,13 +1371,13 @@ public enum BossaAPI {
         @NotNull
         public String getOrdID2() {
             logger.exiting(NolOrderRequestAPI.class.getName(), "getOrdID2");
-            return new String(wrappee.OrdID2).trim();
+            return origID2;
         }
 
         @NotNull
         public String getAcct() {
             logger.exiting(NolOrderRequestAPI.class.getName(), "getAcct");
-            return new String(wrappee.Acct).trim();
+            return acct;
         }
 
         public int getMinQty() {
@@ -1339,13 +1393,13 @@ public enum BossaAPI {
         @NotNull
         public NolTickerAPI getTicker() {
             logger.exiting(NolOrderRequestAPI.class.getName(), "getTicker");
-            return new NolTickerAPI(wrappee.ticker);
+            return ticker;
         }
 
         @NotNull
         public String getSide() {
             logger.exiting(NolOrderRequestAPI.class.getName(), "getSide");
-            return new String(wrappee.Side).trim();
+            return side;
         }
 
         public int getQty() {
@@ -1356,7 +1410,7 @@ public enum BossaAPI {
         @NotNull
         public String getOrdTyp() {
             logger.exiting(NolOrderRequestAPI.class.getName(), "getOrdTyp");
-            return new String(wrappee.OrdTyp).trim();
+            return ordTyp;
         }
 
         public float getPx() {
@@ -1378,13 +1432,13 @@ public enum BossaAPI {
         @NotNull
         public String getTmInForce() {
             logger.exiting(NolOrderRequestAPI.class.getName(), "getTmInForce");
-            return new String(wrappee.TmInForce).trim();
+            return tmInForce;
         }
 
         @NotNull
         public String getExpireDt() {
             logger.exiting(NolOrderRequestAPI.class.getName(), "getExpireDt");
-            return new String(wrappee.ExpireDt).trim();
+            return expireDt;
         }
 
         public float getTrgrPx() {
@@ -1395,19 +1449,19 @@ public enum BossaAPI {
         @NotNull
         public String getDefPayTyp() {
             logger.exiting(NolOrderRequestAPI.class.getName(), "getDefPayTyp");
-            return new String(wrappee.DefPayTyp).trim();
+            return defPayTyp;
         }
 
         @NotNull
         public String getSessionDt() {
             logger.exiting(NolOrderRequestAPI.class.getName(), "getSessionDt");
-            return new String(wrappee.SessionDt).trim();
+            return sessionDt;
         }
 
         @NotNull
         public String getExpireTm() {
             logger.exiting(NolOrderRequestAPI.class.getName(), "getExpireTm");
-            return new String(wrappee.ExpireTm).trim();
+            return expireTm;
         }
 
     }
