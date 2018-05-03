@@ -392,6 +392,9 @@ public enum BossaAPI {
         @Contract(pure = true)
         public MarketSide getSide() {
             logger.exiting(NolBidAskTblAPI.class.getName(), "getSide");
+            if (wrappee.side > 2 || wrappee.side < 1) {
+                throw new IllegalStateException("not initialized!");
+            }
             return MarketSide.values[wrappee.side - 1];
         }
 
@@ -428,7 +431,15 @@ public enum BossaAPI {
             return wrappee.amount;
         }
 
-
+        @Override
+        public String toString() {
+            return "NolBidAskTblAPI \n" +
+                    "Side: " + getSide() + "\n" +
+                    "Depth: " + getDepth() + "\n" +
+                    "Price: " + getPrice() + "\n" +
+                    "Size: " + getSize() + "\n" +
+                    "Count of offers: " + getAmount() + "/n";
+        }
     }
 
     /**
@@ -492,6 +503,15 @@ public enum BossaAPI {
             return new String(wrappee.Group).trim();
         }
 
+        @Override
+        public String toString() {
+            return "NolTickerAPI \n" +
+                    "ISIN: " + getIsin() + "\n" +
+                    "\nName: " + getName() +
+                    "\nMarket code: " + getMarketCode() +
+                    "\nCFI: " + getCFI() +
+                    "\nGroup: " + getGroup() + "\n";
+        }
     }
 
     /**
@@ -575,9 +595,13 @@ public enum BossaAPI {
      */
     public static final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAPI, BossaAPIInterface.NolRecentInfo> {
 
+        NolBidAskStrAPI offers;
+        NolTickerAPI ticker;
         private NolRecentInfoAPI(BossaAPIInterface.NolRecentInfo nolRecentInfo) {
             logger.entering(NolRecentInfoAPI.class.getName(), "Constructor");
             this.wrappee = nolRecentInfo;
+            offers = new NolBidAskStrAPI(wrappee.offers);
+            ticker = new NolTickerAPI(wrappee.ticker);
             if (this.getError() < 0) {
                 String message = GetResultCodeDesc(this.getError());
                 IllegalStateException e = new IllegalStateException(message);
@@ -594,15 +618,15 @@ public enum BossaAPI {
          * @return bit mask
          */
         @Contract(pure = true)
-        public int getBitMask() {
+        public String getBitMask() {
             logger.exiting(NolRecentInfoAPI.class.getName(), "getBitMask", wrappee.BitMask);
-            return wrappee.BitMask;
+            return Integer.toBinaryString(wrappee.BitMask);
         }
 
         @NotNull
         public NolTickerAPI getTicker() {
             logger.exiting(NolTickerAPI.class.getName(), "getTicker");
-            return new NolTickerAPI(wrappee.ticker);
+            return ticker;
         }
 
         /**
@@ -837,7 +861,7 @@ public enum BossaAPI {
          */
         public List<NolBidAskTblAPI> getOffers() {
             logger.exiting(NolTickerAPI.class.getName(), "getOffers", wrappee.offers);
-            return new NolBidAskStrAPI(wrappee.offers).getBidask_table();
+            return offers.getBidask_table();
         }
 
         /**
@@ -849,6 +873,34 @@ public enum BossaAPI {
             return wrappee.Error;
         }
 
+        @Override
+        public String toString() {
+            return "NolRecentInfoAPI" +
+                    "\nBit mask: " + getBitMask() +
+                    "\nTicker: " + getTicker() +
+                    "\nValue of last transaction: " + getValoLT() +
+                    "\nVolume of last transaction: " + getVoLT() +
+                    "\nTime of last transaction: " + getToLT() +
+                    "\nOpen: " + getOpen() +
+                    "\nHigh: " + getHigh() +
+                    "\nLow: " + getLow() +
+                    "\nClose: " + getClose() +
+                    "\nBid: " + getBid() +
+                    "\nAsk: " + getAsk() +
+                    "\nBid size: " + getBidSize() +
+                    "\nAsk size: " + getAskSize() +
+                    "\nTotal volume: " + getTotalVolume() +
+                    "\nTotal value: " + getTotalValue() +
+                    "\nOpen interest: " + getOpenInterest() +
+                    "\nPhase: " + getPhase() +
+                    "\nStatus: " + getStatus() +
+                    "\nBid amount: " + getBidAmount() +
+                    "\nAsk amount: " + getAskAmount() +
+                    "\nOpen value: " + getOpenValue() +
+                    "\nClose value: " + getCloseValue() +
+                    "\nReference price: " + getReferPrice() +
+                    "\nOffers: " + getOffers();
+        }
     }
 
     /**
@@ -876,9 +928,11 @@ public enum BossaAPI {
      * Contains information about position in portfolio.
      */
     public static final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInterface.NolPos> {
+        NolTickerAPI ticker;
 
         private NolPosAPI(BossaAPIInterface.NolPos nolPos) {
             this.wrappee = nolPos;
+            this.ticker = new NolTickerAPI(wrappee.ticker);
         }
 
         /**
@@ -889,7 +943,7 @@ public enum BossaAPI {
         @NotNull
         public NolTickerAPI getTicker() {
             logger.exiting(NolPosAPI.class.getName(), "getTicker");
-            return new NolTickerAPI(wrappee.ticker);
+            return ticker;
         }
 
         /**
@@ -912,6 +966,13 @@ public enum BossaAPI {
             return wrappee.acc120;
         }
 
+        @Override
+        public String toString() {
+            return "NolPosAPI " +
+                    "\nTicker: " + getTicker() +
+                    "\nAcc110 shares free: " + getAcc110() +
+                    "\nAcc120 shares blocked: " + getAcc120();
+        }
     }
 
     /**
@@ -992,6 +1053,15 @@ public enum BossaAPI {
             return positionList;
         }
 
+        @Override
+        public String toString() {
+            return "NolStatementAPI \n" +
+                    "\nName: " + getName() +
+                    "\nIKE: " + getIke() +
+                    "\nType: " + getType() +
+                    "\nFunds: " + getFundMap() +
+                    "\nPositions: " + getPositions();
+        }
     }
 
     /**

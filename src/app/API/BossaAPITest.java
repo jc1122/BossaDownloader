@@ -85,9 +85,6 @@ class BossaAPITest {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName() == "Quotes") {
                     counter[0]++;
-                    BossaAPI.NolRecentInfoAPI quote = BossaAPI.NolRecentInfoAPI.class.cast(evt.getNewValue());
-//                    System.out.println(quote.getTicker().getIsin());
-//                    System.out.println(Integer.toBinaryString(quote.getBitMask()));
                     synchronized (this) {
                         if (counter[0] == 2 * numberOfTickers) {
                             this.notifyAll();
@@ -202,7 +199,7 @@ class BossaAPITest {
     void getTickersAll() {
         List<BossaAPI.NolTickerAPI> tickers = prepareAllTickers(TypeOfList.ALL);
     }
-    
+
     @Test
     @DisplayName("get api version")
     void get_Version() {
