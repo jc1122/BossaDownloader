@@ -438,7 +438,7 @@ public enum BossaAPI {
                     "Depth: " + getDepth() + "\n" +
                     "Price: " + getPrice() + "\n" +
                     "Size: " + getSize() + "\n" +
-                    "Count of offers: " + getAmount() + "/n";
+                    "Count of offers: " + getAmount() + "\n";
         }
     }
 
@@ -604,6 +604,8 @@ public enum BossaAPI {
         NolBidAskStrAPI offers;
         NolTickerAPI ticker;
         String bitMask, toLT, phase, status;
+        Map<String, Boolean> fieldInMessage;
+
         private NolRecentInfoAPI(BossaAPIInterface.NolRecentInfo nolRecentInfo) {
             logger.entering(NolRecentInfoAPI.class.getName(), "Constructor");
             this.wrappee = nolRecentInfo;
@@ -613,6 +615,13 @@ public enum BossaAPI {
             toLT = new String(wrappee.ToLT).trim();
             phase = new String(wrappee.Phase).trim();
             status = new String(wrappee.Status).trim();
+            fieldInMessage = new HashMap<>();
+
+            //fill with zeros to get 32 bits
+            bitMask = new String(new char[32 - bitMask.length()]).replace("\0", "0").concat(bitMask);
+            //reverse to get youngest bits at start
+            bitMask = new StringBuilder(bitMask).reverse().toString();
+
 
             if (this.getError() < 0) {
                 String message = GetResultCodeDesc(this.getError());
@@ -627,12 +636,36 @@ public enum BossaAPI {
          * {@code 1} for filled filled {@code 0} for unfilled.
          * Unfilled fields are set to 0.
          *
-         * @return bit mask
+         * @return map of valid properties in this object
          */
         @Contract(pure = true)
-        public String getBitMask() {
+        public Map<String, Boolean> getBitMask() {
             logger.exiting(NolRecentInfoAPI.class.getName(), "getBitMask", wrappee.BitMask);
-            return bitMask;
+            char[] arrayBitMask = bitMask.toCharArray();
+            fieldInMessage.put("ValoLT", arrayBitMask[0] == '1');
+            fieldInMessage.put("VoLT", arrayBitMask[1] == '1');
+            fieldInMessage.put("ToLT", arrayBitMask[2] == '1');
+            fieldInMessage.put("Open", arrayBitMask[3] == '1');
+            fieldInMessage.put("High", arrayBitMask[4] == '1');
+            fieldInMessage.put("Low", arrayBitMask[5] == '1');
+            fieldInMessage.put("Close", arrayBitMask[6] == '1');
+            fieldInMessage.put("Bid", arrayBitMask[7] == '1');
+            fieldInMessage.put("Ask", arrayBitMask[8] == '1');
+            fieldInMessage.put("BidSize", arrayBitMask[9] == '1');
+            fieldInMessage.put("AskSize", arrayBitMask[10] == '1');
+            fieldInMessage.put("TotalVolume", arrayBitMask[11] == '1');
+            fieldInMessage.put("TotalValue", arrayBitMask[12] == '1');
+            fieldInMessage.put("OpenInterest", arrayBitMask[13] == '1');
+            fieldInMessage.put("Phase", arrayBitMask[14] == '1');
+            fieldInMessage.put("Status", arrayBitMask[15] == '1');
+            fieldInMessage.put("BidAmount", arrayBitMask[16] == '1');
+            fieldInMessage.put("AskAmount", arrayBitMask[17] == '1');
+            fieldInMessage.put("OpenValue", arrayBitMask[18] == '1');
+            fieldInMessage.put("CloseValue", arrayBitMask[19] == '1');
+            fieldInMessage.put("ReferPrice", arrayBitMask[20] == '1');
+            fieldInMessage.put("Offers", arrayBitMask[21] == '1');
+            fieldInMessage.put("Error", arrayBitMask[22] == '1');
+            return fieldInMessage;
         }
 
         @NotNull
@@ -817,7 +850,6 @@ public enum BossaAPI {
          *
          * @return amount of offers
          */
-        @Deprecated
         public int getBidAmount() {
             logger.exiting(NolTickerAPI.class.getName(), "getBidAmount", wrappee.BidAmount);
             return wrappee.BidAmount;
@@ -829,7 +861,6 @@ public enum BossaAPI {
          *
          * @return amount of offers
          */
-        @Deprecated
         public int getAskAmount() {
             logger.exiting(NolTickerAPI.class.getName(), "getAskAmount", wrappee.AskAmount);
             return wrappee.AskAmount;

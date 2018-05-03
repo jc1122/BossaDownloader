@@ -46,7 +46,7 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
         updatePanel(0);
     }
 
-    private void updatePanel(int index) {
+    private synchronized void updatePanel(int index) {
         BossaAPI.NolStatementAPI currentAccount = accountList.get(index);
 
         positionsPanel.removeAll();
@@ -66,10 +66,8 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
                 String isin = position.getTicker().getIsin();
                 positionIsinsPrices.put(isin, -1.);
                 positionIsinsLabels.put(isin, new JLabel());
-                positionIsinsCount.put(isin, 0);
+                positionIsinsCount.put(isin, -10);
             }
-
-            model.addToFilter(positionIsinsPrices.keySet());
 
             for (BossaAPI.NolPosAPI position : positions) {
                 String isin = position.getTicker().getIsin();
@@ -77,8 +75,10 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
                 positionsPanel.add(new JLabel(Integer.toString(position.getAcc110())));
                 positionsPanel.add(new JLabel(Integer.toString(position.getAcc120())));
                 positionsPanel.add(positionIsinsLabels.get(isin));
-                positionIsinsCount.replace(isin,position.getAcc110()+position.getAcc120());
+                positionIsinsCount.replace(isin, position.getAcc110() + position.getAcc120());
             }
+            //add to filter forces callback, it must be called last, otherwise there may be race condition with code above
+            model.addToFilter(positionIsinsPrices.keySet());
         }
     }
 
@@ -104,11 +104,13 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
             case "Quotes":
                 BossaAPI.NolRecentInfoAPI quote = (BossaAPI.NolRecentInfoAPI) evt.getNewValue();
                 String isin = quote.getTicker().getIsin();
-                this.positionIsinsPrices.replace(isin, quote.getClose()*this.positionIsinsCount.get(isin));
-                updateValues(isin);
+                if (quote.getBitMask().get("Close")) {
+                    this.positionIsinsPrices.replace(isin, quote.getClose() * this.positionIsinsCount.get(isin));
+                    //updatePanel(this.selectedAccount); //without this
+                    updateValues(isin);
+                }
                 break;
         }
-
     }
 
     public JPanel getPane() {
