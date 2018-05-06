@@ -4,7 +4,6 @@ import app.API.BossaAPI;
 import app.gui.Model;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -23,11 +22,12 @@ class AccountPane implements PropertyChangeListener {
         this.model = model;
 
         accountPanel = new JPanel();
-        accountPanel.setBackground(new Color(100, 100, 100));
+        //accountPanel.setBackground(new Color(100, 100, 100));
         accountPanel.setLayout(new BoxLayout(accountPanel, BoxLayout.LINE_AXIS));
 
         accountNameComboBox = new JComboBox<>();
         accountLabel = new JLabel("Account: ");
+
         accountPanel.add(accountLabel);
         accountPanel.add(accountNameComboBox);
 
@@ -42,6 +42,7 @@ class AccountPane implements PropertyChangeListener {
         addAccountsToComboBox(accountList);
 
         accountNameComboBox.setSelectedIndex(0);
+        accountNameComboBox.setMaximumSize(accountNameComboBox.getPreferredSize());
     }
 
     @Override
@@ -59,14 +60,13 @@ class AccountPane implements PropertyChangeListener {
             for (ActionListener listener : listeners) {
                 accountNameComboBox.removeActionListener(listener);
             }
-
             accountNameComboBox.removeAllItems();
             addAccountsToComboBox(accountList);
 
             for (ActionListener listener : listeners) {
                 accountNameComboBox.addActionListener(listener);
             }
-
+            accountNameComboBox.setMaximumSize(accountNameComboBox.getPreferredSize());
             accountNameComboBox.setSelectedIndex(index);
         }
     }

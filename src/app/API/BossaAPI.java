@@ -200,9 +200,6 @@ public enum BossaAPI {
     public static String addToFilter(Set<String> isins) throws IllegalStateException {
         Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "addToFilter", params);
-//        if(tickersInFilter.size() + isins.size() > 100) {
-//            throw new IllegalStateException("Trying to exceed 100 tickers in filter! Use smaller amount of tickers.");
-//        }
         clearFilter();
         tickersInFilter.addAll(isins);
 
@@ -356,6 +353,10 @@ public enum BossaAPI {
 
     public static Map<String, PropertyAPI> getPropertyMap() {
         return propertyMap;
+    }
+
+    public static Set<String> getTickersInFilter() {
+        return new HashSet<>(tickersInFilter); //this should be immutable
     }
 
     //extracted to help composition

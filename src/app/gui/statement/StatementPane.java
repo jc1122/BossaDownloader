@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ class StatementPane implements PropertyChangeListener, ActionListener {
     private JLabel ikeStatusLabel;
     private JLabel accountTypeLabel;
     private JLabel accountTypeStatusLabel;
-    private JLabel accountLabel;
+    //private JLabel accountLabel;
     private GridLayout statementPanelLayout;
     private Map<String, JLabel> statementLabels;
     private Map<String, JLabel> statementValues;
@@ -48,7 +49,7 @@ class StatementPane implements PropertyChangeListener, ActionListener {
         statementPanelLayout = new GridLayout(0, 2);
         statementPanelLayout.setHgap(20);
         statementPanel.setLayout(statementPanelLayout);
-        statementPanel.setBackground(new Color(100, 200, 200));
+        //statementPanel.setBackground(new Color(100, 200, 200));
 
         statementPanel.add(ikeLabel);
         statementPanel.add(ikeStatusLabel);
@@ -56,24 +57,34 @@ class StatementPane implements PropertyChangeListener, ActionListener {
         statementPanel.add(accountTypeLabel);
         statementPanel.add(accountTypeStatusLabel);
 
-        statementLabels = new HashMap<>();
+        statementLabels = new LinkedHashMap<>();
+        statementLabels.put("CashAccount", new JLabel(""));
+
+        statementLabels.put("CashRecivables", new JLabel("Total cash:"));
+        statementLabels.put("MaxBuy", new JLabel("Max buying power:"));
+        statementLabels.put("MaxOtpBuy", new JLabel("Max OTP buy:"));
+        statementLabels.put("LiabilitiesLimitMax", new JLabel("Amount to reach buying limit:"));
+        statementLabels.put("RecivablesBlocked", new JLabel("Receivables blocked for orders:"));
+        statementLabels.put("Recivables", new JLabel("Recivables:"));
+        statementLabels.put("Liabilities", new JLabel("Liabilities:"));
+
+        statementLabels.put("FuturesAccount", new JLabel(""));
+
         statementLabels.put("Deposit", new JLabel("Deposit:"));
-        statementLabels.put("CashBlocked", new JLabel("Cash blocked:"));
         statementLabels.put("BlockedDeposit", new JLabel("Blocked deposit:"));
         statementLabels.put("FreeDeposit", new JLabel("Free deposit:"));
         statementLabels.put("SecSafetiesUsed", new JLabel("SecSafetiesUsed change to meaningful label:"));
-        statementLabels.put("PortfolioValue", new JLabel("Portfolio value: "));
-        statementLabels.put("SecValueSum", new JLabel("SevValSum:"));
         statementLabels.put("SecSafeties", new JLabel("SecSafeties:"));
         statementLabels.put("OptionBonus", new JLabel("OptionBonus:"));
-        statementLabels.put("MaxBuy", new JLabel("MaxBuy:"));
-        statementLabels.put("LiabilitiesLimitMax", new JLabel("LiabilitiesLimitMax:"));
-        statementLabels.put("Recivables", new JLabel("Recivables:"));
-        statementLabels.put("Liabilities", new JLabel("Liabilities:"));
-        statementLabels.put("MaxOtpBuy", new JLabel("MaxOtpBuy:"));
-        statementLabels.put("RecivablesBlocked", new JLabel("RecivablesBlocked:"));
-        statementLabels.put("CashRecivables", new JLabel("CashRecivables:"));
-        statementLabels.put("Cash", new JLabel("Cash:"));
+
+        statementLabels.put("AllAccounts", new JLabel(""));
+
+        statementLabels.put("Cash", new JLabel("Cash available for orders:"));
+        statementLabels.put("CashBlocked", new JLabel("Cash blocked for pending orders:"));
+        statementLabels.put("SecValueSum", new JLabel("Securities value::"));
+        statementLabels.put("PortfolioValue", new JLabel("Total portfolio value: "));
+
+        statementLabels.put("Separator", new JLabel(""));
 
         statementValues = new HashMap<>();
         for (String key : statementLabels.keySet()) {
@@ -102,6 +113,8 @@ class StatementPane implements PropertyChangeListener, ActionListener {
             statementLabels.get(fund.getKey()).setEnabled(true);
             statementValues.get(fund.getKey()).setText(fund.getValue().toString());
         }
+        int preferredHeight = statementPanel.getPreferredSize().height;
+        statementPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, preferredHeight));
     }
 
     @Override

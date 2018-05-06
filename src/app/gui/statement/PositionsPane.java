@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//TODO check behavior in concurrency
+//TODO check behavior in concurrency; remember to remove tickers from filter on close!
 class PositionsPane implements PropertyChangeListener, ActionListener {
     private JPanel positionsPanel;
     private GridLayout positionsPanelLayout;
@@ -24,7 +24,10 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
     private Map<String, JLabel> positionIsinsLabels;
     private Map<String, Integer> positionIsinsCount;
 
-    PositionsPane(Model model) {
+    private StatementDialog dialog;
+
+    PositionsPane(Model model, StatementDialog dialog) {
+        this.dialog = dialog;
         this.model = model;
         try {
             this.model.addPropertyListener(this);
@@ -33,7 +36,7 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
         }
 
         positionsPanel = new JPanel();
-        positionsPanel.setBackground(new Color(133, 133, 233));
+        //positionsPanel.setBackground(new Color(133, 133, 233));
         positionsPanelLayout = new GridLayout(0, 4);
         positionsPanel.setLayout(positionsPanelLayout);
 
@@ -44,6 +47,7 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
         this.accountList = (List<BossaAPI.NolStatementAPI>) model.getProperty("Accounts"); //TODO will cause error when api is in investor offline status
         //TODO this may be buggy
         updatePanel(0);
+
     }
 
     private synchronized void updatePanel(int index) {
@@ -80,6 +84,9 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
             //add to filter forces callback, it must be called last, otherwise there may be race condition with code above
             model.addToFilter(positionIsinsPrices.keySet());
         }
+        int preferredHeight = positionsPanel.getPreferredSize().height;
+        positionsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, preferredHeight));
+        dialog.resize();
     }
 
     @Override
@@ -106,7 +113,6 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
                 String isin = quote.getTicker().getIsin();
                 if (quote.getBitMask().get("Close")) {
                     this.positionIsinsPrices.replace(isin, quote.getClose() * this.positionIsinsCount.get(isin));
-                    //updatePanel(this.selectedAccount); //without this
                     updateValues(isin);
                 }
                 break;
