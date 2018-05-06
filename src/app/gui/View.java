@@ -3,6 +3,7 @@ package app.gui;
 import app.API.BossaAPI;
 import app.gui.menu.MainMenuBarFactory;
 import app.gui.statement.StatementDialog;
+import app.gui.tickers.SelectTickersDialog;
 
 import javax.swing.*;
 import java.util.logging.Logger;
@@ -47,7 +48,10 @@ public class View {
         JMenuItem statement = frame.getJMenuBar().getMenu(1).getItem(0); // Account/statement
         statement.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.showStatement()));
 
-        JMenuItem version = frame.getJMenuBar().getMenu(2).getItem(0); // Help/version
+        JMenuItem select = frame.getJMenuBar().getMenu(2).getItem(0); // Tickers/Select...
+        select.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.selectTickers()));
+
+        JMenuItem version = frame.getJMenuBar().getMenu(3).getItem(0); // Help/version
         version.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.showVersion()));
     }
 
@@ -59,6 +63,9 @@ public class View {
         new StatementDialog(model);
     }
 
+    void showSelectTickersDialog() {
+        new SelectTickersDialog();
+    }
 
     void disableStartApiMenuItem() {
         frame.getJMenuBar().getMenu(0).getItem(0).setEnabled(false);

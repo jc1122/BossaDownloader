@@ -12,7 +12,7 @@ public class Controller {
         SwingUtilities.invokeLater(() -> {
             view.createGUI();
             view.disableStopApiMenuItem();
-            //view.disableStatementAccountsMenuItem();
+            view.disableStatementAccountsMenuItem();
         });
     }
 
@@ -36,7 +36,10 @@ public class Controller {
     void showStatement() {
         view.showStatementDialog();
     }
-    //TODO add status bar and logging of init functions
+
+    void selectTickers() {
+        view.showSelectTickersDialog();
+    }
 
 
 }
