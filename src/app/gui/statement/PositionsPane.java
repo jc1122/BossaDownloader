@@ -81,6 +81,7 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
                 positionsPanel.add(positionIsinsLabels.get(isin));
                 positionIsinsCount.replace(isin, position.getAcc110() + position.getAcc120());
             }
+            //TODO check if ticker set is already in filter - implement this in model
             //add to filter forces callback, it must be called last, otherwise there may be race condition with code above
             model.addToFilter(positionIsinsPrices.keySet());
         }

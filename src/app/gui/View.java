@@ -64,7 +64,7 @@ public class View {
     }
 
     void showSelectTickersDialog() {
-        new SelectTickersDialog();
+        new SelectTickersDialog(model);
     }
 
     void disableStartApiMenuItem() {

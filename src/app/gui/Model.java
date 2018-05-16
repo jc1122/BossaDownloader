@@ -1,9 +1,11 @@
 package app.gui;
 
 import app.API.BossaAPI;
+import app.API.TypeOfList;
 
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,5 +43,9 @@ public class Model {
 
     public Object getProperty(String property) {
         return propertyMap.get(property).getProperty();
+    }
+
+    public List<BossaAPI.NolTickerAPI> getTickers(TypeOfList typeOfList, BossaAPI.NolTickerAPI in_ticker) {
+        return BossaAPI.getTickers(typeOfList, in_ticker);
     }
 }
