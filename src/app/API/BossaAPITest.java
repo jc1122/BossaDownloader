@@ -95,10 +95,14 @@ class BossaAPITest {
         };
         BossaAPI.Quotes.getInstance().addPropertyChangeListener(listener);
         synchronized (listener) {
-            listener.wait(2000);
+            listener.wait(6000);
         }
         assertTrue(counter[0] > 2 * numberOfTickers - 5,
-                "callback count too small, increase timeout or check code!");
+                "callback count is "
+                        + Integer.toString(counter[0])
+                        + " should be at least"
+                        + Integer.toString(2 * numberOfTickers - 5)
+                        + ", increase timeout or check code!");
     }
 
     @Test
@@ -180,7 +184,8 @@ class BossaAPITest {
     private List<BossaAPI.NolTickerAPI> prepareAllTickers(TypeOfList typeOfList) {
         List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
         assumeFalse(tickers.isEmpty());
-        List<BossaAPI.NolTickerAPI> singleTicker = BossaAPI.getTickers(TypeOfList.SYMBOL, tickers.get(0));
+        //List<BossaAPI.NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, tickers.get(0));
+        List<BossaAPI.NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, tickers.get(0));
         System.out.println("number of tickers: " + tickers.size());
         System.out.println("Symbol: " + tickers.get(0).getName());
         System.out.println("number of filtered tickers: " + singleTicker.size());
@@ -191,6 +196,7 @@ class BossaAPITest {
     @DisplayName("get list of SYMBOL tickers with single ticker symbol")
     void getTickersSymbol() {
         List<BossaAPI.NolTickerAPI> tickers = prepareAllTickers(TypeOfList.SYMBOL);
+        System.out.println(tickers);
         assertTrue(tickers.size() == 1);
     }
 
