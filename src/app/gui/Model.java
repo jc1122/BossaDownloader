@@ -4,21 +4,33 @@ import app.API.BossaAPI;
 import app.API.TypeOfList;
 
 import java.beans.PropertyChangeListener;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Model {
     private Map<String, BossaAPI.PropertyAPI> propertyMap = BossaAPI.getPropertyMap();
-
-    private Set<String> tickersInFilter = new HashSet<>();
 
 
     public void addToFilter(Set<String> isins) {
         BossaAPI.addToFilter(isins);
     }
 
+    public void addTickersToFilter(Set<BossaAPI.NolTickerAPI> tickers) {
+        BossaAPI.addTickersToFilter(tickers);
+    }
+
+    public Set<String> getTickerISINSInFilter() {
+        return BossaAPI.getTickerISINSInFilter();
+    }
+
+    public Set<BossaAPI.NolTickerAPI> getTickersInFilter() {
+        return BossaAPI.getTickersInFilter();
+    }
+    public void clearFilter() {
+        BossaAPI.clearFilter();
+    }
     public void removeFromFilter(Set<String> isins) {
         BossaAPI.removeFromFilter(isins);
     }

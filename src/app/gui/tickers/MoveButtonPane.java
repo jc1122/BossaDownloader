@@ -2,8 +2,6 @@ package app.gui.tickers;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MoveButtonPane {
     JPanel buttonPanel = new JPanel();
@@ -18,35 +16,27 @@ public class MoveButtonPane {
         JButton leftButton = new JButton("<");
         rightButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         leftButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
         buttonPanel.add(rightButton);
         buttonPanel.add(Box.createRigidArea(new Dimension((int) (leftButton.getPreferredSize().getWidth() * 1.61),
                 (int) leftButton.getPreferredSize().getHeight())));
         buttonPanel.add(leftButton);
         //setBorder(buttonPanel);
-        rightButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-
-                TickerTableModel rightModel = (TickerTableModel) right.getModel();
-                TickerTableModel leftModel = (TickerTableModel) left.getModel();
-                int row = left.convertRowIndexToModel(left.getSelectedRow());
-                rightModel.addRow(leftModel.removeRow(row));
-
-            }
-        });
-        leftButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                TickerTableModel rightModel = (TickerTableModel) right.getModel();
-                TickerTableModel leftModel = (TickerTableModel) left.getModel();
-                int row = right.convertRowIndexToModel(right.getSelectedRow());
-                leftModel.addRow(rightModel.removeRow(row));
-
-            }
-        });
+        rightButton.addActionListener(e -> moveRow(left, right));
+        leftButton.addActionListener(e -> moveRow(right, left));
     }
 
+    private void moveRow(JTable from, JTable to) {
+        if(from.getSelectedRow() == -1) {
+            return;
+        }
+        //TODO correct this, this cast is not safe in general
+        TickerTableModel toModel = (TickerTableModel) to.getModel();
+        TickerTableModel fromModel = (TickerTableModel) from.getModel();
+        int row = from.convertRowIndexToModel(from.getSelectedRow());
+        toModel.addRow(fromModel.removeRow(row));
+    }
     public JPanel getPanel() {
         return buttonPanel;
     }

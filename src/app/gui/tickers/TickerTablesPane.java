@@ -33,22 +33,18 @@ public class TickerTablesPane {
         rightSorter.setRowFilter(rf);
     }
 
-    TickerTablesPane(JTextField filterText, List<BossaAPI.NolTickerAPI> tickers) {
-        List<BossaAPI.NolTickerAPI> tickersToFilter = new ArrayList<>();
-
+    TickerTablesPane(JTextField filterText, List<BossaAPI.NolTickerAPI> tickers, List<BossaAPI.NolTickerAPI> tickersInFilter) {
         pane = new JPanel();
         pane.setLayout(new BoxLayout(pane, BoxLayout.LINE_AXIS));
-
 
         left = new TickerTable(tickers, "Tickers to choose from:");
         setTableSorter(left.getTable());
 
-        right = new TickerTable(tickersToFilter, "Tickers in filter:");
+        right = new TickerTable(tickersInFilter, "Tickers in filter:");
         setTableSorter(right.getTable());
-        JTable rightTable = right.getTable();
 
         pane.add(left.getPane());
-        pane.add(new MoveButtonPane(left.getTable(), rightTable).getPanel());
+        pane.add(new MoveButtonPane(left.getTable(), right.getTable()).getPanel());
         pane.add(right.getPane());
 
         filterText.getDocument().addDocumentListener(
@@ -72,4 +68,7 @@ public class TickerTablesPane {
         return pane;
     }
 
+    public List<BossaAPI.NolTickerAPI> getTickersInFilter() {
+        return right.getModel().getData();
+    }
 }

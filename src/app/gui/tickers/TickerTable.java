@@ -12,7 +12,6 @@ public class TickerTable {
 
     private JScrollPane createTable(List<BossaAPI.NolTickerAPI> tickers) {
 
-
         TickerTableModel model = new TickerTableModel(tickers);
 
         table = new JTable(model);

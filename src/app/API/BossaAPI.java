@@ -9,7 +9,9 @@ import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
+//TODO check if everything is documented well
 /**
  * This class is a wrapper for <a href="https://github.com/java-native-access/jna">JNA</a> mapping
  * of <a href="http://bossa.pl/notowania/narzedzia/bossapi/">BossaAPI</a> interface.
@@ -21,7 +23,8 @@ public enum BossaAPI {
     ;
     static final BossaAPIInterface INSTANCE;
     private static final Map<String, PropertyAPI> propertyMap = new HashMap<>();
-    private static final Set<String> tickersInFilter = new HashSet<>();
+    private static final Set<String> tickerISINSInFilter = new HashSet<>();
+    private static final Set<NolTickerAPI> tickersInFilter = new HashSet<>();
 
     private static final Logger logger =
             Logger.getLogger(BossaAPI.class.getName());
@@ -201,9 +204,13 @@ public enum BossaAPI {
         Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "addToFilter", params);
         clearFilter();
-        tickersInFilter.addAll(isins);
+        tickerISINSInFilter.addAll(isins);
+        //TODO test this method - may throw nullpointerexception if isin is not in tickers
+        for(String isin : isins) {
+            tickersInFilter.add(getTickers(TypeOfList.ISIN, new NolTickerAPI(isin)).get(0));
+        }
 
-        String tickerString = isinSetToString(tickersInFilter);
+        String tickerString = isinSetToString(tickerISINSInFilter);
         int errorCode = INSTANCE.AddToFilter(tickerString, false);
         String output = GetResultCodeDesc(errorCode);
         if (errorCode < 0) {
@@ -211,19 +218,30 @@ public enum BossaAPI {
             logger.finer(e.getMessage());
             throw e;
         }
+
         logger.exiting(BossaAPI.class.getName(), "addToFilter", output);
         return output;
+    }
+
+    public static void addTickersToFilter(Set<BossaAPI.NolTickerAPI> tickers) {
+        Set <String> isins = tickers
+                .stream()
+                .map(BossaAPI.NolTickerAPI::getIsin)
+                .collect(Collectors.toSet());
+        addToFilter(isins);
     }
 
     public static String removeFromFilter(Set<String> isins) throws IllegalStateException {
         Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "removeFromFilter", params);
-        if (!tickersInFilter.containsAll(isins)) {
-            throw new IllegalArgumentException(isins.removeAll(tickersInFilter) + " not in filter");
+        if (!tickerISINSInFilter.containsAll(isins)) {
+            throw new IllegalArgumentException(isins.removeAll(tickerISINSInFilter) + " not in filter");
         }
-        tickersInFilter.removeAll(isins);
+        tickerISINSInFilter.removeAll(isins);
+        tickersInFilter.removeIf(ticker -> isins.contains(ticker.getIsin()));
+
         //must be a new set, because addToFilters clear mapping during assignment!
-        addToFilter(new HashSet<>(tickersInFilter));
+        addToFilter(new HashSet<>(tickerISINSInFilter));
         return "remove from filter"; //safe, exception in addToFilter guards this
     }
 
@@ -325,6 +343,7 @@ public enum BossaAPI {
     @SuppressWarnings("UnusedReturnValue")
     public static String clearFilter() {
         logger.entering(BossaAPI.class.getName(), "clearFilter");
+        tickerISINSInFilter.clear();
         tickersInFilter.clear();
         int errorCode = INSTANCE.ClearFilter();
         String message = GetResultCodeDesc(errorCode);
@@ -355,7 +374,11 @@ public enum BossaAPI {
         return propertyMap;
     }
 
-    public static Set<String> getTickersInFilter() {
+    public static Set<String> getTickerISINSInFilter() {
+        return new HashSet<>(tickerISINSInFilter); //this should be immutable
+    }
+
+    public static Set<NolTickerAPI> getTickersInFilter() {
         return new HashSet<>(tickersInFilter); //this should be immutable
     }
 
@@ -478,6 +501,10 @@ public enum BossaAPI {
             marketCode = new String(wrappee.MarketCode).trim();
             cfi = new String(wrappee.CFI).trim();
             group = new String(wrappee.Group).trim();
+        }
+        //this constructor is needed for addToFilter
+        private NolTickerAPI(String isin) {
+            this.isin = isin;
         }
 
         @NotNull

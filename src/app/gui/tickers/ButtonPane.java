@@ -1,20 +1,38 @@
 package app.gui.tickers;
 
 import javax.swing.*;
+import app.gui.Model;
+import java.util.HashSet;
 
 public class ButtonPane {
-    JPanel totalPane = new JPanel();
-    JPanel filterPane = new JPanel();
-    BoxLayout totalPaneLayout = new BoxLayout(totalPane, BoxLayout.Y_AXIS);
-    JTextField searchField;
+    private JPanel totalPane = new JPanel();
+    private JPanel filterPane = new JPanel();
+    private BoxLayout totalPaneLayout = new BoxLayout(totalPane, BoxLayout.Y_AXIS);
+    private JTextField searchField;
+
+    private JButton okButton = new JButton("OK");
+    private JButton cancelButton = new JButton("Cancel");
+    private JButton saveButton = new JButton("Save...");
+    private JButton loadButton = new JButton("Load...");
+    private TickerTablesPane tickerTablesPane;
 
     JPanel buttonPane = new JPanel();
 
-    public ButtonPane() {
-        buttonPane.add(new JButton("OK"));
-        buttonPane.add(new JButton("Cancel"));
-        buttonPane.add(new JButton("Save..."));
-        buttonPane.add(new JButton("Load..."));
+    public void setTickerTablesPane(TickerTablesPane tickerTablesPane) {
+        this.tickerTablesPane = tickerTablesPane;
+    }
+
+    public ButtonPane(Model model) {
+        buttonPane.add(okButton);
+        buttonPane.add(cancelButton);
+        buttonPane.add(saveButton);
+        buttonPane.add(loadButton);
+
+        okButton.addActionListener(e -> {
+                model.clearFilter();
+                model.addTickersToFilter(new HashSet<>(tickerTablesPane.getTickersInFilter()));
+        }
+                );
 
         filterPane.add(new JLabel("Search text: "));
         searchField = new JTextField();
