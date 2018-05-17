@@ -97,12 +97,12 @@ public enum BossaAPI {
      * to Java List of wrapper class. Pointer class must extend {@link Structure} or implement
      * {@link Structure.ByReference}.
      *
-     * @param size         of array
-     * @param pointer      to array
-     * @param wrapperClass of pointer
+     * @param size         number of elements in JNA mapped array
+     * @param pointer      to JNA mapped array
+     * @param wrapperClass pointer will be wrapped by this class, the class should have a constructor which uses <i>pointer</i>
      * @param <U>          pointer class
-     * @param <T>          wrapper class
-     * @return list of wrapper class
+     * @param <T>          class wrapper designed to wrap class of the pointer {@link BossaAPIClassWrapper}
+     * @return list of wrapper class elements
      */
     private static <U extends Structure,
             T extends BossaAPIClassWrapper<? extends BossaAPIClassWrapper, U>>
@@ -146,7 +146,7 @@ public enum BossaAPI {
      * is not running. To check status of NOL3, use {@link Status}
      * before calling this method. This method initialized {@link Quotes}
      *
-     * @return intialization comment
+     * @return intialization comment, will return only commentary about successful init
      * @throws IllegalStateException if unsuccessful
      */
     public static String initialize() throws IllegalStateException {
@@ -166,8 +166,8 @@ public enum BossaAPI {
     }
 
     /**
-     * Call to initialize callbacks of the api. Callbacks are stored in observables.
-     * Quotes observable is initialized by {@link BossaAPI#initialize()}
+     * Call to initialize callbacks of the api. Callbacks are accessible using {@link PropertyChangeListener}.
+     * Quotes property is initialized by {@link BossaAPI#initialize()}
      * otherwise API complains about lib not being initialized.
      */
     private static void InitializeObservers() {
@@ -190,13 +190,13 @@ public enum BossaAPI {
      * to {@code true}.
      * {@code isins} can be single ISIN obtained from ticker: {@link NolTickerAPI#getIsin()}
      * or may be multiple ISINs separated by {@code ";"} ex. {@code ISIN1;ISIN2 }.
-     * If there are any tickers already in the filter, they will be removed.
+     * If there are any tickers already in the filter, they will remain there. New tickers will be appended to filter.
      * </p>
      * <p>
-     * {@link Quotes} will be updated after calling this method.
+     * {@link Quotes} property will be updated after calling this method.
      * </p>
      *
-     * @param isins ISIN or name (name doesn't seem to work as of showVersion 1.0.0.70 of native library)
+     * @param isins ISIN or name of ticker added to filter (name doesn't seem to work as of showVersion 1.0.0.70 of native library)
      * @return success message
      * @throws IllegalStateException if failed
      */
@@ -223,6 +223,10 @@ public enum BossaAPI {
         return output;
     }
 
+    /**
+     * @see BossaAPI#addToFilter(Set)
+     * @param tickers a set of tickers to be appended to filter
+     */
     public static void addTickersToFilter(Set<BossaAPI.NolTickerAPI> tickers) {
         Set <String> isins = tickers
                 .stream()
@@ -231,6 +235,13 @@ public enum BossaAPI {
         addToFilter(isins);
     }
 
+    /**
+     * Removes given tickers from filter.
+     * @see BossaAPI#addToFilter(Set)
+     * @param isins
+     * @return success message
+     * @throws IllegalStateException if any of given tickers are not in filter
+     */
     public static String removeFromFilter(Set<String> isins) throws IllegalStateException {
         Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "removeFromFilter", params);
