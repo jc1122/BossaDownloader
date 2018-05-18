@@ -381,25 +381,46 @@ public enum BossaAPI {
         return message;
     }
 
+    /**
+     * The keys of the map are names of properties. The names should also be class names of properties ex. <i>Outlook</i>
+     * @return property names associated with instance of property class
+     * @see BossaAPI.PropertyAPI
+     */
     public static Map<String, PropertyAPI> getPropertyMap() {
         return propertyMap;
     }
 
+    /**
+     * Returns a set of ISINS of tickers which are currently in filter. Adding elements to the received set will not affect
+     * the elements in filter.
+     * @return ISINs of tickers in filter
+     */
     public static Set<String> getTickerISINSInFilter() {
         return new HashSet<>(tickerISINSInFilter); //this should be immutable
     }
 
+    /**
+     * Returns a set of tickers which are currently in filter. Modyfing the returned set will not affect the filter.
+     * @see BossaAPI#getTickersInFilter()
+     * @return
+     */
     public static Set<NolTickerAPI> getTickersInFilter() {
         return new HashSet<>(tickersInFilter); //this should be immutable
     }
 
+    /**
+     * Helper class for wrapping JNI structures to objects. Appropriate getters should be implemented by childs.
+     * @param <T> wrapper class for JNI structure
+     * @param <Q> class of the object to be wrapped
+     */
     //extracted to help composition
     private static abstract class BossaAPIClassWrapper<T, Q extends Structure> {
         Q wrappee;
     }
 
     /**
-     * Stores market data.
+     * Stores market data of one level of market quotes. Information stored is offer side (bid/ask), offer depth (level),
+     * price, amount of offers, cumulative volume of security.
      */
     public static final class NolBidAskTblAPI extends BossaAPIClassWrapper<NolBidAskTblAPI, BossaAPIInterface.NolBidAskTbl> {
 
@@ -478,7 +499,8 @@ public enum BossaAPI {
     }
 
     /**
-     * Wrapper for pointer to offers.
+     * Stores list of market quotes (market levels). The list may not be sorted.
+     * @see BossaAPI.NolBidAskTblAPI
      */
     private static final class NolBidAskStrAPI extends BossaAPIClassWrapper<NolBidAskStrAPI, BossaAPIInterface.NolBidAskStr> {
 
@@ -500,7 +522,12 @@ public enum BossaAPI {
     }
 
     /**
-     * Stores data of single ticker.
+     * Stores data of single ticker. Each field is a {@link String}:<br>
+     * ISIN - international securities identification number<br>
+     * name - name<br>
+     * marketCode - //TODO add desctiption <br>
+     * CFI - //TODO add description <br>
+     * group - //TODO add description <br>
      */
     public static final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, BossaAPIInterface.NolTicker> {
         String isin, name, marketCode, cfi, group;
@@ -563,6 +590,7 @@ public enum BossaAPI {
      * Stores list of tickers.
      * Needs to be closed manually using {@link NolTickersAPI#close()} after finished working with object to release
      * resources.
+     * @see BossaAPI.NolTickerAPI
      */
     private static final class NolTickersAPI
             extends BossaAPIClassWrapper<NolTickersAPI, BossaAPIInterface.NolTickers>
@@ -620,14 +648,6 @@ public enum BossaAPI {
         public List<NolTickerAPI> getTickersList() throws NullPointerException {
             if (wrappee == null) throw new NullPointerException("Tickers already closed!");
             return tickerListCache;
-
-/*            List nolTickersList = Arrays.asList(wrappee.ptrtickerslist.toArray(wrappee.size));
-            List<NolTickerAPI> nolTickersAPIList = new ArrayList<>(wrappee.size);
-
-            for (Object ticker : nolTickersList) {
-                nolTickersAPIList.add(new NolTickerAPI((BossaAPIInterface.NolTicker) ticker));
-            }
-            return nolTickersAPIList;*/
         }
 
     }
@@ -635,7 +655,34 @@ public enum BossaAPI {
     /**
      * Stores market info about given ticker. <br>
      * This object is returned by {@link Quotes}
-     * Data returned in this class is shattered. Not all fields are filled in each instance!
+     * Data returned in this class is shattered. Not all fields are valid in each instance!
+     * To check if a field is valid, use {@link NolRecentInfoAPI#getBitMask()}. <br><br>
+     * The info includes: <br>
+     * Offers - current market depth (up to 5 levels), see: {@link BossaAPI.NolBidAskStrAPI} <br>
+     * Ticker - description of current instrument, see: {@link BossaAPI.NolTickerAPI} <br>
+     * ToLT - time of last transaction as {@link String}, see: {@link NolRecentInfoAPI#getToLT()} <br>
+     * Phase - session phase //TODO check which values are possible <br>
+     * Status - session status //TODO check which values are possible <br>
+     * ValoLT - value of last transaction, see {@link NolRecentInfoAPI#getValoLT()} <br>
+     * VoLT - volume of last transaction, see {@link NolRecentInfoAPI#getVoLT()} <br>
+     * Open - price at session open, see {@link NolRecentInfoAPI#getOpen()}<br>
+     * High - current session highest price, see {@link NolRecentInfoAPI#getHigh()}<br>
+     * Low - current session lowest price, see {@link NolRecentInfoAPI#getLow()}<br>
+     * Close - price st close of current session, see {@link NolRecentInfoAPI#getClose()} <br>
+     * Bid - current best bid price, see {@link NolRecentInfoAPI#getBid()} <br>
+     * Ask - current best ask price, see {@link NolRecentInfoAPI#getAsk()} <br>
+     * BidSize - sum of number of shares at current best bid, see {@link NolRecentInfoAPI#getBidSize()}<br>
+     * AskSize - sum of number of shares at current best ask, see {@link NolRecentInfoAPI#getAskSize()}<br>
+     * TotalVolume - cumulative volume of current session, see {@link NolRecentInfoAPI#getTotalValue()}<br>
+     * TotalValue - cumulative turnover of current session, see {@link NolRecentInfoAPI#getTotalValue()}<br>
+     * OpenInterest - applicable only to derivates, number of open positions, see {@link NolRecentInfoAPI#getOpenInterest()}<br>
+     * BidAmount - amount of offers at current best bid, see {@link NolRecentInfoAPI#getAskAmount()} <br>
+     * AskAmount - amount of offers at current best ask, see {@link NolRecentInfoAPI#getAskAmount()} <br>
+     * OpenValue - turnover at session open, see {@link NolRecentInfoAPI#getOpenValue()}<br>
+     * CloseValue - turnover at session close, see {@link NolRecentInfoAPI#getCloseValue()}<br>
+     * ReferPrice - reference price, typically close price of previous session, see {@link NolRecentInfoAPI#getReferPrice()}<br>
+     * Error - error code of this message, for validity check only, see {@link NolRecentInfoAPI#getError()}<br>
+     * <br>
      * Throws {@link IllegalStateException} on construct on errornous received message.
      */
     public static final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAPI, BossaAPIInterface.NolRecentInfo> {
@@ -671,11 +718,11 @@ public enum BossaAPI {
         }
 
         /**
-         * Each bit in bitmask represents a field stored in this class.
-         * {@code 1} for filled filled {@code 0} for unfilled.
-         * Unfilled fields are set to 0.
+         * Returned map contains information, if a given field is valid.
+         * The keys to the map are property names of this object, see {@link NolRecentInfoAPI} for property names.
+         * {@code True} for filled filled {@code False} for unfilled.
          *
-         * @return map of valid properties in this object
+         * @return map of property names associated with a boolean value
          */
         @Contract(pure = true)
         public Map<String, Boolean> getBitMask() {
@@ -854,7 +901,7 @@ public enum BossaAPI {
         }
 
         /**
-         * Get open interest.
+         * Get open interest. Valid for derivates only.
          *
          * @return open interest
          */
@@ -885,7 +932,8 @@ public enum BossaAPI {
 
         /**
          * Get amount of offers of current best bid. May return 0 instead of real value.
-         * Use {@link NolBidAskTblAPI#getAmount()} for selected best bid instead of this.
+         * Use {@link NolBidAskTblAPI#getAmount()} on best bid from {@link NolRecentInfoAPI#getOffers()}
+         * for selected best bid instead of this.
          *
          * @return amount of offers
          */
@@ -896,7 +944,8 @@ public enum BossaAPI {
 
         /**
          * Get amount of offers of current best ask. May return 1 instead of real value.
-         * Use {@link NolBidAskTblAPI#getAmount()} for selected best ask instead of this.
+         * Use {@link NolBidAskTblAPI#getAmount()} on best ask from {@link NolRecentInfoAPI#getOffers()}
+         * for selected best ask instead of this.
          *
          * @return amount of offers
          */
@@ -986,7 +1035,34 @@ public enum BossaAPI {
     }
 
     /**
-     * Contains information about funds in portfolio
+     * Contains information about funds in portfolio.<br>
+     * This is just a helper used in {@link NolStatementAPI}<br>
+     *     <br>
+     * Possible names:<br>
+     *     <br>
+     * For cash accounts: <br>
+     * CashRecivables - total cash on account <br>
+     * MaxBuy - maximum buying power <br>
+     * MaxOtpBuy - maximum buying power on delayed payment <br>
+     * LiabilitiesLimitMax - amount of cash to reach buying limit <br>
+     * RecivablesBlocked - cash blocked for pending orders <br>
+     * Recivables - cash <br>
+     * Liabilities - cash to deduct from account <br>
+     * <br>
+     * For derivates accounts: <br>
+     * Deposit - total deposit on account <br>
+     * BlockedDeposit - deposit blocked for orders<br>
+     * FreeDeposit - free cash in deposit<br>
+     * SecSafetiesUsed - //TODO check what it is<br>
+     * SecSafeties - //TODO check what it is<br>
+     * OptionBonus - cash received as option bonus<br>
+     *<br>
+     * For all accounts:<br>
+     * Cash - cash available for orders
+     * CashBlocked - cash blocked for pending orders
+     * SecValueSum - sum of values of owned securities
+     * PortfolioValue - total portfolio value
+     * @see NolStatementAPI
      */
     private static final class NolFundAPI extends BossaAPIClassWrapper<NolFundAPI, BossaAPIInterface.NolFund> {
 
@@ -1002,6 +1078,9 @@ public enum BossaAPI {
             return name;
         }
 
+        /**
+         * @return cash value
+         */
         public String getValue() {
             logger.exiting(NolFundAPI.class.getName(), "getValue");
             return value;
@@ -1010,7 +1089,12 @@ public enum BossaAPI {
     }
 
     /**
-     * Contains information about position in portfolio.
+     * Contains information about position in portfolio.<br>
+     *     <br>
+     * Information includes:<br>
+     * Ticker - see: {@link NolTickerAPI}<br>
+     * Acc110 - amount of securities at owners disposal, see: {@link NolPosAPI#getAcc110()}<br>
+     * Acc120 - amount of securities blocked for pending orders, see: {@link NolPosAPI#getAcc120()}<br>
      */
     public static final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInterface.NolPos> {
         NolTickerAPI ticker;
@@ -1061,7 +1145,14 @@ public enum BossaAPI {
     }
 
     /**
-     * Stores information about available trading accounts.
+     * Stores information about trading account.<br>
+     *     <br>
+     * The information includes: <br>
+     * Name - account number, see: {@link NolStatementAPI#getName()}
+     * IKE - Indywidualne Konto Emerytalne, see: {@link NolStatementAPI#getIke()}
+     * Type - account type, see: {@link NolStatementAPI#getIke()}
+     * FundMap - funds on account, see: {@link NolStatementAPI#getFundMap()}
+     * Positions - securities on account, see: {@link NolStatementAPI#getPositions()}
      */
     public static final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI, BossaAPIInterface.NolStatement> {
         //private List<NolFundAPI> fundList;
@@ -1124,7 +1215,7 @@ public enum BossaAPI {
 
         /**
          * Returns map of funds associated with account.
-         *
+         * @see NolFundAPI
          * @return map
          */
         @Contract(pure = true)
@@ -1157,6 +1248,7 @@ public enum BossaAPI {
 
     /**
      * Contains list of statements for all accessible accounts.
+     * @see NolStatementAPI
      */
     private static final class NolAggrStatementAPI extends BossaAPIClassWrapper<NolAggrStatementAPI, BossaAPIInterface.NolAggrStatement> {
 
@@ -1401,6 +1493,9 @@ public enum BossaAPI {
 
     }
 
+    /**
+     * //TODO check behavior and add javadoc
+     */
     public static final class NolOrderRequestAPI extends BossaAPIClassWrapper<NolOrderRequestAPI, BossaAPIInterface.NolOrderRequest> {
         String origID, origID2, acct, side, ordTyp, tmInForce, expireDt, defPayTyp, sessionDt, expireTm;
         NolTickerAPI ticker;
@@ -1536,6 +1631,12 @@ public enum BossaAPI {
 
     }
 
+    /**
+     * Provides {@link PropertyChangeSupport} for callbacks of API and wraps property.
+     * Property may be accessed only after it has been initialized!
+     *
+     * @param <T> class of wrapped property
+     */
     //refactoring CallbackHelpers to generic class impossible due to type erasure...
     //cannot map Object type in JNA to multiple classes with typemapper, it would break ordinary type mapping
     public static class PropertyAPI<T> {
@@ -1546,10 +1647,12 @@ public enum BossaAPI {
         }
 
         public void addPropertyChangeListener(PropertyChangeListener listener) {
+            logger.exiting(this.getClass().getName(), "addPropertyChangeListener");
             propertyChangeSupport.addPropertyChangeListener(listener);
         }
 
         public void removePropertyChangeListener(PropertyChangeListener listener) {
+            logger.exiting(this.getClass().getName(), "removePropertyChangeListener");
             propertyChangeSupport.removePropertyChangeListener(listener);
         }
 
@@ -1566,7 +1669,9 @@ public enum BossaAPI {
     }
 
     /**
-     * Stores market data: info about price levels and trades.
+     * Updates information about quotes. This class handles listeners for {@link NolRecentInfoAPI}
+     *
+     * @see NolRecentInfoAPI
      */
     public static final class Quotes extends PropertyAPI<NolRecentInfoAPI> {
 
@@ -1602,7 +1707,8 @@ public enum BossaAPI {
     }
 
     /**
-     * Stores info about current NOL3 app status.
+     * Updates info about current NOL3 app status. This class handles listeners for {@link Nol3State}
+     * @see Nol3State
      */
     public static final class Status extends PropertyAPI<Nol3State> {
 
@@ -1633,7 +1739,8 @@ public enum BossaAPI {
     }
 
     /**
-     * Updates account statement information once received data from NOL3.
+     * Updates account statement information once received data from NOL3. This class handles listeners for {@link NolStatementAPI}
+     * @see NolStatementAPI
      */
     public static final class Accounts extends PropertyAPI<List<NolStatementAPI>> {
         //private NolAggrStatementAPI nolAggrStatementAPI;
@@ -1669,7 +1776,7 @@ public enum BossaAPI {
     }
 
     /**
-     * Stores delay time to server.
+     * Updates delay time to server. This class handles listeners for delay to NOL server.
      */
     public static final class Delay extends PropertyAPI<Float> {
 
@@ -1700,7 +1807,8 @@ public enum BossaAPI {
     }
 
     /**
-     * Stores information about current orders.
+     * Updates information about current orders. This class handles listeners for {@link NolOrderReportAPI}
+     * @see NolOrderReportAPI
      */
     public static final class Order extends PropertyAPI<NolOrderReportAPI> {
         //private NolOrderReportAPI nolOrderReportAPI;
@@ -1734,7 +1842,8 @@ public enum BossaAPI {
     }
 
     /**
-     * Stores diagnostic data from NOL3
+     * Updates diagnostic data from NOL3. This class handles listeners for {@link Outlook}
+     * @see Outlook
      */
     public static final class Outlook extends PropertyAPI<String> {
         //private String outlook;
@@ -1764,6 +1873,7 @@ public enum BossaAPI {
         }
     }
 
+    //makes a semicolon separated string from given set of strings
     private static String isinSetToString(Set<String> isins) {
         StringBuilder filterFormat = new StringBuilder();
         for (String isin : isins) {
