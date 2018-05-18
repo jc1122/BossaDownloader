@@ -23,6 +23,7 @@ public enum BossaAPI {
     ;
     static final BossaAPIInterface INSTANCE;
     private static final Map<String, PropertyAPI> propertyMap = new HashMap<>();
+    private static final Map<String, NolTickerAPI> tickersMap = new HashMap<>();
     private static final Set<String> tickerISINSInFilter = new HashSet<>();
     private static final Set<NolTickerAPI> tickersInFilter = new HashSet<>();
 
@@ -162,6 +163,12 @@ public enum BossaAPI {
         SetTradingSess(true);
         //the observable below must be initialized after the lib is initialized, otherwise "lib is not inicialized" error
         INSTANCE.SetCallback(Quotes.getCallbackHelper());
+
+        List<NolTickerAPI> tickers = getTickers(TypeOfList.ALL, null);
+        for (NolTickerAPI ticker : tickers) {
+            tickersMap.put(ticker.getIsin(), ticker);
+        }
+
         return output;
     }
 
@@ -205,9 +212,9 @@ public enum BossaAPI {
         logger.entering(BossaAPI.class.getName(), "addToFilter", params);
         clearFilter();
         tickerISINSInFilter.addAll(isins);
-        //TODO test this method - may throw nullpointerexception if isin is not in tickers
+
         for(String isin : isins) {
-            tickersInFilter.add(getTickers(TypeOfList.ISIN, new NolTickerAPI(isin)).get(0));
+            tickersInFilter.add(tickersMap.get(isin));
         }
 
         String tickerString = isinSetToString(tickerISINSInFilter);
@@ -540,11 +547,6 @@ public enum BossaAPI {
             cfi = new String(wrappee.CFI).trim();
             group = new String(wrappee.Group).trim();
         }
-        //this constructor is needed for addToFilter
-        private NolTickerAPI(String isin) {
-            this.isin = isin;
-        }
-
         @NotNull
         public String getIsin() {
             logger.exiting(NolTickerAPI.class.getName(), "getIsin");
