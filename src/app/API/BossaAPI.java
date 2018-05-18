@@ -238,7 +238,7 @@ public enum BossaAPI {
     /**
      * Removes given tickers from filter.
      * @see BossaAPI#addToFilter(Set)
-     * @param isins
+     * @param isins of tickers to be removed from filter
      * @return success message
      * @throws IllegalStateException if any of given tickers are not in filter
      */
@@ -402,7 +402,7 @@ public enum BossaAPI {
     /**
      * Returns a set of tickers which are currently in filter. Modyfing the returned set will not affect the filter.
      * @see BossaAPI#getTickersInFilter()
-     * @return
+     * @return set of tickers currently in filter
      */
     public static Set<NolTickerAPI> getTickersInFilter() {
         return new HashSet<>(tickersInFilter); //this should be immutable
@@ -621,7 +621,7 @@ public enum BossaAPI {
             }
             tickerListCache = convertPointerToListHelper(wrappee.size, wrappee.ptrtickerslist,
                     NolTickerAPI.class);
-            logger.exiting(NolTickersAPI.class.getName(), "Constructor");
+            logger.exiting(this.getClass().getName(), "Constructor");
         }
 
         /**
@@ -649,7 +649,11 @@ public enum BossaAPI {
             if (wrappee == null) throw new NullPointerException("Tickers already closed!");
             return tickerListCache;
         }
-
+        @Override
+        public void finalize() {
+            logger.warning(this.getClass() + " instance not closed, potential memory leak expected.");
+            this.close();
+        }
     }
 
     /**
@@ -996,7 +1000,7 @@ public enum BossaAPI {
         }
 
         /**
-         * If <0 then errornous
+         * If less than 0 then the message is invalid
          *
          * @return error code
          */

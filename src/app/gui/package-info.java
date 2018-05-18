@@ -1,5 +1,5 @@
 /**
- * This package contains all GUI elements of BossaDownloader
+ * Contains all GUI elements of BossaDownloader
  * *
  *
  * @author jc1122

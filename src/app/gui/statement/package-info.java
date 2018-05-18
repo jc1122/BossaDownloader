@@ -1,5 +1,5 @@
 /**
- * Contains elements of Statement display dialog.
+ * Elements of Statement display dialog.
  *
  * @author jc1122
  */
