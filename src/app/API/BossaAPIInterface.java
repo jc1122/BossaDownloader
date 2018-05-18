@@ -5,8 +5,10 @@ import com.sun.jna.Library;
 import com.sun.jna.Structure;
 
 /**
- * JNA interface for BossaAPI native dll. This is a direct mapping of native API to Java.
- * To use functionality, use {@link BossaAPI}.
+ * JNA low level interface for BossaAPI native dll. This is a direct mapping of native API to Java.
+ * Check <a href="https://java-native-access.github.io/jna/4.2.1/overview-summary.html#marshalling">C to JNA type mapping</a>
+ * before using this interface. Ex. data types like byte arrays may need to be converted to {@link String} to be meaningful.
+ * To use higher level functionality, use {@link BossaAPI}.
  */
 @SuppressWarnings({"WeakerAccess", "Convert2Lambda", "unused", "UnusedReturnValue"})
 interface BossaAPIInterface extends Library {
@@ -19,70 +21,235 @@ interface BossaAPIInterface extends Library {
         public static class ByReference extends NolBidAskTbl implements Structure.ByReference {
         }
 
+        /**
+         * Position of offer level relative to the market. Value of 1 is best offer, higher numbers are farther from market.
+         */
         public int depth; // pozycja ofery 1-5
+        /**
+         * 1 for BID, 2 for ASK.
+         */
         public int side;  // 1- kupno/ 2- sprzeda¿
+        /**
+         * Price of offer.
+         */
         public double price; // cena ofery
+        /**
+         * Size of offer. Total number of securities on this level.
+         */
         public int size;     // rozmiar oferty
+        /**
+         * Total amount of offers on this level.
+         */
         public int amount;        // iloœæ ofert
     }
 
+    /**
+     * List of {@link NolBidAskTbl}
+     */
     class NolBidAskStr extends Structure {
+        /**
+         * Number of market levels. Should be even. Ex. 10 (5 for BID, 5 for ASK)
+         */
         public int offersize;
+        /**
+         * pointer to memory holding list of {@link NolBidAskTbl}
+         */
         public NolBidAskTbl.ByReference bidask_table;
     }
 
+    /**
+     * Stores description of ticker.
+     */
     class NolTicker extends Structure {
 
         public static class ByReference extends NolTicker implements Structure.ByReference {
         }
 
+        /**
+         * International Securities Identifying Number. Max length is 13. Ex. PLDEBCA00016
+         * @see BossaAPI.NolTickerAPI#getIsin()
+         */
         public byte[] Isin = new byte[13];        // International Securities Identifying Number
+        /**
+         * Short name of ticker. Max length is 21. Ex. DEBICA
+         * @see BossaAPI.NolTickerAPI#getName()
+         */
         public byte[] Name = new byte[21];        // Full name of the ticker
+        /**
+         * Market code. See {@link BossaAPI.NolTickerAPI#getMarketCode()} for a list of available market codes.
+         * @see BossaAPI.NolTickerAPI#getMarketCode()
+         */
         public byte[] MarketCode = new byte[3];
+        /**
+         * CFI.
+         * @see BossaAPI.NolTickerAPI#getCFI()
+         */
         public byte[] CFI = new byte[7];
+
+        /**
+         * Market group.
+         * @see BossaAPI.NolTickerAPI#getGroup()
+         */
         public byte[] Group = new byte[3];
     }
 
+    /**
+     * Stores array of {@link NolTicker}
+     * @see BossaAPIInterface#GetTickers(NolTickers, TypeOfList, NolTicker)
+     */
     class NolTickers extends Structure {
 
         public static class ByReference extends NolTickers implements Structure.ByReference {
         }
 
+        /**
+         * Pointer to array of tickers
+         */
         public NolTicker.ByReference ptrtickerslist;    // pointer to list of tickers
+        /**
+         * Size of ticker array
+         */
         public int size;            // size of table of ticker structures
     }
 
+    /**
+     * Stores market quotes for given ticker. This is returned by callback function set by
+     * {@link BossaAPIInterface#SetCallback(SetCallbackDummy)}
+     */
     @SuppressWarnings("unused")
     class NolRecentInfo extends Structure {
+        /**
+         * Stores info, which fields are valid in current message.
+         * For bits from youngest to oldest:
+         * 1. {@link NolRecentInfo#ValoLT}
+         * 2. {@link NolRecentInfo#VoLT}
+         * 3. {@link NolRecentInfo#ToLT}
+         * 4. {@link NolRecentInfo#Open}
+         * 5. {@link NolRecentInfo#High}
+         * 6. {@link NolRecentInfo#Low}
+         * 7. {@link NolRecentInfo#Close}
+         * 8. {@link NolRecentInfo#Bid}
+         * 9. {@link NolRecentInfo#Ask}
+         * 10. {@link NolRecentInfo#BidSize}
+         * 11. {@link NolRecentInfo#AskSize}
+         * 12. {@link NolRecentInfo#TotalVolume}
+         * 13. {@link NolRecentInfo#TotalValue}
+         * 14. {@link NolRecentInfo#OpenInterest}
+         * 15. {@link NolRecentInfo#Phase}
+         * 16. {@link NolRecentInfo#Status}
+         * 17. {@link NolRecentInfo#BidAmount}
+         * 18. {@link NolRecentInfo#AskAmount}
+         * 19. {@link NolRecentInfo#OpenValue}
+         * 20. {@link NolRecentInfo#CloseValue}
+         * 21. {@link NolRecentInfo#ReferPrice}
+         * 22. {@link NolRecentInfo#offers}
+         * 23. {@link NolRecentInfo#Error}
+         */
         public int BitMask;        // mask of data
+        /**
+         * All data in current message are for this ticker.
+         */
         public NolTicker ticker;    // structure containing information about name and isin
+        /**
+         * Value of last transaction.
+         */
         public double ValoLT;    // a(flag in BitMask) - value of last transaction 1
+        /**
+         * Volume of last transaction
+         */
         public int VoLT;        // b - volume of last transaction 2
+        /**
+         * Time of last transaction in hh:mm:ss format.
+         */
         public byte[] ToLT = new byte[9];        // c - time of last transaction 4
+        /**
+         * Price at session opening
+         */
         public double Open;        // d - open price 8
+        /**
+         * Current highest price during trading session
+         */
         public double High;        // e - current high price 10
+        /**
+         * Current lowest price during trading session
+         */
         public double Low;        // f - current low price 20
+        /**
+         * Price at close of trading session
+         */
         public double Close;        // g - close price 40
+        /**
+         * Best bid price
+         */
         public double Bid;        // h - the best bid price 80
+        /**
+         * Best ask price
+         */
         public double Ask;        // i - the best ask price  100
+        /**
+         * Number of securities at best bid price
+         */
         public int BidSize;        // j - size of the best bid 200
+        /**
+         * Number of securities at best ask price
+         */
         public int AskSize;        // k - size of the best ask 400
+        /**
+         * Cumulative volume for this ticker during trading session
+         */
         public int TotalVolume;    // l - total volume 800
+        /**
+         * Cumulative turnover for this ticker during trading session
+         */
         public double TotalValue;    // m - total value  1000
+        /**
+         * Open interest. Valid for derivates only.
+         */
         public int OpenInterest;    // n - number of open intrests 2000
+        /**
+         * Current phase of session. TODO add possible values
+         */
         public byte[] Phase = new byte[5];            // o - ticker phase 4000
+        /**
+         * Current status of session. TODO add possible values.
+         */
         public byte[] Status = new byte[5];        // p - ticker status 8000
+        /**
+         * Amount of offers at best bid price
+         */
         public int BidAmount;        // r - amount of bid 10000
+        /**
+         * Amount of offers at best ask price
+         */
         public int AskAmount;        // s - amount of ask 20000
+        /**
+         * Turnover at session open.
+         */
         public double OpenValue;    // t - open value    40000
+        /**
+         * Turnover at session close.
+         */
         public double CloseValue;    // u - close value   80000
+        /**
+         * Reference price. Typically close of previous session.
+         */
         public double ReferPrice;// w - reference price 100000
+        /**
+         * List of bid and ask offers
+         */
         public NolBidAskStr offers; // y - offers       200000
-
+        /**
+         * Error code
+         * @see BossaAPIInterface#GetResultCodeDesc(int)
+         */
         public int Error;            // z - error
 
     }
 
+    /**
+     * Stores description and value of funds in account.
+     * @see BossaAPI.NolFundAPI
+     */
     class NolFund extends Structure {
         public static class ByReference extends NolFund implements Structure.ByReference {
         }
@@ -91,6 +258,10 @@ interface BossaAPIInterface extends Library {
         public byte[] value = new byte[30];        // value of fundation
     }
 
+    /**
+     * Stores positions - ticker and amount of ticker in given account.
+     * @see app.API.BossaAPI.NolPosAPI
+     */
     class NolPos extends Structure {
         public static class ByReference extends NolPos implements Structure.ByReference {
         }
@@ -100,6 +271,10 @@ interface BossaAPIInterface extends Library {
         public int acc120;
     }
 
+    /**
+     * Account statement.
+     * @see app.API.BossaAPI.NolStatementAPI
+     */
     class NolStatement extends Structure {
         public static class ByReference extends NolStatement implements Structure.ByReference {
         }
@@ -113,11 +288,18 @@ interface BossaAPIInterface extends Library {
         public int sizepos;                // size of acctivities table
     }
 
+    /**
+     * list of {@link NolStatement}
+     * @see app.API.BossaAPI.NolAggrStatementAPI
+     */
     class NolAggrStatement extends Structure {
         public NolStatement.ByReference ptrstate;       // pointer to nolstatments
         public int size;                     // number of accounts
     }
 
+    /**
+     * TODO add documentation
+     */
     @SuppressWarnings("unused")
     class NolOrderReport extends Structure {
         public long BitMask;        // BitMask wich data are active
@@ -156,6 +338,9 @@ interface BossaAPIInterface extends Library {
 
     }
 
+    /**
+     * TODO add documentation
+     */
     @SuppressWarnings("unused")
     class NolOrderRequest extends Structure {
         public int BitMask;
