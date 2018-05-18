@@ -1207,8 +1207,8 @@ public enum BossaAPI {
     }
 
     /**
-     * Stores information about trading account.<br>
-     *     <br>
+     * Stores information about trading account.
+     *     <br><br>
      * The information includes: <br>
      * Name - account number, see: {@link NolStatementAPI#getName()}
      * IKE - Indywidualne Konto Emerytalne, see: {@link NolStatementAPI#getIke()}

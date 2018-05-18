@@ -248,7 +248,7 @@ interface BossaAPIInterface extends Library {
 
     /**
      * Stores description and value of funds in account.
-     * @see BossaAPI.NolFundAPI
+     * @see app.API.BossaAPI.NolFundAPI
      */
     class NolFund extends Structure {
         public static class ByReference extends NolFund implements Structure.ByReference {
