@@ -5,7 +5,8 @@ import com.sun.jna.Library;
 import com.sun.jna.Structure;
 
 /**
- * JNA interface for BossaAPI native dll
+ * JNA interface for BossaAPI native dll. This is a direct mapping of native API to Java.
+ * To use functionality, use {@link BossaAPI}.
  */
 @SuppressWarnings({"WeakerAccess", "Convert2Lambda", "unused", "UnusedReturnValue"})
 interface BossaAPIInterface extends Library {
@@ -176,18 +177,34 @@ interface BossaAPIInterface extends Library {
         public byte[] ExpireTm = new byte[9];    //u expire time									80000
     }
 
-    // initialize function
-    // AppId - string containing the application information
+    /**
+     *  Initializes library, should be called before calling any other methods. However, to check if NOL3 is running,
+     *  you may run {@link BossaAPIInterface#SetCallbackStatus(SetCallbackStatusDummy)} first and check status.
+     *  Will fail if called, when <a href="http://bossa.pl/oferta/internet/pomoc/nol">NOL3</a>
+     *  is not running.
+     * @param AppId login and pass separated by semocolon, currently only "BOS;BOS" is accepted
+     * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
+     */
     int Initialize(String AppId);
 
-    // function for adding ticker(s) to a filter
-    // TickersToAdd - string containing isins separated by ';'
-    // Flush = true, short/name ticker, Flush = false - ISIN
+    /**
+     * Starts tracking quotes of given tickers. Quotes will be sent to the function set by
+     * {@link BossaAPIInterface#SetCallback}. If the filter is not empty, then API will crash.
+     * Use {@link BossaAPIInterface#ClearFilter()} to clear filter.
+     * @param TickersToAdd isins or names of tickers separated by semicolon
+     * @param Flush {@code True} for names, {@code False} for ISINs
+     * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
+     */
     int AddToFilter(String TickersToAdd, boolean Flush);
 
-    // function for removing ticker(s) from a filter
-    // TickersToRem - string containing isins separated by ';',
-    // Flush = true, short/name ticker, Flush = false - ISIN
+    /**
+     * Replaces tickers currently in filter with given tickers and starts tracking quotes.
+     * @see BossaAPIInterface#ClearFilter()
+     * @see BossaAPIInterface#AddToFilter(String, boolean)
+     * @param TickersToRem
+     * @param Flush
+     * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
+     */
     int RemFromFilter(String TickersToRem, boolean Flush);
 
     /**
@@ -211,7 +228,7 @@ interface BossaAPIInterface extends Library {
     int SetCallback(SetCallbackDummy dummy);
 
     /**
-     * Function for clearing filter. Only tickers which are in filter will receive quotes updates.
+     * Stop tracking quotes of previously selected tickers. Only tickers which are in filter will receive quotes updates.
      * Clearing filter effectively stops updates of all quotes.
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
