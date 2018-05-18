@@ -11,6 +11,9 @@ import com.sun.jna.Structure;
 @SuppressWarnings({"WeakerAccess", "Convert2Lambda", "unused", "UnusedReturnValue"})
 interface BossaAPIInterface extends Library {
 
+    /**
+     * Represents one level of market offers
+     */
     class NolBidAskTbl extends Structure {
 
         public static class ByReference extends NolBidAskTbl implements Structure.ByReference {
