@@ -354,7 +354,7 @@ interface BossaAPIInterface extends Library {
      */
     int ReleaseTickersList(NolTickers ptrtickers);
     /**
-     * Substitute of pointer to function {@link BossaAPIInterface#SetCallbackOrder(SetCallbackStatus)}.
+     * Substitute of pointer to function {@link BossaAPIInterface#SetCallbackStatus(SetCallbackStatusDummy)}
      *
      */
     interface SetCallbackStatusDummy extends Callback {
