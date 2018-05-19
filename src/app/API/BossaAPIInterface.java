@@ -121,29 +121,29 @@ interface BossaAPIInterface extends Library {
         /**
          * Stores info, which fields are valid in current message.
          * For bits from youngest to oldest:
-         * 1. {@link NolRecentInfo#ValoLT}
-         * 2. {@link NolRecentInfo#VoLT}
-         * 3. {@link NolRecentInfo#ToLT}
-         * 4. {@link NolRecentInfo#Open}
-         * 5. {@link NolRecentInfo#High}
-         * 6. {@link NolRecentInfo#Low}
-         * 7. {@link NolRecentInfo#Close}
-         * 8. {@link NolRecentInfo#Bid}
-         * 9. {@link NolRecentInfo#Ask}
-         * 10. {@link NolRecentInfo#BidSize}
-         * 11. {@link NolRecentInfo#AskSize}
-         * 12. {@link NolRecentInfo#TotalVolume}
-         * 13. {@link NolRecentInfo#TotalValue}
-         * 14. {@link NolRecentInfo#OpenInterest}
-         * 15. {@link NolRecentInfo#Phase}
-         * 16. {@link NolRecentInfo#Status}
-         * 17. {@link NolRecentInfo#BidAmount}
-         * 18. {@link NolRecentInfo#AskAmount}
-         * 19. {@link NolRecentInfo#OpenValue}
-         * 20. {@link NolRecentInfo#CloseValue}
-         * 21. {@link NolRecentInfo#ReferPrice}
-         * 22. {@link NolRecentInfo#offers}
-         * 23. {@link NolRecentInfo#Error}
+         * 1. {@link NolRecentInfo#ValoLT}<br>
+         * 2. {@link NolRecentInfo#VoLT}<br>
+         * 3. {@link NolRecentInfo#ToLT}<br>
+         * 4. {@link NolRecentInfo#Open}<br>
+         * 5. {@link NolRecentInfo#High}<br>
+         * 6. {@link NolRecentInfo#Low}<br>
+         * 7. {@link NolRecentInfo#Close}<br>
+         * 8. {@link NolRecentInfo#Bid}<br>
+         * 9. {@link NolRecentInfo#Ask}<br>
+         * 10. {@link NolRecentInfo#BidSize}<br>
+         * 11. {@link NolRecentInfo#AskSize}<br>
+         * 12. {@link NolRecentInfo#TotalVolume}<br>
+         * 13. {@link NolRecentInfo#TotalValue}<br>
+         * 14. {@link NolRecentInfo#OpenInterest}<br>
+         * 15. {@link NolRecentInfo#Phase}<br>
+         * 16. {@link NolRecentInfo#Status}<br>
+         * 17. {@link NolRecentInfo#BidAmount}<br>
+         * 18. {@link NolRecentInfo#AskAmount}<br>
+         * 19. {@link NolRecentInfo#OpenValue}<br>
+         * 20. {@link NolRecentInfo#CloseValue}<br>
+         * 21. {@link NolRecentInfo#ReferPrice}<br>
+         * 22. {@link NolRecentInfo#offers}<br>
+         * 23. {@link NolRecentInfo#Error}<br>
          */
         public int BitMask;        // mask of data
         /**
@@ -289,11 +289,17 @@ interface BossaAPIInterface extends Library {
     }
 
     /**
-     * list of {@link NolStatement}
+     * Array of {@link NolStatement}. Contains pointer to array and size of array.
      * @see app.API.BossaAPI.NolAggrStatementAPI
      */
     class NolAggrStatement extends Structure {
+        /**
+         * Pointer to array
+         */
         public NolStatement.ByReference ptrstate;       // pointer to nolstatments
+        /**
+         * Size of array
+         */
         public int size;                     // number of accounts
     }
 

@@ -234,12 +234,12 @@ public enum BossaAPI {
      * @see BossaAPI#addToFilter(Set)
      * @param tickers a set of tickers to be appended to filter
      */
-    public static void addTickersToFilter(Set<BossaAPI.NolTickerAPI> tickers) {
+    public static String addTickersToFilter(Set<BossaAPI.NolTickerAPI> tickers) {
         Set <String> isins = tickers
                 .stream()
                 .map(BossaAPI.NolTickerAPI::getIsin)
                 .collect(Collectors.toSet());
-        addToFilter(isins);
+        return addToFilter(isins);
     }
 
     /**
@@ -743,8 +743,6 @@ public enum BossaAPI {
      * CloseValue - turnover at session close, see {@link NolRecentInfoAPI#getCloseValue()}<br>
      * ReferPrice - reference price, typically close price of previous session, see {@link NolRecentInfoAPI#getReferPrice()}<br>
      * Error - error code of this message, for validity check only, see {@link NolRecentInfoAPI#getError()}<br>
-     * <br>
-     * Throws {@link IllegalStateException} on construct on errornous received message.
      */
     public static final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAPI, BossaAPIInterface.NolRecentInfo> {
 
@@ -1152,11 +1150,6 @@ public enum BossaAPI {
 
     /**
      * Contains information about position in portfolio.
-     *     <br>
-     * Information includes:<br>
-     * Ticker - see: {@link NolTickerAPI}<br>
-     * Acc110 - amount of securities at owners disposal, see: {@link NolPosAPI#getAcc110()}<br>
-     * Acc120 - amount of securities blocked for pending orders, see: {@link NolPosAPI#getAcc120()}<br>
      */
     public static final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInterface.NolPos> {
         NolTickerAPI ticker;
@@ -1208,13 +1201,6 @@ public enum BossaAPI {
 
     /**
      * Stores information about trading account.
-     *     <br><br>
-     * The information includes: <br>
-     * Name - account number, see: {@link NolStatementAPI#getName()}
-     * IKE - Indywidualne Konto Emerytalne, see: {@link NolStatementAPI#getIke()}
-     * Type - account type, see: {@link NolStatementAPI#getIke()}
-     * FundMap - funds on account, see: {@link NolStatementAPI#getFundMap()}
-     * Positions - securities on account, see: {@link NolStatementAPI#getPositions()}
      */
     public static final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI, BossaAPIInterface.NolStatement> {
         //private List<NolFundAPI> fundList;
@@ -1696,6 +1682,7 @@ public enum BossaAPI {
     /**
      * Provides {@link PropertyChangeSupport} for callbacks of API and wraps property.
      * Property may be accessed only after it has been initialized!
+     * Property name should be the same as the name of class inheriting from this class.
      *
      * @param <T> class of wrapped property
      */

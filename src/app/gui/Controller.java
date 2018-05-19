@@ -2,6 +2,9 @@ package app.gui;
 
 import javax.swing.*;
 
+/**
+ * Part of MVC pattern. Handles user actions provided by {@link View} and informs {@link Model} about them.
+ */
 public class Controller {
     private Model model;
     private View view;
@@ -16,15 +19,21 @@ public class Controller {
         });
     }
 
+    /**
+     * Initialize {@link Model}
+     */
     void startAPI() {
-        model.startAPI();
+        model.initialize();
         view.enableStopApiMenuItem();
         view.enableStatementAccountsMenuItem();
         view.disableStartApiMenuItem();
     }
 
+    /**
+     * Shut down
+     */
     void stopAPI() {
-        model.stopAPI();
+        model.shutdown();
         view.disableStopApiMenuItem();
         view.enableStartApiMenuItem();
     }
@@ -33,10 +42,16 @@ public class Controller {
         view.showVersionDialog();
     }
 
+    /**
+     * Show information about available accounts and their details.
+     */
     void showStatement() {
         view.showStatementDialog();
     }
 
+    /**
+     * Select tickers, whose market quotes will be tracked and updated.
+     */
     void selectTickers() {
         view.showSelectTickersDialog();
     }

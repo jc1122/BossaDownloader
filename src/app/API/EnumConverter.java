@@ -5,6 +5,10 @@ import com.sun.jna.ToNativeContext;
 import com.sun.jna.TypeConverter;
 
 //http://technofovea.com/blog/archives/815
+
+/**
+ * See <a href="http://technofovea.com/blog/archives/815">here</a> for details
+ */
 class EnumConverter implements TypeConverter {
 
     //private static final Logger logger = LoggerFactory.getLogger(EnumConverter.class);

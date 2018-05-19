@@ -40,23 +40,23 @@ public class View {
     //TODO replace indexes with something more meaningful; this will crash badly when new items are added to menubar
     private void addEventListeners() {
         JMenuItem start = frame.getJMenuBar().getMenu(0).getItem(0); // API/start
-        start.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.startAPI()));
+        start.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.startAPI()));
 
         JMenuItem stop = frame.getJMenuBar().getMenu(0).getItem(2); // API/stop
-        stop.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.stopAPI()));
+        stop.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.stopAPI()));
 
         JMenuItem statement = frame.getJMenuBar().getMenu(1).getItem(0); // Account/statement
-        statement.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.showStatement()));
+        statement.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.showStatement()));
 
         JMenuItem select = frame.getJMenuBar().getMenu(2).getItem(0); // Tickers/Select...
-        select.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.selectTickers()));
+        select.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.selectTickers()));
 
         JMenuItem version = frame.getJMenuBar().getMenu(3).getItem(0); // Help/version
-        version.addActionListener(new ActionListenerShowsDialogOnException(() -> controller.showVersion()));
+        version.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.showVersion()));
     }
 
     void showVersionDialog() {
-        JOptionPane.showMessageDialog(frame, "API showVersion: \n" + model.getAPIversion());
+        JOptionPane.showMessageDialog(frame, "API showVersion: \n" + model.getVersion());
     }
 
     void showStatementDialog() {

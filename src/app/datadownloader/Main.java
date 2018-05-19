@@ -13,7 +13,7 @@ public class Main {
         FileInputStream loggingProperties = new FileInputStream("./lib/logging.properties");
         LogManager.getLogManager().readConfiguration(loggingProperties);
 
-        System.out.println("startAPI");
+        System.out.println("initialize");
         Model model = new Model();
         /*Controller controller = */new Controller(model);
     }
