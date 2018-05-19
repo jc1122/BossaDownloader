@@ -11,9 +11,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * You need to {@link SelectTickersDialog#getDialog()} then {@link JDialog#setVisible(boolean)}
+ * manually to display the dialog.
+ */
 public class SelectTickersDialog {
+
+    JDialog dialog;
+    public JDialog getDialog() {
+        return dialog;
+    }
     public SelectTickersDialog(Model model) {
-        JDialog dialog = new JDialog();
+        dialog = new JDialog();
         dialog.setTitle("Tickers to watch");
 
         //TODO refactor this, possibly in BossaAPI, to many unnecessary conversions
@@ -23,8 +32,7 @@ public class SelectTickersDialog {
         List<BossaAPI.NolTickerAPI> tickers = new ArrayList<>(allTickers);
         List<BossaAPI.NolTickerAPI> tickersInFilter = new ArrayList<>(model.getTickersInFilter());
 
-        //TODO add tickers in filter to model and to this dialog and display them in window
-        ButtonPane buttonPane = new ButtonPane(model);
+        ButtonPane buttonPane = new ButtonPane(model, dialog);
         TickerTablesPane tickerTablesPane = new TickerTablesPane(buttonPane.getSearchField(), tickers, tickersInFilter);
         buttonPane.setTickerTablesPane(tickerTablesPane);
 
@@ -36,8 +44,8 @@ public class SelectTickersDialog {
         dialog.add(buttonPane.getPane(), BorderLayout.PAGE_END);
 
         dialog.pack();
-        SwingUtilities.invokeLater(() ->
-                dialog.setVisible(true));
+//        SwingUtilities.invokeLater(() ->
+//                dialog.setVisible(true));
 
         dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }

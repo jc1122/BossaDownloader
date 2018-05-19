@@ -22,7 +22,7 @@ public class ButtonPane {
         this.tickerTablesPane = tickerTablesPane;
     }
 
-    public ButtonPane(Model model) {
+    public ButtonPane(Model model, JDialog dialog) {
         buttonPane.add(okButton);
         buttonPane.add(cancelButton);
         buttonPane.add(saveButton);
@@ -31,8 +31,13 @@ public class ButtonPane {
         okButton.addActionListener(e -> {
                 model.clearFilter();
                 model.addTickersToFilter(new HashSet<>(tickerTablesPane.getTickersInFilter()));
+                dialog.dispose();
         }
                 );
+        cancelButton.addActionListener( e -> {
+            dialog.dispose();
+
+        });
 
         filterPane.add(new JLabel("Search text: "));
         searchField = new JTextField();

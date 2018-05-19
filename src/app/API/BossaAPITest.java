@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+//TODO test nolorderreport and nolorderrequest
+
 class BossaAPITest {
 
     @BeforeEach
@@ -325,6 +327,7 @@ class BossaAPITest {
         void getTickers() {
             List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
             System.out.println("number of tickers: " + tickers.size());
+            assertTrue(tickers.size() > 1000);
         }
 
         private List<BossaAPI.NolTickerAPI> prepareAllTickers(TypeOfList typeOfList) {

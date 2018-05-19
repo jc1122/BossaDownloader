@@ -17,6 +17,8 @@ public class View {
 
     private JFrame frame;
 
+    private SelectTickersDialog selectTickersDialog;
+
     View(Controller controller, Model model) {
         this.controller = controller;
         this.model = model;
@@ -64,7 +66,14 @@ public class View {
     }
 
     void showSelectTickersDialog() {
-        new SelectTickersDialog(model);
+        if (selectTickersDialog != null) {
+            if (selectTickersDialog.getDialog().isVisible()) {
+                return;
+            }
+        }
+        selectTickersDialog = new SelectTickersDialog(model);
+        selectTickersDialog.getDialog().setVisible(true);
+        selectTickersDialog.getDialog().requestFocus();
     }
 
     void disableStartApiMenuItem() {

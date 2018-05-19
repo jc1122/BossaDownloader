@@ -105,6 +105,7 @@ public enum BossaAPI {
      * @param <T>          class wrapper designed to wrap class of the pointer {@link BossaAPIClassWrapper}
      * @return list of wrapper class elements
      */
+    //TODO this may be converted to Set instead of List
     private static <U extends Structure,
             T extends BossaAPIClassWrapper<? extends BossaAPIClassWrapper, U>>
     List<T> convertPointerToListHelper(int size, U pointer, Class<T> wrapperClass) {
