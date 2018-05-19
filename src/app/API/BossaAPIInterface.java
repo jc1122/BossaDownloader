@@ -515,6 +515,9 @@ interface BossaAPIInterface extends Library {
 
     /**
      * Enables request for update of trading session status and phase. Should be called before tickers are added to filter.
+     * Additional {@link BossaAPIInterface.NolRecentInfo} message will be sent to function set by
+     * {@link BossaAPIInterface#SetCallback(SetCallbackDummy)} before sending message with quotes.
+     * The message will contain only info about the phase and session status.
      * @param val True to receive updates, False to stop receiving updates
      * @return
      */

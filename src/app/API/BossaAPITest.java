@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -19,7 +20,7 @@ class BossaAPITest {
     @BeforeEach
     void setUp() {
         assumeTrue(BossaAPIInterfaceTest.checkIfNolIsRunning(), "NOL is not running");
-        BossaAPI.initialize();
+        System.out.println("init message: " + BossaAPI.initialize());
         //Thread.sleep(100);
     }
 
@@ -33,6 +34,62 @@ class BossaAPITest {
         BossaAPI.initialize();
     }
 
+    @Nested
+    @DisplayName("addTickersToFilter tests")
+    class AddTickersToFilterTests {
+
+        private Set<BossaAPI.NolTickerAPI> addNumberOfTickers(int number) {
+            List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
+            Set<BossaAPI.NolTickerAPI> tickerSet = new HashSet<>();
+
+            IntStream.range(0, number).forEach(value -> tickerSet.add(tickers.get(value)));
+
+            return tickerSet;
+        }
+
+        @Test
+        @DisplayName("add 10 valid tickers to filter")
+        void addTickersToFilterTest10() {
+            String message = BossaAPI.addTickersToFilter(addNumberOfTickers(10));
+            assertTrue(message.equals("add to filter"));
+        }
+
+        @Test
+        @DisplayName("add 200 valid tickers to filter (limit is 150)")
+        void addTickersToFilterTest200() {
+            Executable test = () -> BossaAPI.addTickersToFilter(addNumberOfTickers(200));
+            assertThrows(IllegalArgumentException.class, test, "should complain about too much tickers in filter!");
+        }
+
+        @Test
+        @DisplayName("add single null ticker to filter")
+        void addTickersToFilterNull() {
+            Set<BossaAPI.NolTickerAPI> tickers = new HashSet<>();
+            tickers.add(null);
+            Executable test = () -> BossaAPI.addTickersToFilter(tickers);
+            assertThrows(IllegalArgumentException.class, test);
+            //BossaAPI.addTickersToFilter(tickers);
+        }
+
+        @Test
+        @DisplayName("add single null ticker with 10 valid tickers to filter")
+        void addTickersToFilterValidNull() {
+            Set<BossaAPI.NolTickerAPI> tickers = addNumberOfTickers(10);
+            tickers.add(null);
+            String message = BossaAPI.addTickersToFilter(tickers);
+            assertTrue(message.equals("add to filter"));
+        }
+
+        @Test
+        @DisplayName("add invalid ticker to filter")
+        void addTickersToFilterInvalid() {
+            Set<BossaAPI.NolTickerAPI> tickers = addNumberOfTickers(10);
+            tickers.add(null);
+            String message = BossaAPI.addTickersToFilter(tickers);
+            assertTrue(message.equals("add to filter"));
+        }
+    }
+
     @Test
     @DisplayName("successfully add single isin to filter")
     void addToFilterSingleIsin() {
@@ -41,6 +98,7 @@ class BossaAPITest {
 
         assertEquals("add to filter", BossaAPI.addToFilter(isins), BossaAPI.addToFilter(isins));
     }
+
     @Test
     @DisplayName("successfully add multiple isins to filter")
     void addToFilterMultipleIsins() {
@@ -69,7 +127,7 @@ class BossaAPITest {
         BossaAPI.clearFilter();
         Executable test = () -> BossaAPI.addToFilter(prepareIsins(300));
 
-        assertThrows(IllegalStateException.class, test, "should complain about too much tickers in filter!");
+        assertThrows(IllegalArgumentException.class, test, "should complain about too much tickers in filter!");
 
     }
 
@@ -115,7 +173,7 @@ class BossaAPITest {
         isins.add("invalid4");
 
         Executable test = () -> BossaAPI.addToFilter(isins);
-        assertThrows(IllegalStateException.class, test, "error with attribute action or ticker");
+        assertThrows(IllegalArgumentException.class, test, "error with attribute action or ticker");
     }
 
     @Test
@@ -124,87 +182,15 @@ class BossaAPITest {
         Set<String> isins = new HashSet<>();
 
         Executable test = () -> BossaAPI.addToFilter(isins);
-        assertThrows(IllegalStateException.class, test, "error with attribute action or ticker");
-    }
-    @Test
-    @DisplayName("remove invalid isin from filter or isin not contained in filter")
-    void removeFromFilterInvalid() {
-        Set<String> isins = new HashSet<>();
-        isins.add("PLVCAOC00015");
-        isins.add("PLNFI0600010");
-        isins.add("PLNFI0800016");
-        isins.add("PL11BTS00015");
-        BossaAPI.addToFilter(isins);
-
-        Set<String> isinsToRemove = new HashSet<>();
-        isinsToRemove.add("invalid");
-
-        Executable test = () -> BossaAPI.removeFromFilter(isinsToRemove);
-        assertThrows(IllegalArgumentException.class, test, "nothing to add/remove");
-        //fail("");
+        assertThrows(IllegalArgumentException.class, test, "error with attribute action or ticker");
     }
 
-    @Test
-    @DisplayName("remove valid existing isin from filter ")
-    void removeFromFilterValid() {
-        Set<String> isins = new HashSet<>();
-        isins.add("PLVCAOC00015");
-        isins.add("PLNFI0600010");
-        isins.add("PLNFI0800016");
-        isins.add("PL11BTS00015");
-        BossaAPI.addToFilter(isins);
-
-        Set<String> isinsToRemove = new HashSet<>();
-        isinsToRemove.add("PLNFI0800016");
-        isinsToRemove.add("PL11BTS00015");
-
-        assertEquals("remove from filter", BossaAPI.removeFromFilter(isinsToRemove));
-    }
     @Test
     @Disabled
     void APIOrderRequest() {
         fail("");
     }
 
-    @Test
-    @DisplayName("get default list of tickers")
-    void getTickers() {
-        List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
-        System.out.println("number of tickers: " + tickers.size());
-        //fail("");
-    }
-
-    @Test
-    @DisplayName("get list of tickers with wrong type of list for in_ticker")
-    void getTickersWrongParameter() {
-        Executable test = () -> BossaAPI.getTickers(TypeOfList.ISIN, null);
-        assertThrows(IllegalArgumentException.class, test);
-    }
-
-    private List<BossaAPI.NolTickerAPI> prepareAllTickers(TypeOfList typeOfList) {
-        List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
-        assumeFalse(tickers.isEmpty());
-        //List<BossaAPI.NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, tickers.get(0));
-        List<BossaAPI.NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, tickers.get(0));
-        System.out.println("number of tickers: " + tickers.size());
-        System.out.println("Symbol: " + tickers.get(0).getName());
-        System.out.println("number of filtered tickers: " + singleTicker.size());
-        return singleTicker;
-    }
-
-    @Test
-    @DisplayName("get list of SYMBOL tickers with single ticker symbol")
-    void getTickersSymbol() {
-        List<BossaAPI.NolTickerAPI> tickers = prepareAllTickers(TypeOfList.SYMBOL);
-        System.out.println(tickers);
-        assertTrue(tickers.size() == 1);
-    }
-
-    @Test
-    @DisplayName("get list of ALL tickers with single ticker symbol")
-    void getTickersAll() {
-        List<BossaAPI.NolTickerAPI> tickers = prepareAllTickers(TypeOfList.ALL);
-    }
 
     @Test
     @DisplayName("get api version")
@@ -238,6 +224,118 @@ class BossaAPITest {
                 assertEquals(e.getClass(), NullPointerException.class);
                 System.out.println(e.getMessage());
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("removeFromFilter tests")
+    class RemoveFromFilterTests {
+        Set<String> isinsToRemove;
+
+        @BeforeEach
+        void prepareFilter() {
+            Set<String> isins = new HashSet<>();
+            isins.add("PLVCAOC00015");
+            isins.add("PLNFI0600010");
+            isins.add("PLNFI0800016");
+            isins.add("PL11BTS00015");
+            BossaAPI.addToFilter(isins);
+            isinsToRemove = new HashSet<>();
+        }
+
+        @Test
+        @DisplayName("remove invalid isin from filter or isin not contained in filter")
+        void removeFromFilterInvalid() {
+            isinsToRemove.add("invalid");
+            Executable test = () -> BossaAPI.removeFromFilter(isinsToRemove);
+            assertThrows(IllegalArgumentException.class, test, "nothing to add/remove");
+        }
+
+        @Test
+        @DisplayName("remove valid existing isin from filter ")
+        void removeFromFilterValid() {
+            isinsToRemove.add("PLNFI0800016");
+            isinsToRemove.add("PL11BTS00015");
+            assertEquals("remove from filter", BossaAPI.removeFromFilter(isinsToRemove));
+        }
+
+        @Test
+        @DisplayName("remove invalid isin and valid existing isin from filter ")
+        void removeFromFilterValidInvalid() {
+            isinsToRemove.add("PLNFI0800016");
+            isinsToRemove.add("PL11BTS00015");
+            isinsToRemove.add("invalid");
+            Executable test = () -> BossaAPI.removeFromFilter(isinsToRemove);
+            assertThrows(IllegalArgumentException.class, test);
+        }
+
+        @Test
+        @DisplayName("remove null isin from filter ")
+        void removeFromFilterNull() {
+            isinsToRemove.add(null);
+            Executable test = () -> BossaAPI.removeFromFilter(isinsToRemove);
+            assertThrows(IllegalArgumentException.class, test);
+        }
+
+        @Test
+        @DisplayName("remove empty isin from filter ")
+        void removeFromFilterEmpty() {
+            isinsToRemove.add("");
+            Executable test = () -> BossaAPI.removeFromFilter(isinsToRemove);
+            assertThrows(IllegalArgumentException.class, test);
+        }
+
+        @Test
+        @DisplayName("remove empty isin and valid existing isin from filter ")
+        void removeFromFilterValidEmpty() {
+            isinsToRemove.add("PLNFI0800016");
+            isinsToRemove.add("PL11BTS00015");
+            isinsToRemove.add("");
+            Executable test = () -> BossaAPI.removeFromFilter(isinsToRemove);
+            assertThrows(IllegalArgumentException.class, test);
+        }
+    }
+
+    @Nested
+    @DisplayName("getTickers test")
+    class GetTickersTest {
+        @Test
+        @DisplayName("get list of tickers with wrong type of list for in_ticker")
+        void getTickersWrongParameter() {
+            Executable test = () -> BossaAPI.getTickers(TypeOfList.ISIN, null);
+            assertThrows(IllegalArgumentException.class, test);
+        }
+
+        @Test
+        @DisplayName("get list of SYMBOL tickers with single ticker symbol")
+        void getTickersSymbol() {
+            List<BossaAPI.NolTickerAPI> tickers = prepareAllTickers(TypeOfList.SYMBOL);
+            System.out.println(tickers);
+            assertTrue(tickers.size() == 1);
+        }
+
+        @Test
+        @DisplayName("get list of ALL tickers with single ticker symbol")
+        void getTickersAll() {
+            List<BossaAPI.NolTickerAPI> tickers = prepareAllTickers(TypeOfList.ALL);
+        }
+
+        @Test
+        @DisplayName("get default list of tickers")
+        void getTickers() {
+            List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
+            System.out.println("number of tickers: " + tickers.size());
+        }
+
+        private List<BossaAPI.NolTickerAPI> prepareAllTickers(TypeOfList typeOfList) {
+            List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
+            assumeFalse(tickers.isEmpty());
+            //List<BossaAPI.NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, tickers.get(0));
+            List<BossaAPI.NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, tickers.get(0));
+            System.out.println("number of tickers: " + tickers.size());
+            System.out.println("Symbol: " + tickers.get(0).getName());
+            System.out.println("number of filtered tickers: " + singleTicker.size());
+            return singleTicker;
         }
     }
 }

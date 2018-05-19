@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 
 public class SelectTickersDialog {
-    //TODO add functionality
     public SelectTickersDialog(Model model) {
         JDialog dialog = new JDialog();
         dialog.setTitle("Tickers to watch");

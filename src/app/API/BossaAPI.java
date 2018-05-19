@@ -207,7 +207,7 @@ public enum BossaAPI {
      * @return success message
      * @throws IllegalStateException if failed
      */
-    public static String addToFilter(Set<String> isins) throws IllegalStateException {
+    public static String addToFilter(Set<String> isins) throws IllegalArgumentException {
         Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "addToFilter", params);
         clearFilter();
@@ -221,7 +221,7 @@ public enum BossaAPI {
         int errorCode = INSTANCE.AddToFilter(tickerString, false);
         String output = GetResultCodeDesc(errorCode);
         if (errorCode < 0) {
-            IllegalStateException e = new IllegalStateException(output);
+            IllegalArgumentException e = new IllegalArgumentException(output);
             logger.finer(e.getMessage());
             throw e;
         }
@@ -235,6 +235,9 @@ public enum BossaAPI {
      * @param tickers a set of tickers to be appended to filter
      */
     public static String addTickersToFilter(Set<BossaAPI.NolTickerAPI> tickers) {
+        if(tickers.contains(null)) {
+            tickers.remove(null);
+        }
         Set <String> isins = tickers
                 .stream()
                 .map(BossaAPI.NolTickerAPI::getIsin)
@@ -325,7 +328,7 @@ public enum BossaAPI {
      *
      * @param typeOfList group filter
      * @param in_ticker  null or valid ticker
-     * @return list of tickers
+     * @return tickers
      */
     @NotNull
     public static List<NolTickerAPI> getTickers(TypeOfList typeOfList, NolTickerAPI in_ticker) {
@@ -572,7 +575,7 @@ public enum BossaAPI {
          * IX - index<br>
          * IN -<br>
          * DN -<br>
-         * @return
+         * @return success or error message
          */
         @NotNull
         public String getMarketCode() {
