@@ -13,6 +13,7 @@ class EnumConverter implements TypeConverter {
 
     //private static final Logger logger = LoggerFactory.getLogger(EnumConverter.class);
 
+    @Override
     public Object fromNative(Object input, FromNativeContext context) {
         Integer i = (Integer) input;
         Class targetClass = context.getTargetType();
@@ -32,11 +33,13 @@ class EnumConverter implements TypeConverter {
         return instance.getForValue(i);
     }
 
+    @Override
     public Object toNative(Object input, ToNativeContext context) {
         JnaEnum j = (JnaEnum) input;
         return j.getIntValue();
     }
 
+    @Override
     public Class nativeType() {
         return Integer.class;
     }

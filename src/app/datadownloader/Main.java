@@ -6,7 +6,9 @@ import app.gui.Model;
 import java.io.FileInputStream;
 import java.util.logging.LogManager;
 
-/** Simple example of JNA interface mapping and usage. */
+/**
+ * Simple example of JNA interface mapping and usage.
+ */
 @SuppressWarnings("Convert2Lambda")
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -15,6 +17,7 @@ public class Main {
 
         System.out.println("initialize");
         Model model = new Model();
-        /*Controller controller = */new Controller(model);
+        /*Controller controller = */
+        new Controller(model);
     }
 }

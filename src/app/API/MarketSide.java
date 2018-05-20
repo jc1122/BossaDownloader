@@ -21,6 +21,7 @@ public enum MarketSide {
 
     /**
      * Returns 1 for BID and 2 for ASK
+     *
      * @return Returns 1 for BID and 2 for ASK
      */
     public int getValue() {

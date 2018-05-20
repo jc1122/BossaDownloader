@@ -66,11 +66,13 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
     @SuppressWarnings("FieldCanBeLocal")
     private static int start = -1;
 
+    @Override
     @Contract(pure = true)
     public int getIntValue() {
         return this.ordinal() + start;
     }
 
+    @Override
     @Nullable
     public TypeOfList getForValue(int i) {
         for (TypeOfList o : TypeOfList.values()) {
@@ -84,7 +86,8 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
     /**
      * Used to ckeck if getting list of tickers is possible by
      * {@link BossaAPI#getTickers(TypeOfList, BossaAPI.NolTickerAPI)}
-     * @param ticker
+     *
+     * @param ticker whose fields you wish to check
      * @return {@code True} if given field of ticker is not empty
      */
     public abstract boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker);

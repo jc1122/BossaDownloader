@@ -5,10 +5,7 @@ import org.junit.jupiter.api.function.Executable;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,7 +50,7 @@ class BossaAPITest {
         @DisplayName("add 10 valid tickers to filter")
         void addTickersToFilterTest10() {
             String message = BossaAPI.addTickersToFilter(addNumberOfTickers(10));
-            assertTrue(message.equals("add to filter"));
+            assertEquals("add to filter", message);
         }
 
         @Test
@@ -79,7 +76,7 @@ class BossaAPITest {
             Set<BossaAPI.NolTickerAPI> tickers = addNumberOfTickers(10);
             tickers.add(null);
             String message = BossaAPI.addTickersToFilter(tickers);
-            assertTrue(message.equals("add to filter"));
+            assertEquals("add to filter", message);
         }
 
         @Test
@@ -88,7 +85,7 @@ class BossaAPITest {
             Set<BossaAPI.NolTickerAPI> tickers = addNumberOfTickers(10);
             tickers.add(null);
             String message = BossaAPI.addTickersToFilter(tickers);
-            assertTrue(message.equals("add to filter"));
+            assertEquals("add to filter", message);
         }
     }
 
@@ -113,7 +110,7 @@ class BossaAPITest {
         assertEquals("add to filter", BossaAPI.addToFilter(isins), BossaAPI.addToFilter(isins));
     }
 
-    Set<String> prepareIsins(int numberOfIsins) {
+    private Set<String> prepareIsins(int numberOfIsins) {
         List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
         assumeTrue(tickers.size() > numberOfIsins, "ticker count is below 101!");
         Set<String> isins = new HashSet<>();
@@ -143,7 +140,7 @@ class BossaAPITest {
         PropertyChangeListener listener = new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName() == "Quotes") {
+                if (Objects.equals(evt.getPropertyName(), "Quotes")) {
                     counter[0]++;
                     synchronized (this) {
                         if (counter[0] == 2 * numberOfTickers) {
@@ -313,7 +310,7 @@ class BossaAPITest {
         void getTickersSymbol() {
             List<BossaAPI.NolTickerAPI> tickers = prepareAllTickers(TypeOfList.SYMBOL);
             System.out.println(tickers);
-            assertTrue(tickers.size() == 1);
+            assertEquals(1, tickers.size());
         }
 
         @Test

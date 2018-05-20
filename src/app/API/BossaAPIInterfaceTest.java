@@ -14,14 +14,15 @@ class BossaAPIInterfaceTest {
     private static int code; //error code for each test
 
     private static void assertNonNegative(int code) {
-        assertTrue(code >=0, getMessage(code));
+        assertTrue(code >= 0, getMessage(code));
     }
 
     private static void assertNegative(int code) {
         assertFalse(code == -22, getMessage(code));
-        assertFalse(code == -55,getMessage(code));
+        assertFalse(code == -55, getMessage(code));
         assertTrue(code < 0, getMessage(code));
     }
+
     static boolean checkIfNolIsRunning() {
         String line;
         StringBuilder pidInfo = new StringBuilder();
@@ -61,9 +62,9 @@ class BossaAPIInterfaceTest {
     static void tearDown() {
         System.out.println("Post test message: " + getMessage(code));
         System.out.println("Shutdown message: " + getMessage(INSTANCE.Shutdown()));
-                try {
-            Thread.sleep(100); //give some time to clean up, otherwise api may crash
-        } catch(InterruptedException e) {}
+//                try {
+//            Thread.sleep(100); //give some time to clean up, otherwise api may crash
+//        } catch(InterruptedException e) {}
     }
 
     @Nested
@@ -78,6 +79,7 @@ class BossaAPIInterfaceTest {
             assertNonNegative(code);
 
         }
+
         @Test
         @DisplayName("add 2 valid isins to empty filter")
         void addToFilterMany() {
@@ -86,6 +88,7 @@ class BossaAPIInterfaceTest {
             assertNonNegative(code);
 
         }
+
         @Test
         @DisplayName("add valid isin to nonempty filter")
         void addToFilterNonEmpty() {
@@ -95,6 +98,7 @@ class BossaAPIInterfaceTest {
             assertNegative(code);
 
         }
+
         @Test
         @DisplayName("add invalid isin to empty filter")
         void addToFilterInvalid() {
@@ -103,6 +107,7 @@ class BossaAPIInterfaceTest {
             assertNegative(code);
 
         }
+
         @Test
         @DisplayName("add invalid isin to nonempty filter")
         void addToFilterInvalidNonEmpty() {
@@ -112,6 +117,7 @@ class BossaAPIInterfaceTest {
             assertNegative(code);
 
         }
+
         @Test
         @DisplayName("add null isin to nonempty filter")
         void addToFilterNullNonempty() {
@@ -121,6 +127,7 @@ class BossaAPIInterfaceTest {
             assertNegative(code);
 
         }
+
         @Test
         @DisplayName("add empty isin to nonempty filter")
         void addToFilterEmptyNonempty() {
@@ -145,41 +152,46 @@ class BossaAPIInterfaceTest {
             assertNonNegative(code);
 
         }
+
         @Test
         @DisplayName("remove existing tickers from filter and add invalid isin")
         void remFromFilterInalid() {
             INSTANCE.AddToFilter("PLDEBCA00016;", false);
             code = INSTANCE.RemFromFilter("PLDMLKR00023invalid", false);
             INSTANCE.ClearFilter();
-            assertEquals(-34,code);
+            assertEquals(-34, code);
 
         }
+
         @Test
         @DisplayName("remove existing tickers from filter and add empty isin")
         void remFromFilterEmpty() {
             INSTANCE.AddToFilter("PLDEBCA00016;", false);
             code = INSTANCE.RemFromFilter("", false);
             INSTANCE.ClearFilter();
-            assertEquals(-56,code);
+            assertEquals(-56, code);
 
         }
+
         @Test
         @DisplayName("remove existing tickers from filter and add null isin")
         void remFromFilterNull() {
             INSTANCE.AddToFilter("PLDEBCA00016;", false);
             code = INSTANCE.RemFromFilter(null, false);
             INSTANCE.ClearFilter();
-            assertEquals(-56,code);
+            assertEquals(-56, code);
 
         }
+
         @Test
         @DisplayName("remove from empty filter and add null isin")
         void remFromFilterEmptyNull() {
             code = INSTANCE.RemFromFilter(null, false);
             INSTANCE.ClearFilter();
-            assertEquals(-56,code);
+            assertEquals(-56, code);
 
         }
+
         @Test
         @DisplayName("remove from empty filter and add valid isin")
         void remFromFilterEmptyValid() {
@@ -188,17 +200,16 @@ class BossaAPIInterfaceTest {
             assertNonNegative(code);
 
         }
+
         @Test
         @DisplayName("remove from empty filter and add invalid isin")
         void remFromFilterEmptyInalid() {
             code = INSTANCE.RemFromFilter("PLDEBCA00016invalid;", false);
             INSTANCE.ClearFilter();
-            assertEquals(-34,code);
+            assertEquals(-34, code);
 
         }
     }
-
-
 
 
     @Test
@@ -215,9 +226,6 @@ class BossaAPIInterfaceTest {
     }
 
 
-
-
-
     @Test
     @Disabled
     void APIOrderRequest() {
@@ -231,14 +239,6 @@ class BossaAPIInterfaceTest {
     }
 
 
-
-
-
-
-
-
-
-
     @Nested
     @DisplayName("Callback tests")
     class CallbackTests {
@@ -249,6 +249,7 @@ class BossaAPIInterfaceTest {
             assertNonNegative(code);
 
         }
+
         @Test
         @DisplayName("reinitialize delay callback")
         void setCallbackDelayReinitialize() {
@@ -257,36 +258,41 @@ class BossaAPIInterfaceTest {
             code = INSTANCE.SetCallbackDelay(delay -> System.out.println("current delay is: " + delay + " after reinitializing"));
             assertEquals(13, code);
         }
+
         @Test
         @DisplayName("deactivate delay callback")
         void setCallbackDelayDeactivate() {
             INSTANCE.SetCallbackDelay(delay -> System.out.println("current delay is: " + delay));
             code = INSTANCE.SetCallbackDelay(null);
-            assertEquals(16,code);
+            assertEquals(16, code);
 
         }
+
         @Test
         @DisplayName("init callback for Accounts")
         void setCallbackAccount() {
             code = INSTANCE.SetCallbackAccount(null);
-            code = INSTANCE.SetCallbackAccount(nolaggrstatement -> System.out.println(nolaggrstatement));
-            assertEquals(13,code);
+            code = INSTANCE.SetCallbackAccount(System.out::println);
+            assertEquals(13, code);
         }
+
         @Test
         @DisplayName("reinit callback for Accounts")
         void setCallbackAccountReinit() {
-            code = INSTANCE.SetCallbackAccount(nolaggrstatement -> System.out.println(nolaggrstatement));
+            code = INSTANCE.SetCallbackAccount(System.out::println);
             code = INSTANCE.SetCallbackAccount(null);
-            code = INSTANCE.SetCallbackAccount(nolaggrstatement -> System.out.println(nolaggrstatement));
-            assertEquals(13,code);
+            code = INSTANCE.SetCallbackAccount(System.out::println);
+            assertEquals(13, code);
         }
+
         @Test
         @DisplayName("deactivate callback for Accounts")
         void setCallbackAccountDeactivate() {
-            code = INSTANCE.SetCallbackAccount(nolaggrstatement -> System.out.println(nolaggrstatement));
+            code = INSTANCE.SetCallbackAccount(System.out::println);
             code = INSTANCE.SetCallbackAccount(null);
-            assertEquals(16,code);
+            assertEquals(16, code);
         }
+
         @Test
         @DisplayName("initialize callback for orders")
         void setCallbackOrder() {
@@ -294,6 +300,7 @@ class BossaAPIInterfaceTest {
             assertEquals(13, code);
             INSTANCE.SetCallbackOrder(null);
         }
+
         @Test
         @DisplayName("reinitialize callback for orders")
         void setCallbackOrderReinit() {
@@ -303,6 +310,7 @@ class BossaAPIInterfaceTest {
             assertEquals(13, code);
             INSTANCE.SetCallbackOrder(null);
         }
+
         @Test
         @DisplayName("deactivate callback for orders")
         void setCallbackOrderDisable() {
@@ -310,27 +318,31 @@ class BossaAPIInterfaceTest {
             code = INSTANCE.SetCallbackOrder(null);
             assertEquals(16, code);
         }
+
         @Test
         @DisplayName("init callback for Outlook")
         void setCallbackOutlook() {
-            code = INSTANCE.SetCallbackOutlook(outlook -> System.out.println(outlook));
-            assertEquals(13,code);
+            code = INSTANCE.SetCallbackOutlook(System.out::println);
+            assertEquals(13, code);
         }
+
         @Test
         @DisplayName("reinit callback for Outlook")
         void setCallbackOutlookReinit() {
-            code = INSTANCE.SetCallbackOutlook(outlook -> System.out.println(outlook));
+            code = INSTANCE.SetCallbackOutlook(System.out::println);
             code = INSTANCE.SetCallbackOutlook(null);
-            code = INSTANCE.SetCallbackOutlook(outlook -> System.out.println(outlook));
-            assertEquals(13,code);
+            code = INSTANCE.SetCallbackOutlook(System.out::println);
+            assertEquals(13, code);
         }
+
         @Test
         @DisplayName("disable callback for Outlook")
         void setCallbackOutlookDisable() {
-            code = INSTANCE.SetCallbackOutlook(outlook -> System.out.println(outlook));
+            code = INSTANCE.SetCallbackOutlook(System.out::println);
             code = INSTANCE.SetCallbackOutlook(null);
-            assertEquals(16,code);
+            assertEquals(16, code);
         }
+
         @Test
         @DisplayName("set callback for quotes")
         void setCallback() throws InterruptedException {
@@ -347,7 +359,7 @@ class BossaAPIInterfaceTest {
             };
 
             System.out.println(INSTANCE.SetCallback(callback));
-            String isins =  "PLVCAOC00015;PLNFI0600010;PLNFI0800016";
+            String isins = "PLVCAOC00015;PLNFI0600010;PLNFI0800016";
             //callback should be called immediatelly after setting filter
             INSTANCE.AddToFilter(isins, false);
             synchronized (invoked) {
@@ -358,6 +370,7 @@ class BossaAPIInterfaceTest {
             INSTANCE.SetCallback(null);
         }
     }
+
     @Nested
     @DisplayName("Tickers test")
     class TickersTest {
@@ -366,24 +379,25 @@ class BossaAPIInterfaceTest {
         void releaseTickersList() {
             BossaAPIInterface.NolTickers tickers = INSTANCE.InitListTickers();
             code = INSTANCE.ReleaseTickersList(tickers);
-            assertEquals(3,code);
+            assertEquals(3, code);
         }
 
         @Test
         @DisplayName("get all tickers")
         void getTickers() {
             BossaAPIInterface.NolTickers tickers = INSTANCE.InitListTickers();
-            code = INSTANCE.GetTickers(tickers, TypeOfList.ALL,null);
+            code = INSTANCE.GetTickers(tickers, TypeOfList.ALL, null);
             System.out.println(getMessage(code));
             assertTrue(tickers.size > 1000);
         }
+
         @Test
         @Disabled
         @DisplayName("get ticker by ISIN with null in_ticker")
-        //unfortunately this test will cause the api to crash and send "Only one function may be called" message
+            //unfortunately this test will cause the api to crash and send "Only one function may be called" message
         void getTickersNull() {
             BossaAPIInterface.NolTickers tickers = INSTANCE.InitListTickers();
-            code = INSTANCE.GetTickers(tickers, TypeOfList.ISIN,null);
+            code = INSTANCE.GetTickers(tickers, TypeOfList.ISIN, null);
             System.out.println(getMessage(code));
             assertEquals(-93, code);
             INSTANCE.Shutdown();
@@ -398,8 +412,9 @@ class BossaAPIInterfaceTest {
         @DisplayName("Successful init")
         void initialize() {
             code = INSTANCE.Initialize("BOS;BOS");
-            assertEquals(1,code);
+            assertEquals(1, code);
         }
+
         @Test
         @DisplayName("Successful shutdown")
         void shutdown() {

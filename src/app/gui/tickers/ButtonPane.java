@@ -1,29 +1,29 @@
 package app.gui.tickers;
 
-import javax.swing.*;
 import app.gui.Model;
 
+import javax.swing.*;
 import java.util.HashSet;
 import java.util.logging.Logger;
 
-public class ButtonPane {
+class ButtonPane {
     private static final Logger logger =
             Logger.getLogger(ButtonPane.class.getName());
 
-    private JPanel totalPane = new JPanel();
-    private JTextField searchField;
+    private final JPanel totalPane = new JPanel();
+    private final JTextField searchField;
 
     private TickerTablesPane tickerTablesPane;
 
     void setTickerTablesPane(TickerTablesPane tickerTablesPane) {
-        logger.entering(this.getClass().getName(),"setTickerTablesPane", tickerTablesPane);
+        logger.entering(this.getClass().getName(), "setTickerTablesPane", tickerTablesPane);
         this.tickerTablesPane = tickerTablesPane;
-        logger.exiting(this.getClass().getName(),"setTickerTablesPane");
+        logger.exiting(this.getClass().getName(), "setTickerTablesPane");
     }
 
     public ButtonPane(Model model, JDialog dialog) {
         Object[] params = {model, dialog};
-        logger.entering(this.getClass().getName(),"constructor", params);
+        logger.entering(this.getClass().getName(), "constructor", params);
         JButton okButton = new JButton("OK");
         JPanel buttonPane = new JPanel();
         buttonPane.add(okButton);
@@ -35,11 +35,11 @@ public class ButtonPane {
         buttonPane.add(loadButton);
 
         okButton.addActionListener(e -> {
-                model.clearFilter();
-                model.addTickersToFilter(new HashSet<>(tickerTablesPane.getTickersInFilter()));
-                dialog.dispose();
-        }
-                );
+                    model.clearFilter();
+                    model.addTickersToFilter(new HashSet<>(tickerTablesPane.getTickersInFilter()));
+                    dialog.dispose();
+                }
+        );
         cancelButton.addActionListener(e -> dialog.dispose());
 
         JPanel filterPane = new JPanel();
@@ -52,7 +52,7 @@ public class ButtonPane {
         totalPane.setLayout(totalPaneLayout);
         totalPane.add(filterPane);
         totalPane.add(buttonPane);
-        logger.exiting(this.getClass().getName(),"constructor");
+        logger.exiting(this.getClass().getName(), "constructor");
     }
 
     public JPanel getPane() {

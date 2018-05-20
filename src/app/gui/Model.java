@@ -12,10 +12,11 @@ import java.util.Set;
  * Communicates with NOL3 using {@link BossaAPI}.
  */
 public class Model {
-    private Map<String, BossaAPI.PropertyAPI> propertyMap = BossaAPI.getPropertyMap();
+    private final Map<String, BossaAPI.PropertyAPI> propertyMap = BossaAPI.getPropertyMap();
 
     /**
      * {@link BossaAPI#addToFilter(Set)}
+     *
      * @param isins of tickers to be tracked
      */
     public String addToFilter(Set<String> isins) {
@@ -24,6 +25,7 @@ public class Model {
 
     /**
      * {@link BossaAPI#addTickersToFilter(Set)}
+     *
      * @param tickers to be tracked
      */
     public String addTickersToFilter(Set<BossaAPI.NolTickerAPI> tickers) {
@@ -32,6 +34,7 @@ public class Model {
 
     /**
      * {@link BossaAPI#getTickerISINSInFilter()}
+     *
      * @return isins of currently tracked tickers
      */
     public Set<String> getTickerISINSInFilter() {
@@ -40,6 +43,7 @@ public class Model {
 
     /**
      * {@link BossaAPI#getTickersInFilter()}
+     *
      * @return currently tracked tickers
      */
     public Set<BossaAPI.NolTickerAPI> getTickersInFilter() {
@@ -48,6 +52,7 @@ public class Model {
 
     /**
      * {@link BossaAPI#clearFilter()}
+     *
      * @return message of success or failure
      */
     public String clearFilter() {
@@ -56,6 +61,7 @@ public class Model {
 
     /**
      * {@link BossaAPI#removeFromFilter(Set)}
+     *
      * @param isins stop tracking the tickers with given isins
      */
     public String removeFromFilter(Set<String> isins) {
@@ -64,6 +70,7 @@ public class Model {
 
     /**
      * {@link BossaAPI#initialize()}
+     *
      * @return success or error message
      */
     public String initialize() {
@@ -72,6 +79,7 @@ public class Model {
 
     /**
      * {@link BossaAPI#shutdown()}
+     *
      * @return success or error message
      */
     public String shutdown() {
@@ -80,6 +88,7 @@ public class Model {
 
     /**
      * {@link BossaAPI#getVersion()}
+     *
      * @return success or error message
      */
     public String getVersion() {
@@ -89,6 +98,7 @@ public class Model {
     /**
      * The {@code listener} will be added to each property which inherits from {@link BossaAPI.PropertyAPI}
      * and is stored in {@link BossaAPI#getPropertyMap()}.
+     *
      * @param listener callback for property
      */
     public void addPropertyListener(PropertyChangeListener listener) {
@@ -99,6 +109,7 @@ public class Model {
 
     /**
      * {@link BossaAPI.PropertyAPI#getProperty()}
+     *
      * @param property any property of {@link BossaAPI.PropertyAPI}
      * @return property, will need to be cast to appropriate class (class name should be the same as property name)
      */
@@ -108,8 +119,9 @@ public class Model {
 
     /**
      * {@link BossaAPI#getTickers(TypeOfList, BossaAPI.NolTickerAPI)}
+     *
      * @param typeOfList {@link TypeOfList}
-     * @param in_ticker {@link BossaAPI#getTickers(TypeOfList, BossaAPI.NolTickerAPI)}
+     * @param in_ticker  {@link BossaAPI#getTickers(TypeOfList, BossaAPI.NolTickerAPI)}
      * @return {@link BossaAPI#getTickers(TypeOfList, BossaAPI.NolTickerAPI)}
      */
     public List<BossaAPI.NolTickerAPI> getTickers(TypeOfList typeOfList, BossaAPI.NolTickerAPI in_ticker) {

@@ -67,27 +67,32 @@ interface BossaAPIInterface extends Library {
 
         /**
          * International Securities Identifying Number. Max length is 13. Ex. PLDEBCA00016
+         *
          * @see BossaAPI.NolTickerAPI#getIsin()
          */
         public byte[] Isin = new byte[13];        // International Securities Identifying Number
         /**
          * Short name of ticker. Max length is 21. Ex. DEBICA
+         *
          * @see BossaAPI.NolTickerAPI#getName()
          */
         public byte[] Name = new byte[21];        // Full name of the ticker
         /**
          * Market code. See {@link BossaAPI.NolTickerAPI#getMarketCode()} for a list of available market codes.
+         *
          * @see BossaAPI.NolTickerAPI#getMarketCode()
          */
         public byte[] MarketCode = new byte[3];
         /**
          * CFI.
+         *
          * @see BossaAPI.NolTickerAPI#getCFI()
          */
         public byte[] CFI = new byte[7];
 
         /**
          * Market group.
+         *
          * @see BossaAPI.NolTickerAPI#getGroup()
          */
         public byte[] Group = new byte[3];
@@ -95,6 +100,7 @@ interface BossaAPIInterface extends Library {
 
     /**
      * Stores array of {@link NolTicker}
+     *
      * @see BossaAPIInterface#GetTickers(NolTickers, TypeOfList, NolTicker)
      */
     class NolTickers extends Structure {
@@ -240,6 +246,7 @@ interface BossaAPIInterface extends Library {
         public NolBidAskStr offers; // y - offers       200000
         /**
          * Error code
+         *
          * @see BossaAPIInterface#GetResultCodeDesc(int)
          */
         public int Error;            // z - error
@@ -248,6 +255,7 @@ interface BossaAPIInterface extends Library {
 
     /**
      * Stores description and value of funds in account.
+     *
      * @see app.API.BossaAPI.NolFundAPI
      */
     class NolFund extends Structure {
@@ -260,6 +268,7 @@ interface BossaAPIInterface extends Library {
 
     /**
      * Stores positions - ticker and amount of ticker in given account.
+     *
      * @see app.API.BossaAPI.NolPosAPI
      */
     class NolPos extends Structure {
@@ -273,6 +282,7 @@ interface BossaAPIInterface extends Library {
 
     /**
      * Account statement.
+     *
      * @see app.API.BossaAPI.NolStatementAPI
      */
     class NolStatement extends Structure {
@@ -290,6 +300,7 @@ interface BossaAPIInterface extends Library {
 
     /**
      * Array of {@link NolStatement}. Contains pointer to array and size of array.
+     *
      * @see app.API.BossaAPI.NolAggrStatementAPI
      */
     class NolAggrStatement extends Structure {
@@ -372,10 +383,11 @@ interface BossaAPIInterface extends Library {
     }
 
     /**
-     *  Initializes library, should be called before calling any other methods. However, to check if NOL3 is running,
-     *  you may run {@link BossaAPIInterface#SetCallbackStatus(SetCallbackStatusDummy)} first and check status.
-     *  Will fail if called, when <a href="http://bossa.pl/oferta/internet/pomoc/nol">NOL3</a>
-     *  is not running.
+     * Initializes library, should be called before calling any other methods. However, to check if NOL3 is running,
+     * you may run {@link BossaAPIInterface#SetCallbackStatus(SetCallbackStatusDummy)} first and check status.
+     * Will fail if called, when <a href="http://bossa.pl/oferta/internet/pomoc/nol">NOL3</a>
+     * is not running.
+     *
      * @param AppId login and pass separated by semocolon, currently only "BOS;BOS" is accepted
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
@@ -385,30 +397,32 @@ interface BossaAPIInterface extends Library {
      * Starts tracking quotes of given tickers. Quotes will be sent to the function set by
      * {@link BossaAPIInterface#SetCallback}. If the filter is not empty, then API will crash.
      * Use {@link BossaAPIInterface#ClearFilter()} to clear filter.
+     *
      * @param TickersToAdd isins or names of tickers separated by semicolon
-     * @param Flush {@code True} for names, {@code False} for ISINs
+     * @param Flush        {@code True} for names, {@code False} for ISINs
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     int AddToFilter(String TickersToAdd, boolean Flush);
 
     /**
      * Replaces tickers currently in filter with given tickers and starts tracking quotes.
+     *
+     * @param TickersToRem these tickers will no longer be tracked
+     * @param Flush {@code true} for names, {@code false} for isins
+     * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      * @see BossaAPIInterface#ClearFilter()
      * @see BossaAPIInterface#AddToFilter(String, boolean)
-     * @param TickersToRem
-     * @param Flush
-     * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     int RemFromFilter(String TickersToRem, boolean Flush);
 
     /**
      * Substitute of pointer to function {@link BossaAPIInterface#SetCallback(SetCallbackDummy)}.
-     *
      */
     interface SetCallbackDummy extends Callback {
         /**
          * Implement the functionality for callback function here.
-         * @param nolrecentinfo
+         *
+         * @param nolrecentinfo quotes information, see {@link NolRecentInfo}
          */
         void invoke(NolRecentInfo nolrecentinfo);
     }
@@ -416,7 +430,8 @@ interface BossaAPIInterface extends Library {
     /**
      * Function for setting a callback function for quotes.
      * {@code void (*ptrcallback) (RecentInfo*)} - pointer to callback function. Use {@link SetCallbackDummy} instead.
-     * @param dummy
+     *
+     * @param dummy of a pointer to function, see {@link Callback}
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     int SetCallback(SetCallbackDummy dummy);
@@ -424,6 +439,7 @@ interface BossaAPIInterface extends Library {
     /**
      * Stop tracking quotes of previously selected tickers. Only tickers which are in filter will receive quotes updates.
      * Clearing filter effectively stops updates of all quotes.
+     *
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     int ClearFilter();
@@ -431,54 +447,63 @@ interface BossaAPIInterface extends Library {
     /**
      * Translates error code to message. See <a href="http://bossa.pl/notowania/narzedzia/bossapi/"> documentation</a>
      * for a list of available messages.
+     *
      * @param code non negative value is a success, negative is an error
-     * @return
+     * @return code description
      */
-    String GetResultCodeDesc(int code); 	/* code returned by function */
+    String GetResultCodeDesc(int code);    /* code returned by function */
 
     /**
      * Returns version of API native dll.
+     *
      * @return version of API native dll
      */
     String Get_Version();
 
     /**
      * Clean up memory after finishing work with API native dll.
+     *
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     int Shutdown();
+
     /**
      * Substitute of pointer to function {@link BossaAPIInterface#SetCallbackAccount(SetCallbackAccountDummy)}.
-     *
      */
     interface SetCallbackAccountDummy extends Callback {
         /**
          * Implement the functionality for callback function here.
-         * @param nolaggrstatement
+         *
+         * @param nolaggrstatement list of statements for all accounts, see {@link NolAggrStatement}
          */
         void invoke(NolAggrStatement nolaggrstatement);
     }
+
     /**
      * Function for setting a callback function updating information about accounts.
-     * @param dummy
+     *
+     * @param dummy of a pointer to function, see {@link Callback}
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     // function for setting a callback function (accounts information)
     int SetCallbackAccount(SetCallbackAccountDummy dummy);
+
     /**
      * Substitute of pointer to function {@link BossaAPIInterface#SetCallbackOrder(SetCallbackOrderDummy)}.
-     *
      */
     interface SetCallbackOrderDummy extends Callback {
         /**
          * Implement the functionality for callback function here.
-         * @param nolorderreport
+         *
+         * @param nolorderreport see {@link NolOrderReport}
          */
         void invoke(NolOrderReport nolorderreport);
     }
+
     /**
      * Function for setting a callback function updating information about pending orders.
-     * @param dummy
+     *
+     * @param dummy of a pointer to function, see {@link Callback}
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     // function for setting a callback function (orders information)
@@ -486,18 +511,20 @@ interface BossaAPIInterface extends Library {
 
     /**
      * Substitute of pointer to function {@link BossaAPIInterface#SetCallbackOutlook(SetCallbackOutlookDummy)}.
-     *
      */
     interface SetCallbackOutlookDummy extends Callback {
         /**
          * Implement the functionality for callback function here.
-         * @param outlook
+         *
+         * @param outlook diagnostic message from NOL3
          */
         void invoke(String outlook);
     }
+
     /**
      * Function for setting a callback function updating information about messages from NOL
-     * @param dummy
+     *
+     * @param dummy of a pointer to function, see {@link Callback}
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     int SetCallbackOutlook(SetCallbackOutlookDummy dummy);
@@ -505,6 +532,7 @@ interface BossaAPIInterface extends Library {
     /**
      * Handles modification, cancels and status of pending orders.
      * //TODO check and describe functionality
+     *
      * @param nolorderrequest
      * @param nolorderreport
      * @param Typ
@@ -518,25 +546,28 @@ interface BossaAPIInterface extends Library {
      * Additional {@link BossaAPIInterface.NolRecentInfo} message will be sent to function set by
      * {@link BossaAPIInterface#SetCallback(SetCallbackDummy)} before sending message with quotes.
      * The message will contain only info about the phase and session status.
+     *
      * @param val True to receive updates, False to stop receiving updates
-     * @return
+     * @return error code, see {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     int SetTradingSess(boolean val);
 
     /**
      * Substitute of pointer to function {@link BossaAPIInterface#SetCallbackDelay(SetCallbackDelayDummy)}.
-     *
      */
     interface SetCallbackDelayDummy extends Callback {
         /**
          * Implement the functionality for callback function here.
-         * @param delay
+         *
+         * @param delay to NOL3 server in ms
          */
         void invoke(float delay);
     }
+
     /**
      * Function for setting a callback function receiving delay to NOL server.
-     * @param dummy
+     *
+     * @param dummy of a pointer to function, see {@link Callback}
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     int SetCallbackDelay(SetCallbackDelayDummy dummy);
@@ -547,40 +578,46 @@ interface BossaAPIInterface extends Library {
      * get tickers matching given property. If the selected property of {@code in_ticker} is null or empty string, then
      * NOL will crash! After finished work with list of tickers use {@link BossaAPIInterface#ReleaseTickersList(NolTickers)}
      * to release memory.
+     *
      * @param ptrtickers pointer to list of tickers, see: {@link BossaAPIInterface#InitListTickers()}
      * @param typeOfList see: {@link TypeOfList}
-     * @param in_ticker null or a valid ticker
-     * @return
+     * @param in_ticker  null or a valid ticker
+     * @return error code, see {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     int GetTickers(NolTickers ptrtickers, TypeOfList typeOfList, NolTicker in_ticker);
 
     /**
      * Allocates memory for tickers.
-     * @see BossaAPIInterface#GetTickers(NolTickers, TypeOfList, NolTicker)
+     *
      * @return instantiated tickers list
+     * @see BossaAPIInterface#GetTickers(NolTickers, TypeOfList, NolTicker)
      */
     NolTickers InitListTickers();
 
     /**
      * Releases memory of pointer to tickers.
-     * @param ptrtickers
-     * @return  error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
+     *
+     * @param ptrtickers the pointer whose momory you wish to release
+     * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     int ReleaseTickersList(NolTickers ptrtickers);
+
     /**
      * Substitute of pointer to function {@link BossaAPIInterface#SetCallbackStatus(SetCallbackStatusDummy)}
-     *
      */
     interface SetCallbackStatusDummy extends Callback {
         /**
          * Implement the functionality for callback function here.
-         * @param var
+         *
+         * @param var current state of NOL3 app, see {@link Nol3State}
          */
         void invoke(Nol3State var);
     }
+
     /**
      * Function for setting a callback function updating status of session
-     * @param dummy
+     *
+     * @param dummy of a pointer to function, see {@link Callback}
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     int SetCallbackStatus(SetCallbackStatusDummy dummy);

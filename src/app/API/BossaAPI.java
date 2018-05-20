@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 //TODO check if everything is documented well
+
 /**
  * This class is a wrapper for <a href="https://github.com/java-native-access/jna">JNA</a> mapping
  * of <a href="http://bossa.pl/notowania/narzedzia/bossapi/">BossaAPI</a> interface.
@@ -214,7 +215,7 @@ public enum BossaAPI {
         clearFilter();
         tickerISINSInFilter.addAll(isins);
 
-        for(String isin : isins) {
+        for (String isin : isins) {
             tickersInFilter.add(tickersMap.get(isin));
         }
 
@@ -232,14 +233,12 @@ public enum BossaAPI {
     }
 
     /**
-     * @see BossaAPI#addToFilter(Set)
      * @param tickers a set of tickers to be appended to filter
+     * @see BossaAPI#addToFilter(Set)
      */
     public static String addTickersToFilter(Set<BossaAPI.NolTickerAPI> tickers) {
-        if(tickers.contains(null)) {
-            tickers.remove(null);
-        }
-        Set <String> isins = tickers
+        tickers.remove(null);
+        Set<String> isins = tickers
                 .stream()
                 .map(BossaAPI.NolTickerAPI::getIsin)
                 .collect(Collectors.toSet());
@@ -248,11 +247,13 @@ public enum BossaAPI {
 
     /**
      * Removes given tickers from filter.
-     * @see BossaAPI#addToFilter(Set)
+     *
      * @param isins of tickers to be removed from filter
      * @return success message
      * @throws IllegalStateException if any of given tickers are not in filter
+     * @see BossaAPI#addToFilter(Set)
      */
+    @SuppressWarnings("SameReturnValue")
     public static String removeFromFilter(Set<String> isins) throws IllegalStateException {
         Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "removeFromFilter", params);
@@ -364,6 +365,7 @@ public enum BossaAPI {
     /**
      * Stops tracking quotes of all tickers.
      * Removes all tickers from tracking filter.
+     *
      * @return success or error message
      */
     //clear filter before adding new papers
@@ -399,6 +401,7 @@ public enum BossaAPI {
 
     /**
      * The keys of the map are names of properties. The names should also be class names of properties ex. <i>Outlook</i>
+     *
      * @return property names associated with instance of property class
      * @see BossaAPI.PropertyAPI
      */
@@ -409,6 +412,7 @@ public enum BossaAPI {
     /**
      * Returns a set of ISINS of tickers which are currently in filter. Adding elements to the received set will not affect
      * the elements in filter.
+     *
      * @return ISINs of tickers in filter
      */
     public static Set<String> getTickerISINSInFilter() {
@@ -417,7 +421,7 @@ public enum BossaAPI {
 
     /**
      * Returns a set of tickers which are currently in filter. Modyfing the returned set will not affect the filter.
-     * @see BossaAPI#getTickersInFilter()
+     *
      * @return set of tickers currently in filter
      */
     public static Set<NolTickerAPI> getTickersInFilter() {
@@ -426,6 +430,7 @@ public enum BossaAPI {
 
     /**
      * Helper class for wrapping JNI structures to objects. Appropriate getters should be implemented by childs.
+     *
      * @param <T> wrapper class for JNI structure
      * @param <Q> class of the object to be wrapped
      */
@@ -516,6 +521,7 @@ public enum BossaAPI {
 
     /**
      * Stores list of market quotes (market levels). The list may not be sorted.
+     *
      * @see BossaAPI.NolBidAskTblAPI
      */
     private static final class NolBidAskStrAPI extends BossaAPIClassWrapper<NolBidAskStrAPI, BossaAPIInterface.NolBidAskStr> {
@@ -554,6 +560,7 @@ public enum BossaAPI {
 
         /**
          * Returns international securities identification number. Ex. "PLDEBCA00016"
+         *
          * @return ISIN - international securities identification number
          */
         @NotNull
@@ -564,6 +571,7 @@ public enum BossaAPI {
 
         /**
          * Returns short name of ticker. Ex. "DEBICA"
+         *
          * @return ticker name
          */
         @NotNull
@@ -581,6 +589,7 @@ public enum BossaAPI {
          * IX - index<br>
          * IN -<br>
          * DN -<br>
+         *
          * @return success or error message
          */
         @NotNull
@@ -592,6 +601,7 @@ public enum BossaAPI {
         /**
          * Returns type of instrument.
          * Returns empty String in API version 1.0.0.70
+         *
          * @return CFI
          */
         @NotNull
@@ -656,6 +666,7 @@ public enum BossaAPI {
      * Stores list of tickers.
      * Needs to be closed manually using {@link NolTickersAPI#close()} after finished working with object to release
      * resources.
+     *
      * @see BossaAPI.NolTickerAPI
      */
     private static final class NolTickersAPI
@@ -715,6 +726,7 @@ public enum BossaAPI {
             if (wrappee == null) throw new NullPointerException("Tickers already closed!");
             return tickerListCache;
         }
+
         @Override
         public void finalize() {
             logger.warning(this.getClass() + " instance not closed, potential memory leak expected.");
@@ -772,7 +784,7 @@ public enum BossaAPI {
             fieldInMessage = new HashMap<>();
 
             //fill with zeros to get 32 bits
-            bitMask = new String(new char[32 - bitMask.length()]).replace("\0", "0").concat(bitMask);
+            bitMask = new String(new char[32 - bitMask.length()]).replace("\0", "0") + bitMask;
             //reverse to get youngest bits at start
             bitMask = new StringBuilder(bitMask).reverse().toString();
 
@@ -1104,11 +1116,11 @@ public enum BossaAPI {
 
     /**
      * Contains information about funds in portfolio.
-     *
+     * <p>
      * This is just a helper used in {@link NolStatementAPI}<br>
-     *     <br>
+     * <br>
      * Possible names:<br>
-     *     <br>
+     * <br>
      * For cash accounts: <br>
      * CashRecivables - total cash on account <br>
      * MaxBuy - maximum buying power <br>
@@ -1125,17 +1137,19 @@ public enum BossaAPI {
      * SecSafetiesUsed - //TODO check what it is<br>
      * SecSafeties - //TODO check what it is<br>
      * OptionBonus - cash received as option bonus<br>
-     *<br>
+     * <br>
      * For all accounts:<br>
      * Cash - cash available for orders
      * CashBlocked - cash blocked for pending orders
      * SecValueSum - sum of values of owned securities
      * PortfolioValue - total portfolio value
+     *
      * @see NolStatementAPI
      */
     private static final class NolFundAPI extends BossaAPIClassWrapper<NolFundAPI, BossaAPIInterface.NolFund> {
 
         String name, value;
+
         private NolFundAPI(BossaAPIInterface.NolFund nolFund) {
             this.wrappee = nolFund;
             name = new String(wrappee.name).trim();
@@ -1218,6 +1232,7 @@ public enum BossaAPI {
 
         String name, type;
         boolean ikeStatus;
+
         private NolStatementAPI(BossaAPIInterface.NolStatement nolStatement) {
             logger.entering(NolStatementAPI.class.getName(), "Constructor");
             this.wrappee = nolStatement;
@@ -1272,8 +1287,9 @@ public enum BossaAPI {
 
         /**
          * Returns map of funds associated with account.
-         * @see NolFundAPI
+         *
          * @return map
+         * @see NolFundAPI
          */
         @Contract(pure = true)
         public Map<String, Double> getFundMap() {
@@ -1305,6 +1321,7 @@ public enum BossaAPI {
 
     /**
      * Contains list of statements for all accessible accounts.
+     *
      * @see NolStatementAPI
      */
     private static final class NolAggrStatementAPI extends BossaAPIClassWrapper<NolAggrStatementAPI, BossaAPIInterface.NolAggrStatement> {
@@ -1338,6 +1355,7 @@ public enum BossaAPI {
         String ordID, ordID2, statReqID, execID, execTyp, stat, acct, side, ordTyp, ccy, tmInForce, expireDt, txnTm;
         String defPayTyp, getBizRejRsn, txt, expireTm;
         NolTickerAPI ticker;
+
         private NolOrderReportAPI(BossaAPIInterface.NolOrderReport nolOrderReport) {
             this.wrappee = nolOrderReport;
             ordID = new String(wrappee.OrdID).trim();
@@ -1556,6 +1574,7 @@ public enum BossaAPI {
     public static final class NolOrderRequestAPI extends BossaAPIClassWrapper<NolOrderRequestAPI, BossaAPIInterface.NolOrderRequest> {
         String origID, origID2, acct, side, ordTyp, tmInForce, expireDt, defPayTyp, sessionDt, expireTm;
         NolTickerAPI ticker;
+
         private NolOrderRequestAPI(BossaAPIInterface.NolOrderRequest nolOrderRequest) {
             logger.exiting(NolOrderRequestAPI.class.getName(), "Constructor");
             this.wrappee = nolOrderRequest;
@@ -1745,6 +1764,7 @@ public enum BossaAPI {
             return INSTANCE;
         }
 
+        @SuppressWarnings("SameReturnValue")
         private static CallbackHelper getCallbackHelper() {
             return CALLBACK_HELPER;
         }
@@ -1766,6 +1786,7 @@ public enum BossaAPI {
 
     /**
      * Updates info about current NOL3 app status. This class handles listeners for {@link Nol3State}
+     *
      * @see Nol3State
      */
     public static final class Status extends PropertyAPI<Nol3State> {
@@ -1781,6 +1802,7 @@ public enum BossaAPI {
             return INSTANCE;
         }
 
+        @SuppressWarnings("SameReturnValue")
         private static CallbackHelper getCallbackHelper() {
             return CALLBACK_HELPER;
         }
@@ -1798,6 +1820,7 @@ public enum BossaAPI {
 
     /**
      * Updates account statement information once received data from NOL3. This class handles listeners for {@link NolStatementAPI}
+     *
      * @see NolStatementAPI
      */
     public static final class Accounts extends PropertyAPI<List<NolStatementAPI>> {
@@ -1813,6 +1836,7 @@ public enum BossaAPI {
             return INSTANCE;
         }
 
+        @SuppressWarnings("SameReturnValue")
         private static CallbackHelper getCallbackHelper() {
             return CALLBACK_HELPER;
         }
@@ -1849,6 +1873,7 @@ public enum BossaAPI {
             return INSTANCE;
         }
 
+        @SuppressWarnings("SameReturnValue")
         private static CallbackHelper getCallbackHelper() {
             return CALLBACK_HELPER;
         }
@@ -1866,6 +1891,7 @@ public enum BossaAPI {
 
     /**
      * Updates information about current orders. This class handles listeners for {@link NolOrderReportAPI}
+     *
      * @see NolOrderReportAPI
      */
     public static final class Order extends PropertyAPI<NolOrderReportAPI> {
@@ -1881,6 +1907,7 @@ public enum BossaAPI {
             return INSTANCE;
         }
 
+        @SuppressWarnings("SameReturnValue")
         private static CallbackHelper getCallbackHelper() {
             return CALLBACK_HELPER;
         }
@@ -1901,6 +1928,7 @@ public enum BossaAPI {
 
     /**
      * Updates diagnostic data from NOL3. This class handles listeners for {@link Outlook}
+     *
      * @see Outlook
      */
     public static final class Outlook extends PropertyAPI<String> {

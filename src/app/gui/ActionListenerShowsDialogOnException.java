@@ -12,8 +12,6 @@ import java.awt.event.ActionListener;
  * {@link JOptionPane#showMessageDialog(Component, Object, String, int)}
  * when the wrapped {@link Callback} throws {@link Throwable}.
  * The {@link Callback} provided to {@link ActionListenerShowsDialogOnException} will be run in a new {@link SwingWorker}.
- *
- *
  */
 class ActionListenerShowsDialogOnException implements ActionListener {
     /**
@@ -26,7 +24,7 @@ class ActionListenerShowsDialogOnException implements ActionListener {
         void invoke(ActionEvent e);
     }
 
-    private Callback callback;
+    private final Callback callback;
 
     ActionListenerShowsDialogOnException(Callback callback) {
         this.callback = callback;

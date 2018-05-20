@@ -22,7 +22,7 @@ abstract class AbstractGuiFactory<T extends JComponent, K extends JComponent> {
         return container;
     }
 
-    //use this method to add to container, to maintain typesafety
+    //use this method to add to container, to maintain type safety
     void addComponent(K component) {
         container.add(component);
     }

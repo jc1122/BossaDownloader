@@ -1,7 +1,6 @@
 package app.gui.statement;
 
 import app.API.BossaAPI;
-import app.gui.Controller;
 import app.gui.Model;
 
 import javax.swing.*;
@@ -20,46 +19,40 @@ class StatementPane implements PropertyChangeListener, ActionListener {
     private static final Logger logger =
             Logger.getLogger(StatementPane.class.getName());
     private JPanel statementPanel;
-    private JLabel ikeLabel;
     private JLabel ikeStatusLabel;
-    private JLabel accountTypeLabel;
     private JLabel accountTypeStatusLabel;
-    //private JLabel accountLabel;
-    private GridLayout statementPanelLayout;
     private Map<String, JLabel> statementLabels;
     private Map<String, JLabel> statementValues;
     private List<BossaAPI.NolStatementAPI> accountList;
 
-    private Model model;
     private int selectedAccount;
 
     StatementPane(Model model) {
-        logger.entering(this.getClass().getName(),"constructor", model);
-        this.model = model;
+        logger.entering(this.getClass().getName(), "constructor", model);
 
         try {
-            this.model.addPropertyListener(this);
+            model.addPropertyListener(this);
         } catch (NullPointerException e) {
             throw new NullPointerException("Unable to get accounts! Is API initialized?");
         }
 
+        //noinspection unchecked
         this.accountList = (List<BossaAPI.NolStatementAPI>) model.getProperty("Accounts");
 
-        ikeLabel = new JLabel("Indywidualne Konto Emerytalne :");
         ikeStatusLabel = new JLabel(); //text will be set later
-        accountTypeLabel = new JLabel("Account type :");
         accountTypeStatusLabel = new JLabel(); //text will be set later
 
         statementPanel = new JPanel();
-        statementPanelLayout = new GridLayout(0, 2);
+        //private JLabel accountLabel;
+        GridLayout statementPanelLayout = new GridLayout(0, 2);
         statementPanelLayout.setHgap(20);
         statementPanel.setLayout(statementPanelLayout);
         //statementPanel.setBackground(new Color(100, 200, 200));
 
-        statementPanel.add(ikeLabel);
+        statementPanel.add(new JLabel("Indywidualne Konto Emerytalne :"));
         statementPanel.add(ikeStatusLabel);
 
-        statementPanel.add(accountTypeLabel);
+        statementPanel.add(new JLabel("Account type :"));
         statementPanel.add(accountTypeStatusLabel);
 
         statementLabels = new LinkedHashMap<>();
@@ -100,11 +93,11 @@ class StatementPane implements PropertyChangeListener, ActionListener {
         }
         //TODO this may be buggy
         updateStatementPanel(0);
-        logger.exiting(this.getClass().getName(),"constructor");
+        logger.exiting(this.getClass().getName(), "constructor");
     }
 
     private void updateStatementPanel(int index) {
-        logger.entering(this.getClass().getName(),"updateStatementPanel", index);
+        logger.entering(this.getClass().getName(), "updateStatementPanel", index);
         BossaAPI.NolStatementAPI defaultAccount = accountList.get(Math.max(index, 0)); //Max is just in case, when no element = -1  selected
         ikeStatusLabel.setText(defaultAccount.getIke() ? "True" : "False");
         accountTypeStatusLabel.setText(defaultAccount.getType().equals("M") ? "Cash" : "Futures");
@@ -122,26 +115,28 @@ class StatementPane implements PropertyChangeListener, ActionListener {
         }
         int preferredHeight = statementPanel.getPreferredSize().height;
         statementPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, preferredHeight));
-        logger.exiting(this.getClass().getName(),"updateStatementPanel");
+        logger.exiting(this.getClass().getName(), "updateStatementPanel");
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        logger.entering(this.getClass().getName(),"propertyChange", evt);
+        logger.entering(this.getClass().getName(), "propertyChange", evt);
         if (!evt.getPropertyName().equals("Accounts"))
             return;
+        //noinspection unchecked
         this.accountList = (List<BossaAPI.NolStatementAPI>) evt.getNewValue();
         updateStatementPanel(this.selectedAccount);
-        logger.exiting(this.getClass().getName(),"propertyChange");
+        logger.exiting(this.getClass().getName(), "propertyChange");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        logger.entering(this.getClass().getName(),"actionPerformed", e);
+        logger.entering(this.getClass().getName(), "actionPerformed", e);
+        //noinspection unchecked
         JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
         this.selectedAccount = comboBox.getSelectedIndex();
         updateStatementPanel(this.selectedAccount);
-        logger.exiting(this.getClass().getName(),"actionPerformed");
+        logger.exiting(this.getClass().getName(), "actionPerformed");
     }
 
     public JPanel getPane() {

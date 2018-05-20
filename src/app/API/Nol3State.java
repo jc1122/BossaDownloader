@@ -57,6 +57,7 @@ public enum Nol3State implements JnaEnum<Nol3State> {
     /**
      * {@inheritDoc}
      */
+    @Override
     @Contract(pure = true)
     public int getIntValue() {
         return this.ordinal() + start;
@@ -65,6 +66,7 @@ public enum Nol3State implements JnaEnum<Nol3State> {
     /**
      * {@inheritDoc}
      */
+    @Override
     @Nullable
     public Nol3State getForValue(int i) {
         for (Nol3State o : Nol3State.values()) {

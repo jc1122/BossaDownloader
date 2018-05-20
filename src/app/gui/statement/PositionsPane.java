@@ -20,15 +20,14 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
     private static final Logger logger =
             Logger.getLogger(Controller.class.getName());
     private JPanel positionsPanel;
-    private GridLayout positionsPanelLayout;
-    private Model model;
+    private final Model model;
     private int selectedAccount;
     private List<BossaAPI.NolStatementAPI> accountList;
     private Map<String, Double> positionIsinsPrices;
     private Map<String, JLabel> positionIsinsLabels;
     private Map<String, Integer> positionIsinsCount;
 
-    private StatementDialog dialog;
+    private final StatementDialog dialog;
 
     PositionsPane(Model model, StatementDialog dialog) {
         Object[] params = {model, dialog};
@@ -46,8 +45,7 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
 
         positionsPanel = new JPanel();
         //positionsPanel.setBackground(new Color(133, 133, 233));
-        positionsPanelLayout = new GridLayout(0, 4);
-        positionsPanel.setLayout(positionsPanelLayout);
+        positionsPanel.setLayout(new GridLayout(0, 4));
 
         positionIsinsPrices = new HashMap<>();
         positionIsinsLabels = new HashMap<>();
@@ -104,7 +102,8 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        logger.exiting(this.getClass().getName(), "actionPerformed",e);
+        logger.exiting(this.getClass().getName(), "actionPerformed", e);
+        //noinspection unchecked
         JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
         this.selectedAccount = comboBox.getSelectedIndex();
         updatePanel(this.selectedAccount);
@@ -123,6 +122,7 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
         logger.entering(this.getClass().getName(), "propertyChange", evt);
         switch (evt.getPropertyName()) {
             case "Accounts":
+                //noinspection unchecked
                 this.accountList = (List<BossaAPI.NolStatementAPI>) evt.getNewValue();
                 updatePanel(this.selectedAccount);
                 logger.finest("updated account panel");
@@ -140,7 +140,7 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
         logger.exiting(this.getClass().getName(), "propertyChange");
     }
 
-    public JPanel getPane() {
+    JPanel getPane() {
         return positionsPanel;
     }
 }

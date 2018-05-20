@@ -4,16 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Logger;
 
-public class MoveButtonPane {
+class MoveButtonPane {
     private static final Logger logger =
             Logger.getLogger(MoveButtonPane.class.getName());
-    private JPanel buttonPanel = new JPanel();
-    private JTable left;
-    private JTable right;
+    private final JPanel buttonPanel = new JPanel();
+    private final JTable left;
+    private final JTable right;
 
     MoveButtonPane(JTable leftTable, JTable rightTable) {
         Object[] params = {leftTable, rightTable};
-        logger.entering(this.getClass().getName(),"constructor", params);
+        logger.entering(this.getClass().getName(), "constructor", params);
 
         this.left = leftTable;
         this.right = rightTable;
@@ -31,13 +31,13 @@ public class MoveButtonPane {
 
         rightButton.addActionListener(e -> moveRow(left, right));
         leftButton.addActionListener(e -> moveRow(right, left));
-        logger.exiting(this.getClass().getName(),"constructor", params);
+        logger.exiting(this.getClass().getName(), "constructor", params);
     }
 
     private void moveRow(JTable from, JTable to) {
         Object[] params = {from, to};
-        logger.entering(this.getClass().getName(),"moveRow", params);
-        if(from.getSelectedRow() == -1) {
+        logger.entering(this.getClass().getName(), "moveRow", params);
+        if (from.getSelectedRow() == -1) {
             logger.finest("no selected row");
             return;
         }
@@ -46,8 +46,9 @@ public class MoveButtonPane {
         TickerTableModel fromModel = (TickerTableModel) from.getModel();
         int row = from.convertRowIndexToModel(from.getSelectedRow());
         toModel.addRow(fromModel.removeRow(row));
-        logger.exiting(this.getClass().getName(),"moveRow");
+        logger.exiting(this.getClass().getName(), "moveRow");
     }
+
     JPanel getPanel() {
         return buttonPanel;
     }

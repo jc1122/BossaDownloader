@@ -1,7 +1,6 @@
 package app.gui.statement;
 
 import app.API.BossaAPI;
-import app.gui.Controller;
 import app.gui.Model;
 
 import javax.swing.*;
@@ -15,29 +14,24 @@ class AccountPane implements PropertyChangeListener {
     private static final Logger logger =
             Logger.getLogger(AccountPane.class.getName());
 
-    private Model model;
-
-    private JPanel accountPanel;
-    private JComboBox<String> accountNameComboBox;
-    private JLabel accountLabel;
+    private final JPanel accountPanel;
+    private final JComboBox<String> accountNameComboBox;
 
     private List<BossaAPI.NolStatementAPI> accountList;
 
     AccountPane(Model model) {
         logger.entering(this.getClass().getName(), "constructor", model);
-        this.model = model;
 
         accountPanel = new JPanel();
         accountPanel.setLayout(new BoxLayout(accountPanel, BoxLayout.LINE_AXIS));
 
         accountNameComboBox = new JComboBox<>();
-        accountLabel = new JLabel("Account: ");
 
-        accountPanel.add(accountLabel);
+        accountPanel.add(new JLabel("Account: "));
         accountPanel.add(accountNameComboBox);
 
         try {
-            this.model.addPropertyListener(this);
+            model.addPropertyListener(this);
         } catch (NullPointerException e) {
             NullPointerException exc = new NullPointerException("Unable to get accounts! Is API initialized?");
             logger.finer(exc.getMessage());

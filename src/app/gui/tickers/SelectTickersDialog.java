@@ -19,12 +19,14 @@ import java.util.logging.Logger;
 public class SelectTickersDialog {
     private static final Logger logger =
             Logger.getLogger(SelectTickersDialog.class.getName());
-    private JDialog dialog;
+    private final JDialog dialog;
+
     public JDialog getDialog() {
         return dialog;
     }
+
     public SelectTickersDialog(Model model) {
-        logger.entering(this.getClass().getName(),"constructor", model);
+        logger.entering(this.getClass().getName(), "constructor", model);
         dialog = new JDialog();
         dialog.setTitle("Tickers to watch");
 
@@ -50,6 +52,6 @@ public class SelectTickersDialog {
 //        SwingUtilities.invokeLater(() ->
 //                dialog.setVisible(true));
         dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        logger.exiting(this.getClass().getName(),"constructor");
+        logger.exiting(this.getClass().getName(), "constructor");
     }
 }
