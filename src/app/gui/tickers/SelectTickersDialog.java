@@ -10,18 +10,21 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * You need to {@link SelectTickersDialog#getDialog()} then {@link JDialog#setVisible(boolean)}
  * manually to display the dialog.
  */
 public class SelectTickersDialog {
-
+    private static final Logger logger =
+            Logger.getLogger(SelectTickersDialog.class.getName());
     JDialog dialog;
     public JDialog getDialog() {
         return dialog;
     }
     public SelectTickersDialog(Model model) {
+        logger.entering(this.getClass().getName(),"constructor", model);
         dialog = new JDialog();
         dialog.setTitle("Tickers to watch");
 
@@ -46,7 +49,7 @@ public class SelectTickersDialog {
         dialog.pack();
 //        SwingUtilities.invokeLater(() ->
 //                dialog.setVisible(true));
-
         dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        logger.exiting(this.getClass().getName(),"constructor");
     }
 }
