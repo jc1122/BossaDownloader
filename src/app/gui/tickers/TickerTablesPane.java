@@ -8,32 +8,43 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class TickerTablesPane {
+    private static final Logger logger =
+            Logger.getLogger(TickerTablesPane.class.getName());
     private JPanel pane;
     TickerTable left, right;
 
     private void setTableSorter(JTable table) {
+        logger.entering(this.getClass().getName(),"setTableSorter", table);
         table.setAutoCreateRowSorter(true);
         TableRowSorter<TickerTableModel> sorter = new TableRowSorter<>((TickerTableModel) table.getModel());
         table.setRowSorter(sorter);
+        logger.exiting(this.getClass().getName(),"setTableSorter");
     }
 
     private void newFilter(String text) {
+        logger.entering(this.getClass().getName(),"newFilter", text);
         RowFilter<TickerTableModel, Object> rf = null;
         //If current expression doesn't parse, don't update.
         try {
             rf = RowFilter.regexFilter(text);
         } catch (java.util.regex.PatternSyntaxException e) {
+            logger.finest("expression does not parse");
             return;
         }
         TableRowSorter<TickerTableModel> leftSorter = (TableRowSorter<TickerTableModel>) (left.getTable().getRowSorter());
         TableRowSorter<TickerTableModel> rightSorter = (TableRowSorter<TickerTableModel>) (right.getTable().getRowSorter());
         leftSorter.setRowFilter(rf);
         rightSorter.setRowFilter(rf);
+        logger.exiting(this.getClass().getName(),"newFilter");
     }
 
     TickerTablesPane(JTextField filterText, List<BossaAPI.NolTickerAPI> tickers, List<BossaAPI.NolTickerAPI> tickersInFilter) {
+        Object[] params = {filterText, tickers, tickersInFilter};
+        logger.entering(this.getClass().getName(),"constructor", params);
+
         pane = new JPanel();
         pane.setLayout(new BoxLayout(pane, BoxLayout.LINE_AXIS));
 
@@ -62,6 +73,7 @@ public class TickerTablesPane {
                         newFilter(filterText.getText());
                     }
                 });
+        logger.exiting(this.getClass().getName(),"constructor");
     }
 
     public JPanel getPane() {
