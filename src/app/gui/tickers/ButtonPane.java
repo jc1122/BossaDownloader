@@ -2,7 +2,6 @@ package app.gui.tickers;
 
 import javax.swing.*;
 import app.gui.Model;
-import app.gui.View;
 
 import java.util.HashSet;
 import java.util.logging.Logger;
@@ -12,19 +11,11 @@ public class ButtonPane {
             Logger.getLogger(ButtonPane.class.getName());
 
     private JPanel totalPane = new JPanel();
-    private JPanel filterPane = new JPanel();
-    private BoxLayout totalPaneLayout = new BoxLayout(totalPane, BoxLayout.Y_AXIS);
     private JTextField searchField;
 
-    private JButton okButton = new JButton("OK");
-    private JButton cancelButton = new JButton("Cancel");
-    private JButton saveButton = new JButton("Save...");
-    private JButton loadButton = new JButton("Load...");
     private TickerTablesPane tickerTablesPane;
 
-    JPanel buttonPane = new JPanel();
-
-    public void setTickerTablesPane(TickerTablesPane tickerTablesPane) {
+    void setTickerTablesPane(TickerTablesPane tickerTablesPane) {
         logger.entering(this.getClass().getName(),"setTickerTablesPane", tickerTablesPane);
         this.tickerTablesPane = tickerTablesPane;
         logger.exiting(this.getClass().getName(),"setTickerTablesPane");
@@ -33,9 +24,14 @@ public class ButtonPane {
     public ButtonPane(Model model, JDialog dialog) {
         Object[] params = {model, dialog};
         logger.entering(this.getClass().getName(),"constructor", params);
+        JButton okButton = new JButton("OK");
+        JPanel buttonPane = new JPanel();
         buttonPane.add(okButton);
+        JButton cancelButton = new JButton("Cancel");
         buttonPane.add(cancelButton);
+        JButton saveButton = new JButton("Save...");
         buttonPane.add(saveButton);
+        JButton loadButton = new JButton("Load...");
         buttonPane.add(loadButton);
 
         okButton.addActionListener(e -> {
@@ -44,13 +40,15 @@ public class ButtonPane {
                 dialog.dispose();
         }
                 );
-        cancelButton.addActionListener( e -> dialog.dispose());
+        cancelButton.addActionListener(e -> dialog.dispose());
 
+        JPanel filterPane = new JPanel();
         filterPane.add(new JLabel("Search text: "));
         searchField = new JTextField();
         searchField.setColumns(30);
         filterPane.add(searchField);
 
+        BoxLayout totalPaneLayout = new BoxLayout(totalPane, BoxLayout.Y_AXIS);
         totalPane.setLayout(totalPaneLayout);
         totalPane.add(filterPane);
         totalPane.add(buttonPane);
@@ -61,7 +59,7 @@ public class ButtonPane {
         return totalPane;
     }
 
-    public JTextField getSearchField() {
+    JTextField getSearchField() {
         return searchField;
     }
 }
