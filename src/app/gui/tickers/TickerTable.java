@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 public class TickerTable {
     private static final Logger logger =
             Logger.getLogger(TickerTable.class.getName());
-    JScrollPane scrollPane;
-    JTable table;
+    private JScrollPane scrollPane;
+    private JTable table;
 
     private JScrollPane createTable(List<BossaAPI.NolTickerAPI> tickers) {
         logger.entering(this.getClass().getName(),"createTable", tickers);
