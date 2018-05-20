@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class SelectTickersDialog {
     private static final Logger logger =
             Logger.getLogger(SelectTickersDialog.class.getName());
-    JDialog dialog;
+    private JDialog dialog;
     public JDialog getDialog() {
         return dialog;
     }
