@@ -76,14 +76,14 @@ public class TickerTableModel extends AbstractTableModel {
         return null;
     }
 
-    public void addRow(BossaAPI.NolTickerAPI ticker) {
+    void addRow(BossaAPI.NolTickerAPI ticker) {
         logger.entering(this.getClass().getName(),"addRow", ticker);
         tickers.add(ticker);
         this.fireTableDataChanged();
         logger.exiting(this.getClass().getName(),"addRow");
     }
 
-    public BossaAPI.NolTickerAPI removeRow(int row) {
+    BossaAPI.NolTickerAPI removeRow(int row) {
         logger.entering(this.getClass().getName(),"removeRow", row);
         BossaAPI.NolTickerAPI ticker = tickers.remove(row);
         this.fireTableDataChanged();
@@ -91,7 +91,8 @@ public class TickerTableModel extends AbstractTableModel {
         return ticker;
     }
 
-    public BossaAPI.NolTickerAPI getRow(int row) {
+    @SuppressWarnings("unused")
+    BossaAPI.NolTickerAPI getRow(int row) {
         return tickers.get(row);
     }
 
