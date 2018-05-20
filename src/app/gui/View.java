@@ -2,12 +2,13 @@ package app.gui;
 
 import app.gui.menu.MainMenuBarFactory;
 import app.gui.statement.StatementDialog;
-import app.gui.tickers.SelectTickersDialog;
+import app.gui.tickerSelector.SelectTickersDialog;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.logging.Logger;
 
-
+//TODO this class has many enablers and disablers for buttons, find a better way to handle them
 class View {
     private static final Logger logger =
             Logger.getLogger(View.class.getName());
@@ -19,15 +20,29 @@ class View {
 
     private SelectTickersDialog selectTickersDialog;
 
+    private JLabel bottomInfoLabel;
     View(Controller controller, Model model) {
         this.controller = controller;
         this.model = model;
+    }
+
+    void setBottomInfoText(String text) {
+        bottomInfoLabel.setText(text);
     }
 
     private void createFrame() {
         logger.entering(this.getClass().getName(), "createFrame");
         frame = new JFrame("BossaDownloader");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        frame.getContentPane().setLayout(new BorderLayout());
+        JPanel bottomInfoPanel = new JPanel();
+        bottomInfoLabel = new JLabel("Ready");
+        bottomInfoPanel.add(bottomInfoLabel);
+        bottomInfoPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
+        bottomInfoPanel.setLayout(new BoxLayout(bottomInfoPanel, BoxLayout.LINE_AXIS));
+        frame.getContentPane().add(bottomInfoPanel, BorderLayout.PAGE_END);
+
         frame.setSize(600, 300);
         frame.setVisible(true);
         logger.exiting(this.getClass().getName(), "createFrame");
@@ -65,7 +80,7 @@ class View {
 
     void showVersionDialog() {
         logger.entering(this.getClass().getName(), "showVersionDialog");
-        JOptionPane.showMessageDialog(frame, "API showVersion: \n" + model.getVersion());
+        JOptionPane.showMessageDialog(frame, "API version: \n" + model.getVersion());
         logger.exiting(this.getClass().getName(), "showVersionDialog");
     }
 
@@ -90,40 +105,35 @@ class View {
         logger.exiting(this.getClass().getName(), "showSelectTickersDialog", "created a new dialog");
     }
 
-    void disableStartApiMenuItem() {
-        logger.entering(this.getClass().getName(), "disableStartApiMenuItem");
-        frame.getJMenuBar().getMenu(0).getItem(0).setEnabled(false);
-        logger.exiting(this.getClass().getName(), "disableStartApiMenuItem");
+    void setStartApiMenuItemEnabled(boolean enabled) {
+        logger.entering(this.getClass().getName(), "setStartApiMenuItemEnabled");
+        frame.getJMenuBar().getMenu(0).getItem(0).setEnabled(enabled);
+        logger.exiting(this.getClass().getName(), "setStartApiMenuItemEnabled");
     }
 
-    void enableStartApiMenuItem() {
-        logger.entering(this.getClass().getName(), "enableStartApiMenuItem");
-        frame.getJMenuBar().getMenu(0).getItem(0).setEnabled(true);
-        logger.exiting(this.getClass().getName(), "enableStartApiMenuItem");
+    void setStopApiMenuItemEnabled(boolean enabled) {
+        logger.entering(this.getClass().getName(), "setStopApiMenuItemEnabled");
+        frame.getJMenuBar().getMenu(0).getItem(2).setEnabled(enabled);
+        logger.exiting(this.getClass().getName(), "setStopApiMenuItemEnabled");
     }
 
-    void disableStopApiMenuItem() {
-        logger.entering(this.getClass().getName(), "disableStopApiMenuItem");
-        frame.getJMenuBar().getMenu(0).getItem(2).setEnabled(false);
-        logger.exiting(this.getClass().getName(), "disableStopApiMenuItem");
-    }
 
-    void enableStopApiMenuItem() {
-        logger.entering(this.getClass().getName(), "enableStopApiMenuItem");
-        frame.getJMenuBar().getMenu(0).getItem(2).setEnabled(true);
-        logger.exiting(this.getClass().getName(), "enableStopApiMenuItem");
-    }
-
-    public void disableStatementAccountsMenuItem() {
+    public void setStatementAccountsMenuItemEnabled(boolean enabled) {
         logger.entering(this.getClass().getName(), "disableStatementAccountsMenuItem");
-        frame.getJMenuBar().getMenu(1).getItem(0).setEnabled(false);
+        frame.getJMenuBar().getMenu(1).getItem(0).setEnabled(enabled);
         logger.exiting(this.getClass().getName(), "disableStatementAccountsMenuItem");
     }
 
-    void enableStatementAccountsMenuItem() {
-        logger.entering(this.getClass().getName(), "enableStatementAccountsMenuItem");
-        frame.getJMenuBar().getMenu(1).getItem(0).setEnabled(true);
-        logger.exiting(this.getClass().getName(), "enableStatementAccountsMenuItem");
+    public void setAccountsMenuEnabled(boolean enabled) {
+        logger.entering(this.getClass().getName(), "setAccountsMenuEnabled", enabled);
+        frame.getJMenuBar().getMenu(1).setEnabled(enabled);
+        logger.exiting(this.getClass().getName(), "setAccountsMenuEnabled");
+    }
+
+    public void setTickersMenuEnabled(boolean enabled) {
+        logger.entering(this.getClass().getName(), "setTickersMenuEnabled", enabled);
+        frame.getJMenuBar().getMenu(2).setEnabled(enabled);
+        logger.exiting(this.getClass().getName(), "setTickersMenuEnabled");
     }
 
     public Model getModel() {

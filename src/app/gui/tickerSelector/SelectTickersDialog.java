@@ -1,4 +1,4 @@
-package app.gui.tickers;
+package app.gui.tickerSelector;
 
 import app.API.BossaAPI;
 import app.API.TypeOfList;

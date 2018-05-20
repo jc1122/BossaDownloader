@@ -19,8 +19,10 @@ public class Controller {
         view = new View(this, model);
         SwingUtilities.invokeLater(() -> {
             view.createGUI();
-            view.disableStopApiMenuItem();
-            view.disableStatementAccountsMenuItem();
+            view.setStopApiMenuItemEnabled(false);
+            view.setAccountsMenuEnabled(false);
+            view.setTickersMenuEnabled(false);
+
         });
         logger.exiting(this.getClass().getName(), "constructor");
     }
@@ -30,10 +32,11 @@ public class Controller {
      */
     void startAPI() {
         logger.entering(this.getClass().getName(), "startAPI");
-        model.initialize();
-        view.enableStopApiMenuItem();
-        view.enableStatementAccountsMenuItem();
-        view.disableStartApiMenuItem();
+        view.setBottomInfoText(model.initialize());
+
+        view.setStopApiMenuItemEnabled(true);
+        view.setAccountsMenuEnabled(true);
+        view.setTickersMenuEnabled(true);
         logger.exiting(this.getClass().getName(), "startAPI");
     }
 
@@ -42,9 +45,9 @@ public class Controller {
      */
     void stopAPI() {
         logger.entering(this.getClass().getName(), "stopAPI");
-        model.shutdown();
-        view.disableStopApiMenuItem();
-        view.enableStartApiMenuItem();
+        view.setBottomInfoText(model.shutdown());
+        view.setStopApiMenuItemEnabled(false);
+        view.setStartApiMenuItemEnabled(true);
         logger.exiting(this.getClass().getName(), "stopAPI");
     }
 
@@ -64,7 +67,7 @@ public class Controller {
     }
 
     /**
-     * Select tickers, whose market quotes will be tracked and updated.
+     * Select tickerSelector, whose market quotes will be tracked and updated.
      */
     void selectTickers() {
         logger.entering(this.getClass().getName(), "selectTickers");

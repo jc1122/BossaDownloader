@@ -1,1 +1,0 @@
-package app.gui.tickers;

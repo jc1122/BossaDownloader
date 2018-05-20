@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-//TODO check behavior in concurrency; remember to remove tickers from filter on close!
+//TODO check behavior in concurrency; remember to remove tickerSelector from filter on close!
 class PositionsPane implements PropertyChangeListener, ActionListener {
     private static final Logger logger =
             Logger.getLogger(Controller.class.getName());

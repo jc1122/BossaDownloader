@@ -17,7 +17,7 @@ public class Model {
     /**
      * {@link BossaAPI#addToFilter(Set)}
      *
-     * @param isins of tickers to be tracked
+     * @param isins of tickerSelector to be tracked
      */
     public String addToFilter(Set<String> isins) {
         return BossaAPI.addToFilter(isins);
@@ -35,7 +35,7 @@ public class Model {
     /**
      * {@link BossaAPI#getTickerISINSInFilter()}
      *
-     * @return isins of currently tracked tickers
+     * @return isins of currently tracked tickerSelector
      */
     public Set<String> getTickerISINSInFilter() {
         return BossaAPI.getTickerISINSInFilter();
@@ -44,7 +44,7 @@ public class Model {
     /**
      * {@link BossaAPI#getTickersInFilter()}
      *
-     * @return currently tracked tickers
+     * @return currently tracked tickerSelector
      */
     public Set<BossaAPI.NolTickerAPI> getTickersInFilter() {
         return BossaAPI.getTickersInFilter();
@@ -62,7 +62,7 @@ public class Model {
     /**
      * {@link BossaAPI#removeFromFilter(Set)}
      *
-     * @param isins stop tracking the tickers with given isins
+     * @param isins stop tracking the tickerSelector with given isins
      */
     public String removeFromFilter(Set<String> isins) {
         return BossaAPI.removeFromFilter(isins);

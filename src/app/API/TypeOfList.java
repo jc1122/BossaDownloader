@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public enum TypeOfList implements JnaEnum<TypeOfList> {
     /**
-     * Get all tickers
+     * Get all tickerSelector
      */
     UNDEF_LIST {
         @Override
@@ -18,7 +18,7 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
         }
     },// = -1;
     /**
-     * Get all tickers
+     * Get all tickerSelector
      */
     ALL {
         @Override
@@ -27,7 +27,7 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
         }
     }, //= 0;
     /**
-     * Get tickers which match name of given ticker
+     * Get tickerSelector which match name of given ticker
      */
     SYMBOL {
         @Override
@@ -36,7 +36,7 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
         }
     }, //= 1;
     /**
-     * Get tickers which match the ISIN of given ticker
+     * Get tickerSelector which match the ISIN of given ticker
      */
     ISIN {
         @Override
@@ -45,7 +45,7 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
         }
     }, //= 2;
     /**
-     * Get tickers which match the CFI of given ticker
+     * Get tickerSelector which match the CFI of given ticker
      */
     CFI {
         @Override
@@ -54,7 +54,7 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
         }
     }, //= 3;
     /**
-     * Get tickers which match the market code of given ticker
+     * Get tickerSelector which match the market code of given ticker
      */
     MARKET_CODE {
         @Override
@@ -84,7 +84,7 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
     }
 
     /**
-     * Used to ckeck if getting list of tickers is possible by
+     * Used to ckeck if getting list of tickerSelector is possible by
      * {@link BossaAPI#getTickers(TypeOfList, BossaAPI.NolTickerAPI)}
      *
      * @param ticker whose fields you wish to check
