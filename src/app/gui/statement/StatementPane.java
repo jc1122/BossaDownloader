@@ -1,6 +1,7 @@
 package app.gui.statement;
 
 import app.API.BossaAPI;
+import app.gui.Controller;
 import app.gui.Model;
 
 import javax.swing.*;
@@ -13,8 +14,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 class StatementPane implements PropertyChangeListener, ActionListener {
+    private static final Logger logger =
+            Logger.getLogger(StatementPane.class.getName());
     private JPanel statementPanel;
     private JLabel ikeLabel;
     private JLabel ikeStatusLabel;
@@ -30,6 +34,7 @@ class StatementPane implements PropertyChangeListener, ActionListener {
     private int selectedAccount;
 
     StatementPane(Model model) {
+        logger.entering(this.getClass().getName(),"constructor", model);
         this.model = model;
 
         try {
@@ -95,9 +100,11 @@ class StatementPane implements PropertyChangeListener, ActionListener {
         }
         //TODO this may be buggy
         updateStatementPanel(0);
+        logger.exiting(this.getClass().getName(),"constructor");
     }
 
     private void updateStatementPanel(int index) {
+        logger.entering(this.getClass().getName(),"updateStatementPanel", index);
         BossaAPI.NolStatementAPI defaultAccount = accountList.get(Math.max(index, 0)); //Max is just in case, when no element = -1  selected
         ikeStatusLabel.setText(defaultAccount.getIke() ? "True" : "False");
         accountTypeStatusLabel.setText(defaultAccount.getType().equals("M") ? "Cash" : "Futures");
@@ -115,21 +122,26 @@ class StatementPane implements PropertyChangeListener, ActionListener {
         }
         int preferredHeight = statementPanel.getPreferredSize().height;
         statementPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, preferredHeight));
+        logger.exiting(this.getClass().getName(),"updateStatementPanel");
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        logger.entering(this.getClass().getName(),"propertyChange", evt);
         if (!evt.getPropertyName().equals("Accounts"))
             return;
         this.accountList = (List<BossaAPI.NolStatementAPI>) evt.getNewValue();
         updateStatementPanel(this.selectedAccount);
+        logger.exiting(this.getClass().getName(),"propertyChange");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        logger.entering(this.getClass().getName(),"actionPerformed", e);
         JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
         this.selectedAccount = comboBox.getSelectedIndex();
         updateStatementPanel(this.selectedAccount);
+        logger.exiting(this.getClass().getName(),"actionPerformed");
     }
 
     public JPanel getPane() {

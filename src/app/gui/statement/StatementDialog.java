@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class StatementDialog {
     private static final Logger logger =
-            Logger.getLogger(Controller.class.getName());
+            Logger.getLogger(StatementDialog.class.getName());
 
     JDialog dialog = new JDialog();
 
