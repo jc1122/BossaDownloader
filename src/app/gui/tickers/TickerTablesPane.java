@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -14,7 +13,7 @@ public class TickerTablesPane {
     private static final Logger logger =
             Logger.getLogger(TickerTablesPane.class.getName());
     private JPanel pane;
-    TickerTable left, right;
+    private TickerTable left, right;
 
     private void setTableSorter(JTable table) {
         logger.entering(this.getClass().getName(),"setTableSorter", table);
@@ -26,7 +25,7 @@ public class TickerTablesPane {
 
     private void newFilter(String text) {
         logger.entering(this.getClass().getName(),"newFilter", text);
-        RowFilter<TickerTableModel, Object> rf = null;
+        RowFilter<TickerTableModel, Object> rf;
         //If current expression doesn't parse, don't update.
         try {
             rf = RowFilter.regexFilter(text);
@@ -34,7 +33,10 @@ public class TickerTablesPane {
             logger.finest("expression does not parse");
             return;
         }
+        //these casts are safe
+        //noinspection unchecked
         TableRowSorter<TickerTableModel> leftSorter = (TableRowSorter<TickerTableModel>) (left.getTable().getRowSorter());
+        //noinspection unchecked
         TableRowSorter<TickerTableModel> rightSorter = (TableRowSorter<TickerTableModel>) (right.getTable().getRowSorter());
         leftSorter.setRowFilter(rf);
         rightSorter.setRowFilter(rf);
