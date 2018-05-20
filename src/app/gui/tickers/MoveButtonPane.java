@@ -1,7 +1,5 @@
 package app.gui.tickers;
 
-import app.gui.View;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Logger;
@@ -9,9 +7,9 @@ import java.util.logging.Logger;
 public class MoveButtonPane {
     private static final Logger logger =
             Logger.getLogger(MoveButtonPane.class.getName());
-    JPanel buttonPanel = new JPanel();
-    JTable left;
-    JTable right;
+    private JPanel buttonPanel = new JPanel();
+    private JTable left;
+    private JTable right;
 
     MoveButtonPane(JTable leftTable, JTable rightTable) {
         Object[] params = {leftTable, rightTable};
@@ -50,7 +48,7 @@ public class MoveButtonPane {
         toModel.addRow(fromModel.removeRow(row));
         logger.exiting(this.getClass().getName(),"moveRow");
     }
-    public JPanel getPanel() {
+    JPanel getPanel() {
         return buttonPanel;
     }
 
