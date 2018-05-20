@@ -1,6 +1,7 @@
 package app.gui.statement;
 
 import app.API.BossaAPI;
+import app.gui.Controller;
 import app.gui.Model;
 
 import javax.swing.*;
@@ -12,9 +13,12 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 //TODO check behavior in concurrency; remember to remove tickers from filter on close!
 class PositionsPane implements PropertyChangeListener, ActionListener {
+    private static final Logger logger =
+            Logger.getLogger(Controller.class.getName());
     private JPanel positionsPanel;
     private GridLayout positionsPanelLayout;
     private Model model;
@@ -27,12 +31,17 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
     private StatementDialog dialog;
 
     PositionsPane(Model model, StatementDialog dialog) {
+        Object[] params = {model, dialog};
+        logger.entering(this.getClass().getName(), "constructor", params);
+
         this.dialog = dialog;
         this.model = model;
         try {
             this.model.addPropertyListener(this);
         } catch (NullPointerException e) {
-            throw new NullPointerException("Unable to get accounts! Is API initialized?");
+            NullPointerException exc = new NullPointerException("Unable to get accounts! Is API initialized?");
+            logger.finer(exc.getMessage());
+            throw exc;
         }
 
         positionsPanel = new JPanel();
@@ -47,10 +56,11 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
         this.accountList = (List<BossaAPI.NolStatementAPI>) model.getProperty("Accounts"); //TODO will cause error when api is in investor offline status
         //TODO this may be buggy
         updatePanel(0);
-
+        logger.exiting(this.getClass().getName(), "constructor");
     }
 
     private synchronized void updatePanel(int index) {
+        logger.entering(this.getClass().getName(), "updatePanel", index);
         BossaAPI.NolStatementAPI currentAccount = accountList.get(index);
 
         positionsPanel.removeAll();
@@ -83,31 +93,39 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
             }
             //TODO check if ticker set is already in filter - implement this in model
             //add to filter forces callback, it must be called last, otherwise there may be race condition with code above
+            logger.finest("adding isins to filter, callback execution expected");
             model.addToFilter(positionIsinsPrices.keySet());
         }
         int preferredHeight = positionsPanel.getPreferredSize().height;
         positionsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, preferredHeight));
         dialog.resize();
+        logger.exiting(this.getClass().getName(), "updatePanel");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        logger.exiting(this.getClass().getName(), "actionPerformed",e);
         JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
         this.selectedAccount = comboBox.getSelectedIndex();
         updatePanel(this.selectedAccount);
+        logger.exiting(this.getClass().getName(), "actionPerformed");
     }
 
     private void updateValues(String isin) {
+        logger.entering(this.getClass().getName(), "updateValues", isin);
         double price = positionIsinsPrices.get(isin);
         positionIsinsLabels.get(isin).setText(Double.toString(price));
+        logger.exiting(this.getClass().getName(), "updateValues");
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        logger.entering(this.getClass().getName(), "propertyChange", evt);
         switch (evt.getPropertyName()) {
             case "Accounts":
                 this.accountList = (List<BossaAPI.NolStatementAPI>) evt.getNewValue();
                 updatePanel(this.selectedAccount);
+                logger.finest("updated account panel");
                 break;
             case "Quotes":
                 BossaAPI.NolRecentInfoAPI quote = (BossaAPI.NolRecentInfoAPI) evt.getNewValue();
@@ -116,8 +134,10 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
                     this.positionIsinsPrices.replace(isin, quote.getClose() * this.positionIsinsCount.get(isin));
                     updateValues(isin);
                 }
+                logger.finest("updated position values");
                 break;
         }
+        logger.exiting(this.getClass().getName(), "propertyChange");
     }
 
     public JPanel getPane() {
