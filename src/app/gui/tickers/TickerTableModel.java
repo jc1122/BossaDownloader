@@ -4,13 +4,17 @@ import app.API.BossaAPI;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class TickerTableModel extends AbstractTableModel {
-
+    private static final Logger logger =
+            Logger.getLogger(TickerTableModel.class.getName());
     private List<BossaAPI.NolTickerAPI> tickers;
 
     public void setData(List<BossaAPI.NolTickerAPI> tickers) {
+        logger.entering(this.getClass().getName(),"setData", tickers);
         this.tickers = tickers;
+        logger.exiting(this.getClass().getName(),"setData");
     }
 
     public List<BossaAPI.NolTickerAPI> getData() {
@@ -18,7 +22,9 @@ public class TickerTableModel extends AbstractTableModel {
     }
 
     TickerTableModel(List<BossaAPI.NolTickerAPI> tickers) {
+        logger.entering(this.getClass().getName(),"constructor", tickers);
         this.tickers = tickers;
+        logger.exiting(this.getClass().getName(),"constructor");
     }
 
     @Override
@@ -71,13 +77,17 @@ public class TickerTableModel extends AbstractTableModel {
     }
 
     public void addRow(BossaAPI.NolTickerAPI ticker) {
+        logger.entering(this.getClass().getName(),"addRow", ticker);
         tickers.add(ticker);
         this.fireTableDataChanged();
+        logger.exiting(this.getClass().getName(),"addRow");
     }
 
     public BossaAPI.NolTickerAPI removeRow(int row) {
+        logger.entering(this.getClass().getName(),"removeRow", row);
         BossaAPI.NolTickerAPI ticker = tickers.remove(row);
         this.fireTableDataChanged();
+        logger.exiting(this.getClass().getName(),"removeRow", ticker);
         return ticker;
     }
 
