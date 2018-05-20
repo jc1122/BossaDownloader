@@ -2,9 +2,15 @@ package app.gui.tickers;
 
 import javax.swing.*;
 import app.gui.Model;
+import app.gui.View;
+
 import java.util.HashSet;
+import java.util.logging.Logger;
 
 public class ButtonPane {
+    private static final Logger logger =
+            Logger.getLogger(ButtonPane.class.getName());
+
     private JPanel totalPane = new JPanel();
     private JPanel filterPane = new JPanel();
     private BoxLayout totalPaneLayout = new BoxLayout(totalPane, BoxLayout.Y_AXIS);
@@ -19,10 +25,14 @@ public class ButtonPane {
     JPanel buttonPane = new JPanel();
 
     public void setTickerTablesPane(TickerTablesPane tickerTablesPane) {
+        logger.entering(this.getClass().getName(),"setTickerTablesPane", tickerTablesPane);
         this.tickerTablesPane = tickerTablesPane;
+        logger.exiting(this.getClass().getName(),"setTickerTablesPane");
     }
 
     public ButtonPane(Model model, JDialog dialog) {
+        Object[] params = {model, dialog};
+        logger.entering(this.getClass().getName(),"constructor", params);
         buttonPane.add(okButton);
         buttonPane.add(cancelButton);
         buttonPane.add(saveButton);
@@ -34,10 +44,7 @@ public class ButtonPane {
                 dialog.dispose();
         }
                 );
-        cancelButton.addActionListener( e -> {
-            dialog.dispose();
-
-        });
+        cancelButton.addActionListener( e -> dialog.dispose());
 
         filterPane.add(new JLabel("Search text: "));
         searchField = new JTextField();
@@ -47,6 +54,7 @@ public class ButtonPane {
         totalPane.setLayout(totalPaneLayout);
         totalPane.add(filterPane);
         totalPane.add(buttonPane);
+        logger.exiting(this.getClass().getName(),"constructor");
     }
 
     public JPanel getPane() {

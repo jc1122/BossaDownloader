@@ -25,7 +25,7 @@ public class SelectTickersDialog {
         dialog = new JDialog();
         dialog.setTitle("Tickers to watch");
 
-        //TODO refactor this, possibly in BossaAPI, to many unnecessary conversions
+        //TODO refactor this, possibly in BossaAPI, too many unnecessary conversions
         Set<BossaAPI.NolTickerAPI> allTickers = new HashSet<>(model.getTickers(TypeOfList.ALL, null));
         allTickers.removeAll(model.getTickersInFilter());
 

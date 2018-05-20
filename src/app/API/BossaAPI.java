@@ -361,6 +361,11 @@ public enum BossaAPI {
         return version;
     }
 
+    /**
+     * Stops tracking quotes of all tickers.
+     * Removes all tickers from tracking filter.
+     * @return success or error message
+     */
     //clear filter before adding new papers
     @SuppressWarnings("UnusedReturnValue")
     public static String clearFilter() {
