@@ -19,9 +19,9 @@ public class Controller {
         view = new View(this, model);
         SwingUtilities.invokeLater(() -> {
             view.createGUI();
-            view.setStopApiMenuItemEnabled(false);
-            view.setAccountsMenuEnabled(false);
-            view.setTickersMenuEnabled(false);
+            view.setComponentEnabled("Stop", false);
+            view.setComponentEnabled("Accounts", false);
+            view.setComponentEnabled("Tickers", false);
 
         });
         logger.exiting(this.getClass().getName(), "constructor");
@@ -34,9 +34,9 @@ public class Controller {
         logger.entering(this.getClass().getName(), "startAPI");
         view.setBottomInfoText(model.initialize());
 
-        view.setStopApiMenuItemEnabled(true);
-        view.setAccountsMenuEnabled(true);
-        view.setTickersMenuEnabled(true);
+        view.setComponentEnabled("Stop", true);
+        view.setComponentEnabled("Accounts", true);
+        view.setComponentEnabled("Tickers", true);
         logger.exiting(this.getClass().getName(), "startAPI");
     }
 
@@ -46,8 +46,8 @@ public class Controller {
     void stopAPI() {
         logger.entering(this.getClass().getName(), "stopAPI");
         view.setBottomInfoText(model.shutdown());
-        view.setStopApiMenuItemEnabled(false);
-        view.setStartApiMenuItemEnabled(true);
+        view.setComponentEnabled("Stop", false);
+        view.setComponentEnabled("Start", true);
         logger.exiting(this.getClass().getName(), "stopAPI");
     }
 

@@ -108,35 +108,11 @@ class View {
         logger.exiting(this.getClass().getName(), "showSelectTickersDialog", "created a new dialog");
     }
 
-    void setStartApiMenuItemEnabled(boolean enabled) {
-        logger.entering(this.getClass().getName(), "setStartApiMenuItemEnabled");
-        frame.getJMenuBar().getMenu(0).getItem(0).setEnabled(enabled);
-        logger.exiting(this.getClass().getName(), "setStartApiMenuItemEnabled");
-    }
-
-    void setStopApiMenuItemEnabled(boolean enabled) {
-        logger.entering(this.getClass().getName(), "setStopApiMenuItemEnabled");
-        frame.getJMenuBar().getMenu(0).getItem(2).setEnabled(enabled);
-        logger.exiting(this.getClass().getName(), "setStopApiMenuItemEnabled");
-    }
-
-
-    public void setStatementAccountsMenuItemEnabled(boolean enabled) {
-        logger.entering(this.getClass().getName(), "disableStatementAccountsMenuItem");
-        frame.getJMenuBar().getMenu(1).getItem(0).setEnabled(enabled);
-        logger.exiting(this.getClass().getName(), "disableStatementAccountsMenuItem");
-    }
-
-    public void setAccountsMenuEnabled(boolean enabled) {
-        logger.entering(this.getClass().getName(), "setAccountsMenuEnabled", enabled);
-        frame.getJMenuBar().getMenu(1).setEnabled(enabled);
-        logger.exiting(this.getClass().getName(), "setAccountsMenuEnabled");
-    }
-
-    public void setTickersMenuEnabled(boolean enabled) {
-        logger.entering(this.getClass().getName(), "setTickersMenuEnabled", enabled);
-        frame.getJMenuBar().getMenu(2).setEnabled(enabled);
-        logger.exiting(this.getClass().getName(), "setTickersMenuEnabled");
+    void setComponentEnabled(String name, boolean enabled) {
+        Object[] params = {name, enabled};
+        logger.entering(this.getClass().getName(), "setComponentEnabled", params);
+        mainMenuBarFactory.getComponent(name).setEnabled(enabled);
+        logger.exiting(this.getClass().getName(), "setComponentEnabled");
     }
 
     public Model getModel() {
