@@ -55,7 +55,7 @@ class ActionListenerShowsDialogOnException implements ActionListener {
         for (StackTraceElement element : exc.getStackTrace()) {
             stackTrace.append(element).append(System.lineSeparator());
         }
-        JTextArea textArea = new JTextArea(exc.getMessage() + System.lineSeparator() + stackTrace);
+        JTextArea textArea = new JTextArea(exc.getMessage() + System.lineSeparator() + System.lineSeparator() + stackTrace);
         textArea.setEditable(false);
         JOptionPane.showMessageDialog(null,
                 textArea,

@@ -9,8 +9,11 @@ class SimpleMenuFactory extends AbstractGuiFactory<JMenu, JMenuItem> {
         container.setName(containerName);
         for (String componentName : componentNames) {
             JMenuItem component = new JMenuItem(componentName);
+            component.setName(componentName);
             addComponent(component);
+            nameMapping.put(componentName, component);
         }
+        nameMapping.put(containerName, container);
         return container;
     }
 }

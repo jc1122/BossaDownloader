@@ -17,7 +17,7 @@ class View {
     private final Model model;
 
     private JFrame frame;
-
+    private MainMenuBarFactory mainMenuBarFactory;
     private SelectTickersDialog selectTickersDialog;
 
     private JLabel bottomInfoLabel;
@@ -36,11 +36,13 @@ class View {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         frame.getContentPane().setLayout(new BorderLayout());
+
         JPanel bottomInfoPanel = new JPanel();
         bottomInfoLabel = new JLabel("Ready");
         bottomInfoPanel.add(bottomInfoLabel);
         bottomInfoPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
         bottomInfoPanel.setLayout(new BoxLayout(bottomInfoPanel, BoxLayout.LINE_AXIS));
+
         frame.getContentPane().add(bottomInfoPanel, BorderLayout.PAGE_END);
 
         frame.setSize(600, 300);
@@ -53,27 +55,28 @@ class View {
         logger.entering(this.getClass().getName(), "createGUI");
         createFrame();
 
-        frame.setJMenuBar(new MainMenuBarFactory("MenuBar").getContainer());
+        mainMenuBarFactory = new MainMenuBarFactory("MenuBar");
+        frame.setJMenuBar(mainMenuBarFactory.getContainer());
+        System.out.println("menu elements: " + mainMenuBarFactory.getNameMapping().keySet());
         addEventListeners();
         logger.exiting(this.getClass().getName(), "createGUI");
     }
 
-    //TODO replace indexes with something more meaningful; this will crash badly when new items are added to menubar
     private void addEventListeners() {
         logger.entering(this.getClass().getName(), "addEventListeners");
-        JMenuItem start = frame.getJMenuBar().getMenu(0).getItem(0); // API/start
+        JMenuItem start = (JMenuItem)mainMenuBarFactory.getComponent("Start");// API/start
         start.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.startAPI()));
 
-        JMenuItem stop = frame.getJMenuBar().getMenu(0).getItem(2); // API/stop
+        JMenuItem stop = (JMenuItem)mainMenuBarFactory.getComponent("Stop"); // API/stop
         stop.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.stopAPI()));
 
-        JMenuItem statement = frame.getJMenuBar().getMenu(1).getItem(0); // Account/statement
+        JMenuItem statement = (JMenuItem)mainMenuBarFactory.getComponent("Statement"); // Account/statement
         statement.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.showStatement()));
 
-        JMenuItem select = frame.getJMenuBar().getMenu(2).getItem(0); // Tickers/Select...
+        JMenuItem select = (JMenuItem)mainMenuBarFactory.getComponent("Select..."); // Tickers/Select...
         select.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.selectTickers()));
 
-        JMenuItem version = frame.getJMenuBar().getMenu(3).getItem(0); // Help/version
+        JMenuItem version = (JMenuItem)mainMenuBarFactory.getComponent("Version");// Help/version
         version.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.showVersion()));
         logger.exiting(this.getClass().getName(), "addEventListeners");
     }

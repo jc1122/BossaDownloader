@@ -21,6 +21,9 @@ public class MainMenuBarFactory extends AbstractGuiFactory<JMenuBar, JMenu> {
 
         String[] helpMenuNames = new String[]{"Version"};
         addComponent(factory.getContainer("Help", helpMenuNames));
+
+        nameMapping.putAll(factory.getNameMapping());
+        nameMapping.put(name, container);
     }
 
     @Override
