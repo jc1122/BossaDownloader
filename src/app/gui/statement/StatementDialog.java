@@ -10,20 +10,22 @@ public class StatementDialog {
             Logger.getLogger(StatementDialog.class.getName());
 
     private final JDialog dialog = new JDialog();
-
+    private Model model;
+    private PositionsPane positionsPane;
     //TODO this method is an ugly hack; should refactor this to a listener and change PositionsPane constructor
     public void resize() {
         dialog.setSize(dialog.getPreferredSize());
     }
 
     public StatementDialog(Model model) {
+        this.model = model;
         logger.entering(this.getClass().getName(), "constructor", model);
         dialog.setTitle("Statement");
         dialog.setLayout(new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
 
         AccountPane accountPane = new AccountPane(model);
         StatementPane statementPane = new StatementPane(model);
-        PositionsPane positionsPane = new PositionsPane(model, this);
+        positionsPane = new PositionsPane(model, this);
 
         accountPane.addAccountSelectionListener(statementPane);
         accountPane.addAccountSelectionListener(positionsPane);

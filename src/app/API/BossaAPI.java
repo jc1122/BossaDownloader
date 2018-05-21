@@ -266,7 +266,9 @@ public enum BossaAPI {
         tickersInFilter.removeIf(ticker -> isins.contains(ticker.getIsin()));
 
         //must be a new set, because addToFilters clear mapping during assignment!
-        addToFilter(new HashSet<>(tickerISINSInFilter));
+        if (tickerISINSInFilter.size() > 0) {
+            addToFilter(new HashSet<>(tickerISINSInFilter));
+        }
         return "remove from filter"; //safe, exception in addToFilter guards this
     }
 

@@ -10,9 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 //TODO check behavior in concurrency; remember to remove tickerSelector from filter on close!
@@ -26,6 +25,7 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
     private Map<String, Double> positionIsinsPrices;
     private Map<String, JLabel> positionIsinsLabels;
     private Map<String, Integer> positionIsinsCount;
+    private Set<String> isinsInModelFilter;
 
     private final StatementDialog dialog;
 
@@ -52,6 +52,7 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
         positionIsinsCount = new HashMap<>();
 
         this.accountList = (List<BossaAPI.NolStatementAPI>) model.getProperty("Accounts"); //TODO will cause error when api is in investor offline status
+        isinsInModelFilter = model.getTickerISINSInFilter();
         //TODO this may be buggy
         updatePanel(0);
         logger.exiting(this.getClass().getName(), "constructor");
@@ -89,7 +90,7 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
                 positionsPanel.add(positionIsinsLabels.get(isin));
                 positionIsinsCount.replace(isin, position.getAcc110() + position.getAcc120());
             }
-            //TODO check if ticker set is already in filter - implement this in model
+
             //add to filter forces callback, it must be called last, otherwise there may be race condition with code above
             logger.finest("adding isins to filter, callback execution expected");
             model.addToFilter(positionIsinsPrices.keySet());
@@ -133,6 +134,14 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
                 if (quote.getBitMask().get("Close")) {
                     this.positionIsinsPrices.replace(isin, quote.getClose() * this.positionIsinsCount.get(isin));
                     updateValues(isin);
+                    //remove redundant isin after price updates
+                    if (!isinsInModelFilter.contains(isin)) {
+                        if (model.getTickerISINSInFilter().contains(isin)) {
+                            Set<String> tmp = new HashSet<>();
+                            tmp.add(isin);
+                            model.removeFromFilter(tmp);
+                        }
+                    }
                 }
                 logger.finest("updated position values");
                 break;
