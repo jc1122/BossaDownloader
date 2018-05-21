@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Logger;
 
-//TODO this class has many enablers and disablers for buttons, find a better way to handle them
 class View {
     private static final Logger logger =
             Logger.getLogger(View.class.getName());
