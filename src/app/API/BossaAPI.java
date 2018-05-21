@@ -213,6 +213,8 @@ public enum BossaAPI {
         Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "addToFilter", params);
         clearFilter();
+        //TODO this logic is potentially buggy, if tickers are added to filter first, then exception occurs,
+        // TODO effectively no tickers will be in filter but present in the maps
         tickerISINSInFilter.addAll(isins);
 
         for (String isin : isins) {
