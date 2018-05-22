@@ -7,7 +7,7 @@ import javax.swing.border.Border;
 import java.util.List;
 import java.util.logging.Logger;
 
-class TickerTable {
+public class TickerTable {
     private static final Logger logger =
             Logger.getLogger(TickerTable.class.getName());
     private final JScrollPane scrollPane;

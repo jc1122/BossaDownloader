@@ -42,6 +42,7 @@ public enum BossaAPI {
         propertyMap.put("Delay", Delay.getInstance());
         propertyMap.put("Order", Order.getInstance());
         propertyMap.put("Outlook", Outlook.getInstance());
+        propertyMap.put("TickersInFilter", TickersInFilter.getInstance());
 
         Map<String, String> functionNames = new HashMap<>();
 
@@ -220,6 +221,8 @@ public enum BossaAPI {
         for (String isin : isins) {
             tickersInFilter.add(tickersMap.get(isin));
         }
+        //notify listeners
+        TickersInFilter.getInstance().update(tickersInFilter);
 
         String tickerString = isinSetToString(tickerISINSInFilter);
         int errorCode = INSTANCE.AddToFilter(tickerString, false);
@@ -265,6 +268,8 @@ public enum BossaAPI {
         tickerISINSInFilter.removeAll(isins);
         tickersInFilter.removeIf(ticker -> isins.contains(ticker.getIsin()));
 
+        //notify listeners
+        TickersInFilter.getInstance().update(tickersInFilter);
         //must be a new set, because addToFilters clear mapping during assignment!
         if (tickerISINSInFilter.size() > 0) {
             addToFilter(new HashSet<>(tickerISINSInFilter));
@@ -378,6 +383,8 @@ public enum BossaAPI {
         logger.entering(BossaAPI.class.getName(), "clearFilter");
         tickerISINSInFilter.clear();
         tickersInFilter.clear();
+        //notify listeners
+        TickersInFilter.getInstance().update(tickersInFilter);
         int errorCode = INSTANCE.ClearFilter();
         String message = GetResultCodeDesc(errorCode);
         if (errorCode < 0) {
@@ -1749,6 +1756,26 @@ public enum BossaAPI {
         }
     }
 
+    /**
+     * Notifies listeners about any changes in tickers in filter.
+     */
+    public static final class TickersInFilter extends PropertyAPI<Set<NolTickerAPI>> {
+        private static final TickersInFilter INSTANCE = new TickersInFilter();
+
+        private TickersInFilter() {
+            property = tickersInFilter;
+        }
+
+        public static TickersInFilter getInstance() {
+            logger.exiting(TickersInFilter.class.getName(), "getInstance");
+            return INSTANCE;
+        }
+
+        private void update(Set<NolTickerAPI> tickersInFilter) {
+            propertyChangeSupport.firePropertyChange("TickersInFilter",property, tickersInFilter);
+            property = new HashSet<>(tickersInFilter);
+        }
+    }
     /**
      * Updates information about quotes. This class handles listeners for {@link NolRecentInfoAPI}
      *

@@ -75,5 +75,8 @@ public class Controller {
         logger.exiting(this.getClass().getName(), "selectTickers");
     }
 
+    void saveToCSV() {
+        view.showSaveToCSVDialog();
+    }
 
 }
