@@ -21,7 +21,7 @@ public class TickerTableModel extends AbstractTableModel {
         return tickers;
     }
 
-    TickerTableModel(List<BossaAPI.NolTickerAPI> tickers) {
+    public TickerTableModel(List<BossaAPI.NolTickerAPI> tickers) {
         logger.entering(this.getClass().getName(), "constructor", tickers);
         this.tickers = tickers;
         logger.exiting(this.getClass().getName(), "constructor");

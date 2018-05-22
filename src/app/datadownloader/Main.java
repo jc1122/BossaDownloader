@@ -16,7 +16,7 @@ public class Main {
         LogManager.getLogManager().readConfiguration(loggingProperties);
 
         Model model = new Model();
-        /*Controller controller = */
+        /*SaveToCSVController controller = */
         new Controller(model);
     }
 }

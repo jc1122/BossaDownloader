@@ -5,6 +5,7 @@ import app.gui.Model;
 import javax.swing.*;
 import java.util.logging.Logger;
 
+//TODO refactor to MVC
 public class StatementDialog {
     private static final Logger logger =
             Logger.getLogger(StatementDialog.class.getName());

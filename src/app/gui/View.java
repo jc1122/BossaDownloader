@@ -1,6 +1,7 @@
 package app.gui;
 
 import app.gui.menu.MainMenuBarFactory;
+import app.gui.saveToCSV.SaveToCSVDialog;
 import app.gui.statement.StatementDialog;
 import app.gui.tickerSelector.SelectTickersDialog;
 
@@ -18,6 +19,7 @@ class View {
     private JFrame frame;
     private MainMenuBarFactory mainMenuBarFactory;
     private SelectTickersDialog selectTickersDialog;
+    private SaveToCSVDialog saveToCSVDialog;
 
     private JLabel bottomInfoLabel;
     View(Controller controller, Model model) {
@@ -75,6 +77,9 @@ class View {
         JMenuItem select = (JMenuItem)mainMenuBarFactory.getComponent("Select..."); // Tickers/Select...
         select.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.selectTickers()));
 
+        JMenuItem saveToCSV = (JMenuItem)mainMenuBarFactory.getComponent("Save to CSV"); //Tickers/Save to CSV
+        saveToCSV.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.saveToCSV()));
+
         JMenuItem version = (JMenuItem)mainMenuBarFactory.getComponent("Version");// Help/version
         version.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.showVersion()));
         logger.exiting(this.getClass().getName(), "addEventListeners");
@@ -117,4 +122,20 @@ class View {
     public Model getModel() {
         return model;
     }
+
+    //TODO refactor this and showSelectTickersDialog, abstract common class
+    void showSaveToCSVDialog() {
+        logger.entering(this.getClass().getName(), "showSelectTickersDialog");
+        if (saveToCSVDialog != null) {
+            if (saveToCSVDialog.getDialog().isVisible()) {
+                logger.exiting(this.getClass().getName(), "showSelectTickersDialog", "already visible");
+                return;
+            }
+        }
+        saveToCSVDialog = new SaveToCSVDialog(model);
+        saveToCSVDialog.getDialog().setVisible(true);
+        saveToCSVDialog.getDialog().requestFocus();
+        logger.exiting(this.getClass().getName(), "showSelectTickersDialog", "created a new dialog");
+    }
+
 }
