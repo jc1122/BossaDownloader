@@ -36,7 +36,9 @@ class ButtonPane {
 
         okButton.addActionListener(e -> {
                     model.clearFilter();
-                    model.addTickersToFilter(new HashSet<>(tickerTablesPane.getTickersInFilter()));
+            if (tickerTablesPane.getTickersInFilter().size() > 0) {
+                model.addTickersToFilter(new HashSet<>(tickerTablesPane.getTickersInFilter()));
+            }
                     dialog.dispose();
                 }
         );

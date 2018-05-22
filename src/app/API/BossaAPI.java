@@ -25,8 +25,8 @@ public enum BossaAPI {
     static final BossaAPIInterface INSTANCE;
     private static final Map<String, PropertyAPI> propertyMap = new HashMap<>();
     private static final Map<String, NolTickerAPI> tickersMap = new HashMap<>();
-    private static final Set<String> tickerISINSInFilter = new HashSet<>();
-    private static final Set<NolTickerAPI> tickersInFilter = new HashSet<>();
+    private static Set<String> tickerISINSInFilter = new HashSet<>();
+    private static Set<NolTickerAPI> tickersInFilter = new HashSet<>();
 
     private static final Logger logger =
             Logger.getLogger(BossaAPI.class.getName());
@@ -212,7 +212,16 @@ public enum BossaAPI {
     public static String addToFilter(Set<String> isins) throws IllegalArgumentException {
         Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "addToFilter", params);
+
+        //need to be saved, or will be cleared by clearFilter
+        Set<String> saveTickerISINSInFilter = new HashSet<>(tickerISINSInFilter);
+        Set<BossaAPI.NolTickerAPI> saveTickersInFilter = new HashSet<>(tickersInFilter);
+
         clearFilter();
+
+        tickerISINSInFilter = saveTickerISINSInFilter;
+        tickersInFilter = saveTickersInFilter;
+
         //TODO this logic is potentially buggy, if tickers are added to filter first, then exception occurs,
         // TODO effectively no tickers will be in filter but present in the maps
         tickerISINSInFilter.addAll(isins);
@@ -265,10 +274,12 @@ public enum BossaAPI {
         tickerISINSInFilter.removeAll(isins);
         tickersInFilter.removeIf(ticker -> isins.contains(ticker.getIsin()));
 
-        //must be a new set, because addToFilters clear mapping during assignment!
         if (tickerISINSInFilter.size() > 0) {
-            addToFilter(new HashSet<>(tickerISINSInFilter));
+            addToFilter(tickerISINSInFilter);
+        } else {
+            clearFilter();
         }
+
         return "remove from filter"; //safe, exception in addToFilter guards this
     }
 

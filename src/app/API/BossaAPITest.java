@@ -37,6 +37,16 @@ class BossaAPITest {
     @DisplayName("addTickersToFilter tests")
     class AddTickersToFilterTests {
 
+        @BeforeEach
+        void prepare() {
+            BossaAPI.clearFilter();
+        }
+
+        @AfterEach
+        void tearDown() {
+            BossaAPI.clearFilter();
+        }
+
         private Set<BossaAPI.NolTickerAPI> addNumberOfTickers(int number) {
             List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
             Set<BossaAPI.NolTickerAPI> tickerSet = new HashSet<>();
@@ -44,6 +54,18 @@ class BossaAPITest {
             IntStream.range(0, number).forEach(value -> tickerSet.add(tickers.get(value)));
 
             return tickerSet;
+        }
+
+        @Test
+        @DisplayName("successfully add multiple isins to filter")
+        void addToFilterMultipleIsins() {
+            Set<String> isins = new HashSet<>();
+            isins.add("PLVCAOC00015");
+            isins.add("PLNFI0600010");
+            isins.add("PLNFI0800016");
+            isins.add("PL11BTS00015");
+
+            assertEquals("add to filter", BossaAPI.addToFilter(isins));
         }
 
         @Test
@@ -87,28 +109,59 @@ class BossaAPITest {
             String message = BossaAPI.addTickersToFilter(tickers);
             assertEquals("add to filter", message);
         }
+
+        @Test
+        @DisplayName("check quotes callback for 150 tickerSelector in filter")
+        void callbackTest() throws InterruptedException {
+            BossaAPI.clearFilter();
+            int numberOfTickers = 150;
+            BossaAPI.addToFilter(prepareIsins(numberOfTickers));
+            int[] counter = {0};
+            PropertyChangeListener listener = new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (Objects.equals(evt.getPropertyName(), "Quotes")) {
+                        counter[0]++;
+                        synchronized (this) {
+                            if (counter[0] == 2 * numberOfTickers) {
+                                this.notifyAll();
+                            }
+                        }
+                    }
+                }
+            };
+            BossaAPI.Quotes.getInstance().addPropertyChangeListener(listener);
+            synchronized (listener) {
+                listener.wait(6000);
+            }
+            assertTrue(counter[0] > 2 * numberOfTickers - 5,
+                    "callback count is "
+                            + Integer.toString(counter[0])
+                            + " should be at least"
+                            + Integer.toString(2 * numberOfTickers - 5)
+                            + ", increase timeout or check code!");
+        }
+
+        @Test
+        @DisplayName("successfully add single isin to filter")
+        void addToFilterSingleIsin() {
+            Set<String> isins = new HashSet<>();
+            isins.add("PL4FNMD00013");
+
+            assertEquals("add to filter", BossaAPI.addToFilter(isins));
+        }
+
+        @Test
+        @DisplayName("exceed limit (150) of valid tickerSelector to filter")
+        void addToFilterTooManyTickers() {
+            BossaAPI.clearFilter();
+            Executable test = () -> BossaAPI.addToFilter(prepareIsins(300));
+
+            assertThrows(IllegalArgumentException.class, test, "should complain about too much tickerSelector in filter!");
+
+        }
     }
 
-    @Test
-    @DisplayName("successfully add single isin to filter")
-    void addToFilterSingleIsin() {
-        Set<String> isins = new HashSet<>();
-        isins.add("PL4FNMD00013");
-
-        assertEquals("add to filter", BossaAPI.addToFilter(isins), BossaAPI.addToFilter(isins));
-    }
-
-    @Test
-    @DisplayName("successfully add multiple isins to filter")
-    void addToFilterMultipleIsins() {
-        Set<String> isins = new HashSet<>();
-        isins.add("PLVCAOC00015");
-        isins.add("PLNFI0600010");
-        isins.add("PLNFI0800016");
-        isins.add("PL11BTS00015");
-
-        assertEquals("add to filter", BossaAPI.addToFilter(isins), BossaAPI.addToFilter(isins));
-    }
 
     private Set<String> prepareIsins(int numberOfIsins) {
         List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
@@ -120,47 +173,8 @@ class BossaAPITest {
         return isins;
     }
 
-    @Test
-    @DisplayName("exceed limit (150) of valid tickerSelector to filter")
-    void addToFilterTooManyTickers() {
-        BossaAPI.clearFilter();
-        Executable test = () -> BossaAPI.addToFilter(prepareIsins(300));
 
-        assertThrows(IllegalArgumentException.class, test, "should complain about too much tickerSelector in filter!");
 
-    }
-
-    @Test
-    @DisplayName("check quotes callback for 150 tickerSelector in filter")
-    void callbackTest() throws InterruptedException {
-        BossaAPI.clearFilter();
-        int numberOfTickers = 150;
-        BossaAPI.addToFilter(prepareIsins(numberOfTickers));
-        int[] counter = {0};
-        PropertyChangeListener listener = new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (Objects.equals(evt.getPropertyName(), "Quotes")) {
-                    counter[0]++;
-                    synchronized (this) {
-                        if (counter[0] == 2 * numberOfTickers) {
-                            this.notifyAll();
-                        }
-                    }
-                }
-            }
-        };
-        BossaAPI.Quotes.getInstance().addPropertyChangeListener(listener);
-        synchronized (listener) {
-            listener.wait(6000);
-        }
-        assertTrue(counter[0] > 2 * numberOfTickers - 5,
-                "callback count is "
-                        + Integer.toString(counter[0])
-                        + " should be at least"
-                        + Integer.toString(2 * numberOfTickers - 5)
-                        + ", increase timeout or check code!");
-    }
 
     @Test
     @DisplayName("add invalid multiple isins to filter")
@@ -226,20 +240,30 @@ class BossaAPITest {
         }
     }
 
+    //TODO check contents of filter after each add/remove!!! this is not currently checked
     @Nested
     @DisplayName("removeFromFilter tests")
     class RemoveFromFilterTests {
         Set<String> isinsToRemove;
+        Set<String> isins;
+        Set<String> isinsRemained;
 
         @BeforeEach
         void prepareFilter() {
-            Set<String> isins = new HashSet<>();
+            BossaAPI.clearFilter();
+            isins = new HashSet<>();
             isins.add("PLVCAOC00015");
             isins.add("PLNFI0600010");
             isins.add("PLNFI0800016");
             isins.add("PL11BTS00015");
+            isinsRemained = new HashSet<>(isins);
             BossaAPI.addToFilter(isins);
             isinsToRemove = new HashSet<>();
+        }
+
+        @AfterEach
+        void tearDown() {
+            BossaAPI.clearFilter();
         }
 
         @Test
@@ -248,6 +272,7 @@ class BossaAPITest {
             isinsToRemove.add("invalid");
             Executable test = () -> BossaAPI.removeFromFilter(isinsToRemove);
             assertThrows(IllegalArgumentException.class, test, "nothing to add/remove");
+            assertEquals(isinsRemained, BossaAPI.getTickerISINSInFilter());
         }
 
         @Test
@@ -255,7 +280,10 @@ class BossaAPITest {
         void removeFromFilterValid() {
             isinsToRemove.add("PLNFI0800016");
             isinsToRemove.add("PL11BTS00015");
+            isinsRemained.remove("PLNFI0800016");
+            isinsRemained.remove("PL11BTS00015");
             assertEquals("remove from filter", BossaAPI.removeFromFilter(isinsToRemove));
+            assertEquals(isinsRemained, BossaAPI.getTickerISINSInFilter());
         }
 
         @Test
@@ -266,6 +294,7 @@ class BossaAPITest {
             isinsToRemove.add("invalid");
             Executable test = () -> BossaAPI.removeFromFilter(isinsToRemove);
             assertThrows(IllegalArgumentException.class, test);
+            assertEquals(isinsRemained, BossaAPI.getTickerISINSInFilter());
         }
 
         @Test
@@ -274,6 +303,7 @@ class BossaAPITest {
             isinsToRemove.add(null);
             Executable test = () -> BossaAPI.removeFromFilter(isinsToRemove);
             assertThrows(IllegalArgumentException.class, test);
+            assertEquals(isinsRemained, BossaAPI.getTickerISINSInFilter());
         }
 
         @Test
@@ -282,6 +312,7 @@ class BossaAPITest {
             isinsToRemove.add("");
             Executable test = () -> BossaAPI.removeFromFilter(isinsToRemove);
             assertThrows(IllegalArgumentException.class, test);
+            assertEquals(isinsRemained, BossaAPI.getTickerISINSInFilter());
         }
 
         @Test
@@ -292,6 +323,7 @@ class BossaAPITest {
             isinsToRemove.add("");
             Executable test = () -> BossaAPI.removeFromFilter(isinsToRemove);
             assertThrows(IllegalArgumentException.class, test);
+            assertEquals(isinsRemained, BossaAPI.getTickerISINSInFilter());
         }
     }
 
