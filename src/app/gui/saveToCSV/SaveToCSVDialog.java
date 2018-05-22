@@ -3,6 +3,7 @@ package app.gui.saveToCSV;
 import javax.swing.*;
 
 //TODO test this dialog, especially property listeners
+//TODO on dialog close, remove listeners
 public class SaveToCSVDialog {
     SaveToCSVModel model;
     SaveToCSVView view;

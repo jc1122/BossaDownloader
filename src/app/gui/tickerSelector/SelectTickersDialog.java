@@ -16,6 +16,7 @@ import java.util.logging.Logger;
  * You need to {@link SelectTickersDialog#getDialog()} then {@link JDialog#setVisible(boolean)}
  * manually to display the dialog.
  */
+//TODO refactor to MVC
 public class SelectTickersDialog {
     private static final Logger logger =
             Logger.getLogger(SelectTickersDialog.class.getName());
