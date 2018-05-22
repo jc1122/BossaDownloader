@@ -1,32 +1,31 @@
-package app.gui.saveToCSV;
+package app.gui.dialog.saveToCSV;
 
 import app.API.BossaAPI;
-import app.gui.tickerSelector.TickerTableModel;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 import java.util.Set;
-import java.util.ArrayList;
 
-public class SaveToCSVModel implements PropertyChangeListener  {
+public class SaveToCSVModel implements PropertyChangeListener {
     private Set<BossaAPI.NolTickerAPI> tickersInFilter;
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
+
     void removePropertyChangeListener(PropertyChangeListener listaner) {
         propertyChangeSupport.removePropertyChangeListener(listaner);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        if(Objects.equals(propertyChangeEvent.getPropertyName(), "TickersInFilter")) {
+        if (Objects.equals(propertyChangeEvent.getPropertyName(), "TickersInFilter")) {
             //noinspection unchecked
             this.tickersInFilter = (Set<BossaAPI.NolTickerAPI>) propertyChangeEvent.getNewValue();
-            this.propertyChangeSupport.firePropertyChange("TickersInFilter",propertyChangeEvent.getOldValue(), tickersInFilter);
+            this.propertyChangeSupport.firePropertyChange("TickersInFilter", propertyChangeEvent.getOldValue(), tickersInFilter);
         }
     }
 

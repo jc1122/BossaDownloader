@@ -1,39 +1,36 @@
-package app.gui.saveToCSV;
+package app.gui.dialog.generifiedSaveToCSV;
 
 import app.API.BossaAPI;
+import app.gui.dialog.GUIView;
 import app.gui.tickerSelector.TickerTable;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
 
-public class SaveToCSVView implements PropertyChangeListener {
+public class SaveToCSVView<K extends SaveToCSVModel, L extends SaveToCSVView<K, L, M>, M extends SaveToCSVController<K, L>>
+        extends GUIView<K, L, M> {
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        if(Objects.equals(propertyChangeEvent.getPropertyName(), "TickersInFilter")) {
+        if (Objects.equals(propertyChangeEvent.getPropertyName(), "TickersInFilter")) {
             //noinspection unchecked
-            Set<BossaAPI.NolTickerAPI> tickers = (Set<BossaAPI.NolTickerAPI>)propertyChangeEvent.getNewValue();
+            Set<BossaAPI.NolTickerAPI> tickers = (Set<BossaAPI.NolTickerAPI>) propertyChangeEvent.getNewValue();
             tickerTable = new TickerTable(new ArrayList<>(tickers), "Tickers to collect");
         }
     }
 
-    private final JDialog dialog;
-    private final SaveToCSVController controller;
-    private final SaveToCSVModel model;
     private TickerTable tickerTable;
 
     private JButton startSaving, stopSaving;
 
-    SaveToCSVView(SaveToCSVController saveToCSVController, SaveToCSVModel saveToCSVModel) {
-        controller = saveToCSVController;
-        model = saveToCSVModel;
-        dialog = new JDialog();
-        model.addPropertyChangeListener(this);
+    SaveToCSVView(M saveToCSVController, K saveToCSVModel) {
+        super(saveToCSVController, saveToCSVModel);
     }
-    void createGUI() {
+
+    @Override
+    public void createGUI() {
         JPanel buttonPane = new JPanel();
         startSaving = new JButton("Start saving");
         startSaving.addActionListener((e) -> controller.startSaving());
@@ -44,9 +41,6 @@ public class SaveToCSVView implements PropertyChangeListener {
         tickerTable = new TickerTable(new ArrayList<>(model.getTickersInFilter()), "Tickers to collect");
         dialog.add(tickerTable.getPane());
         dialog.add(buttonPane);
-    }
-    JDialog getDialog() {
-        return dialog;
     }
 
     void setStartSavingEnabled(boolean enabled) {

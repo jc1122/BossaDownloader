@@ -1,26 +1,33 @@
 package app.gui.dialog;
 
 import app.gui.Model;
-import app.gui.refactoredStatement.StatementController;
-import app.gui.refactoredStatement.StatementModel;
-import app.gui.refactoredStatement.StatementView;
 
 import javax.swing.*;
+import java.util.logging.Logger;
 
-public class GUIDialog<K extends GUIModel, L extends GUIView, M extends GUIController> {
-    private final JDialog dialog = new JDialog();
-    private K model;
-    private L view;
-    private M controller;
+public class GUIDialog<K extends GUIModel, L extends GUIView, M extends GUIController<K, L>> {
+    public static class CurrentClassGetter extends SecurityManager {
+        public String getClassName() {
+            return getClassContext()[1].getSimpleName();
+        }
+    }
 
-    private Class<K> modelClass;
-    private Class<L> viewClass;
-    private Class<M> controllerClass;
+    protected static final Logger logger =
+            Logger.getLogger(new CurrentClassGetter().getClassName());
 
-    public GUIDialog(Model model) {
-        this.model = new StatementModel(model);
-        controller = new StatementController(this.model);
-        this.view = controller.getView();
+    protected final JDialog dialog = new JDialog();
+    protected K model;
+    protected L view;
+    protected M controller;
+
+    public GUIDialog(Model model, Class<K> modelClass, Class<M> controllerClass) {
+        try {
+            this.model = modelClass.getConstructor(Model.class).newInstance(model);
+            this.controller = controllerClass.getConstructor(Model.class).newInstance(model);
+            this.view = controller.getView();
+        } catch (Exception e) {
+            //TODO add exception handling
+        }
     }
 
     public JDialog getDialog() {

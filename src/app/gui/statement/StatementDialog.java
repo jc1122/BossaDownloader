@@ -13,6 +13,7 @@ public class StatementDialog {
     private final JDialog dialog = new JDialog();
     private Model model;
     private PositionsPane positionsPane;
+
     //TODO this method is an ugly hack; should refactor this to a listener and change PositionsPane constructor
     public void resize() {
         dialog.setSize(dialog.getPreferredSize());

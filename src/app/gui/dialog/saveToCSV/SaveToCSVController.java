@@ -1,10 +1,12 @@
-package app.gui.saveToCSV;
+package app.gui.dialog.saveToCSV;
+
 
 import javax.swing.*;
 
 public class SaveToCSVController {
     SaveToCSVModel model;
     SaveToCSVView view;
+
     SaveToCSVController(SaveToCSVModel model) {
         this.model = model;
         view = new SaveToCSVView(this, model);

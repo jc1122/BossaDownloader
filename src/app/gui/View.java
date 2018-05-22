@@ -1,7 +1,7 @@
 package app.gui;
 
+import app.gui.dialog.saveToCSV.SaveToCSVDialog;
 import app.gui.menu.MainMenuBarFactory;
-import app.gui.saveToCSV.SaveToCSVDialog;
 import app.gui.statement.StatementDialog;
 import app.gui.tickerSelector.SelectTickersDialog;
 
@@ -77,7 +77,7 @@ class View {
         JMenuItem select = (JMenuItem)mainMenuBarFactory.getComponent("Select..."); // Tickers/Select...
         select.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.selectTickers()));
 
-        JMenuItem saveToCSV = (JMenuItem)mainMenuBarFactory.getComponent("Save to CSV"); //Tickers/Save to CSV
+        JMenuItem saveToCSV = (JMenuItem) mainMenuBarFactory.getComponent("Save to CSV"); //Tickers/Save to CSV
         saveToCSV.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.saveToCSV()));
 
         JMenuItem version = (JMenuItem)mainMenuBarFactory.getComponent("Version");// Help/version

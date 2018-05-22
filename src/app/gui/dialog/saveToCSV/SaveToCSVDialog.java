@@ -1,7 +1,8 @@
-package app.gui.saveToCSV;
+package app.gui.dialog.saveToCSV;
+
+import app.gui.Model;
 
 import javax.swing.*;
-import app.gui.Model;
 
 //TODO test this dialog, especially property listeners
 //TODO on dialog close, remove listeners
@@ -15,6 +16,7 @@ public class SaveToCSVDialog {
         controller = new SaveToCSVController(this.model);
         this.view = controller.getView();
     }
+
     public JDialog getDialog() {
         return view.getDialog();
     }
