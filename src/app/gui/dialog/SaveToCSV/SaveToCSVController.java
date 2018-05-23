@@ -1,4 +1,4 @@
-package app.gui.dialog.generifiedSaveToCSV;
+package app.gui.dialog.SaveToCSV;
 
 
 import app.gui.dialog.GUIController;

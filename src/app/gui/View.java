@@ -1,9 +1,9 @@
 package app.gui;
 
-import app.gui.dialog.generifiedSaveToCSV.SaveToCSVController;
-import app.gui.dialog.generifiedSaveToCSV.SaveToCSVDialog;
-import app.gui.dialog.generifiedSaveToCSV.SaveToCSVModel;
-import app.gui.dialog.generifiedSaveToCSV.SaveToCSVView;
+import app.gui.dialog.SaveToCSV.SaveToCSVController;
+import app.gui.dialog.SaveToCSV.SaveToCSVDialog;
+import app.gui.dialog.SaveToCSV.SaveToCSVModel;
+import app.gui.dialog.SaveToCSV.SaveToCSVView;
 import app.gui.menu.MainMenuBarFactory;
 import app.gui.statement.StatementDialog;
 import app.gui.tickerSelector.SelectTickersDialog;

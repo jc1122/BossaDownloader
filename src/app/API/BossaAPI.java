@@ -42,6 +42,7 @@ public enum BossaAPI {
         propertyMap.put("Delay", Delay.getInstance());
         propertyMap.put("Order", Order.getInstance());
         propertyMap.put("Outlook", Outlook.getInstance());
+        propertyMap.put("TickersInFilter", TickersInFilter.getInstance());
 
         Map<String, String> functionNames = new HashMap<>();
 
@@ -240,6 +241,7 @@ public enum BossaAPI {
         }
 
         logger.exiting(BossaAPI.class.getName(), "addToFilter", output);
+        TickersInFilter.getInstance().update(tickersInFilter);
         return output;
     }
 
@@ -1726,7 +1728,7 @@ public enum BossaAPI {
      * Provides {@link PropertyChangeSupport} for callbacks of API and wraps property.
      * Property may be accessed only after it has been initialized!
      * Property name should be the same as the name of class inheriting from this class.
-     *
+     * //TODO abstract getInstance of all child classes
      * @param <T> class of wrapped property
      */
     //refactoring CallbackHelpers to generic class impossible due to type erasure...
@@ -1760,6 +1762,24 @@ public enum BossaAPI {
         }
     }
 
+    public static final class TickersInFilter extends PropertyAPI<Set<NolTickerAPI>> {
+        private static final TickersInFilter INSTANCE = new TickersInFilter();
+
+        private TickersInFilter() {
+            this.property = tickersInFilter;
+        }
+
+        public static TickersInFilter getInstance() {
+            return INSTANCE;
+        }
+
+        private void update(Set<NolTickerAPI> tickersInFilter) {
+            Set<NolTickerAPI> oldValue = this.property;
+            this.property = tickersInFilter;
+            this.propertyChangeSupport.firePropertyChange("TickersInFilter", oldValue, this.property);
+        }
+
+    }
     /**
      * Updates information about quotes. This class handles listeners for {@link NolRecentInfoAPI}
      *

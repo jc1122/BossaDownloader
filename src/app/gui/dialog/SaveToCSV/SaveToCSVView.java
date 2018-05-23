@@ -1,4 +1,4 @@
-package app.gui.dialog.generifiedSaveToCSV;
+package app.gui.dialog.SaveToCSV;
 
 import app.API.BossaAPI;
 import app.gui.dialog.GUIView;
@@ -19,6 +19,7 @@ public class SaveToCSVView<K extends SaveToCSVModel, L extends SaveToCSVView<K, 
             //noinspection unchecked
             Set<BossaAPI.NolTickerAPI> tickers = (Set<BossaAPI.NolTickerAPI>) propertyChangeEvent.getNewValue();
             tickerTable = new TickerTable(new ArrayList<>(tickers), "Tickers to collect");
+            //TODO fix bug in TickerTable - the line above does not update the model and the parent view is not updated
         }
     }
 

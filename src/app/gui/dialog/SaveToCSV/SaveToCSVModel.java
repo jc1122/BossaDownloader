@@ -1,4 +1,4 @@
-package app.gui.dialog.generifiedSaveToCSV;
+package app.gui.dialog.SaveToCSV;
 
 import app.API.BossaAPI;
 import app.gui.dialog.GUIModel;
@@ -12,6 +12,7 @@ public class SaveToCSVModel extends GUIModel {
 
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        System.out.println("im here");
         if (Objects.equals(propertyChangeEvent.getPropertyName(), "TickersInFilter")) {
             //noinspection unchecked
             this.tickersInFilter = (Set<BossaAPI.NolTickerAPI>) propertyChangeEvent.getNewValue();
