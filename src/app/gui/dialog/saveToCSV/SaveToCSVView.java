@@ -4,6 +4,7 @@ import app.API.BossaAPI;
 import app.gui.tickerSelector.TickerTable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -35,16 +36,25 @@ public class SaveToCSVView implements PropertyChangeListener {
     }
 
     void createGUI() {
+        dialog.setLayout(new BorderLayout());
+
         JPanel buttonPane = new JPanel();
         startSaving = new JButton("Start saving");
         startSaving.addActionListener((e) -> controller.startSaving());
+        buttonPane.add(startSaving);
 
         stopSaving = new JButton("Stop saving");
         stopSaving.addActionListener((e) -> controller.stopSaving());
+        buttonPane.add(stopSaving);
 
         tickerTable = new TickerTable(new ArrayList<>(model.getTickersInFilter()), "Tickers to collect");
-        dialog.add(tickerTable.getPane());
-        dialog.add(buttonPane);
+        JPanel tickerPane = new JPanel();
+        tickerPane.setLayout(new BoxLayout(tickerPane, BoxLayout.LINE_AXIS));
+        tickerPane.add(tickerTable.getPane());
+
+        dialog.add(tickerPane, BorderLayout.CENTER);
+        dialog.add(buttonPane, BorderLayout.PAGE_END);
+        dialog.pack();
     }
 
     JDialog getDialog() {

@@ -108,6 +108,18 @@ public class Model {
     }
 
     /**
+     * The {@code listener} will be removed from each property which inherits from {@link BossaAPI.PropertyAPI}
+     * and is stored in {@link BossaAPI#getPropertyMap()}.
+     *
+     * @param listener callback for property
+     */
+    public void removePropertyListener(PropertyChangeListener listener) {
+        for (String property : propertyMap.keySet()) {
+            propertyMap.get(property).removePropertyChangeListener(listener);
+        }
+    }
+
+    /**
      * {@link BossaAPI.PropertyAPI#getProperty()}
      *
      * @param property any property of {@link BossaAPI.PropertyAPI}
