@@ -5,7 +5,7 @@ import app.gui.dialog.GUIController;
 
 public class SaveToCSVController<K extends SaveToCSVModel, L extends SaveToCSVView> extends GUIController<K, L> {
 
-    SaveToCSVController(K model, Class<L> viewClass) {
+    protected SaveToCSVController(K model, Class<L> viewClass) {
         super(model, viewClass);
     }
 

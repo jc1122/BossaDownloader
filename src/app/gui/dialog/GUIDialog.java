@@ -5,6 +5,7 @@ import app.gui.Model;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.lang.reflect.Constructor;
 import java.util.logging.Logger;
 
 public class GUIDialog<K extends GUIModel, L extends GUIView, M extends GUIController<K, L>> {
@@ -22,10 +23,17 @@ public class GUIDialog<K extends GUIModel, L extends GUIView, M extends GUIContr
     protected L view;
     protected M controller;
 
-    public GUIDialog(Model model, Class<K> modelClass, Class<M> controllerClass) {
+    public GUIDialog(Model model, Class<K> modelClass, Class<L> viewClass, Class<M> controllerClass) {
+        Constructor[] constr = controllerClass.getDeclaredConstructors();
         try {
-            this.model = modelClass.getConstructor(Model.class).newInstance(model);
-            this.controller = controllerClass.getConstructor(Model.class).newInstance(model);
+            Constructor<K> constructor = modelClass.getDeclaredConstructor(model.getClass());
+            constructor.setAccessible(true);
+            this.model = constructor.newInstance(model);
+
+            Constructor<M> constructor1 = controllerClass.getDeclaredConstructor(this.model.getClass(), viewClass.getClass());
+            constructor1.setAccessible(true);
+            this.controller = constructor1.newInstance(this.model, viewClass);
+
             this.view = controller.getView();
 
             this.dialog.addWindowListener(new WindowAdapter() {
@@ -36,6 +44,11 @@ public class GUIDialog<K extends GUIModel, L extends GUIView, M extends GUIContr
                 }
             });
         } catch (Exception e) {
+            System.out.println(constr);
+            System.out.println(e.getMessage());
+            System.out.println("paramter should be: " + constr[0].getParameterTypes()[0].toString() + constr[0].getParameterTypes()[1].toString());
+            System.out.println("\n parameter is: " + model.getClass() + viewClass.toString());
+
             //TODO add exception handling
         }
     }

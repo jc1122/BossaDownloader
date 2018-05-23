@@ -19,7 +19,7 @@ public class SaveToCSVModel extends GUIModel {
         }
     }
 
-    SaveToCSVModel(app.gui.Model model) {
+    protected SaveToCSVModel(app.gui.Model model) {
         super(model);
         tickersInFilter = model.getTickersInFilter();
     }

@@ -1,6 +1,9 @@
 package app.gui;
 
-import app.gui.dialog.saveToCSV.SaveToCSVDialog;
+import app.gui.dialog.generifiedSaveToCSV.SaveToCSVController;
+import app.gui.dialog.generifiedSaveToCSV.SaveToCSVDialog;
+import app.gui.dialog.generifiedSaveToCSV.SaveToCSVModel;
+import app.gui.dialog.generifiedSaveToCSV.SaveToCSVView;
 import app.gui.menu.MainMenuBarFactory;
 import app.gui.statement.StatementDialog;
 import app.gui.tickerSelector.SelectTickersDialog;
@@ -19,7 +22,8 @@ class View {
     private JFrame frame;
     private MainMenuBarFactory mainMenuBarFactory;
     private SelectTickersDialog selectTickersDialog;
-    private SaveToCSVDialog saveToCSVDialog;
+    private SaveToCSVDialog<SaveToCSVModel, SaveToCSVView,
+            SaveToCSVController<SaveToCSVModel, SaveToCSVView>> saveToCSVDialog;
 
     private JLabel bottomInfoLabel;
     View(Controller controller, Model model) {
@@ -132,7 +136,7 @@ class View {
                 return;
             }
         }
-        saveToCSVDialog = new SaveToCSVDialog(model);
+        saveToCSVDialog = new SaveToCSVDialog(model, SaveToCSVModel.class, SaveToCSVView.class, SaveToCSVController.class);
         saveToCSVDialog.getDialog().setVisible(true);
         saveToCSVDialog.getDialog().requestFocus();
         logger.exiting(this.getClass().getName(), "showSelectTickersDialog", "created a new dialog");

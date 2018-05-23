@@ -8,8 +8,8 @@ import app.gui.dialog.GUIDialog;
 public class SaveToCSVDialog<K extends SaveToCSVModel, L extends SaveToCSVView, M extends SaveToCSVController<K, L>>
         extends GUIDialog<K, L, M> {
 
-    public SaveToCSVDialog(Model model, Class<K> modelClass, Class<M> controllerClass) {
-        super(model, modelClass, controllerClass);
+    public SaveToCSVDialog(Model model, Class<K> modelClass, Class<L> viewClass, Class<M> controllerClass) {
+        super(model, modelClass, viewClass, controllerClass);
     }
 
 }
