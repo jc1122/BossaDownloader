@@ -9,7 +9,11 @@ public class StatementView<K extends StatementModel,
         L extends StatementView<K, L, M>,
         M extends StatementController<K, L>>
         extends GUIView<K, L, M> {
-    private PositionsPane positionsPane;
+
+    protected PositionsPane positionsPane;
+    protected AccountPane accountPane;
+    protected StatementPane statementPane;
+
 
     StatementView(M controller, K model) {
         super(controller, model);
@@ -18,15 +22,15 @@ public class StatementView<K extends StatementModel,
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-
+        //TODO move all logic notifying the change of data in Pane classes here
     }
 
     @Override
     public void createGUI() {
         dialog.setTitle("Statement");
         dialog.setLayout(new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
-        AccountPane accountPane = new AccountPane(model);
-        StatementPane statementPane = new StatementPane(model);
+        accountPane = new AccountPane(model);
+        statementPane = new StatementPane(model);
         positionsPane = new PositionsPane(model, this);
 
         accountPane.addAccountSelectionListener(statementPane);
