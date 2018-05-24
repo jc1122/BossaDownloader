@@ -1,7 +1,6 @@
-package app.gui.statement;
+package app.gui.dialog.statement;
 
 import app.API.BossaAPI;
-import app.gui.Model;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -10,7 +9,7 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.logging.Logger;
 
-class AccountPane implements PropertyChangeListener {
+class AccountPane<K extends StatementModel> implements PropertyChangeListener {
     private static final Logger logger =
             Logger.getLogger(AccountPane.class.getName());
 
@@ -19,7 +18,7 @@ class AccountPane implements PropertyChangeListener {
 
     private List<BossaAPI.NolStatementAPI> accountList;
 
-    AccountPane(Model model) {
+    AccountPane(K model) {
         logger.entering(this.getClass().getName(), "constructor", model);
 
         accountPanel = new JPanel();
@@ -31,14 +30,14 @@ class AccountPane implements PropertyChangeListener {
         accountPanel.add(accountNameComboBox);
 
         try {
-            model.addPropertyListener(this);
+            model.addPropertyChangeListener(this);
         } catch (NullPointerException e) {
             NullPointerException exc = new NullPointerException("Unable to get accounts! Is API initialized?");
             logger.finer(exc.getMessage());
             throw exc;
         }
 
-        this.accountList = (List<BossaAPI.NolStatementAPI>) model.getProperty("Accounts"); //TODO will cause error when api is in investor offline status
+        this.accountList = model.getAccounts(); //TODO will cause error when api is in investor offline status
 
         addAccountsToComboBox(accountList);
 

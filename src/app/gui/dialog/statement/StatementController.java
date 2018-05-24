@@ -1,4 +1,4 @@
-package app.gui.dialog.refactoredStatement;
+package app.gui.dialog.statement;
 
 import app.gui.dialog.GUIController;
 

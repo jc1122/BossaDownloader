@@ -7,6 +7,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public abstract class GUIModel implements PropertyChangeListener {
+    protected Model mainModel;
     protected PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -17,8 +18,9 @@ public abstract class GUIModel implements PropertyChangeListener {
         propertyChangeSupport.removePropertyChangeListener(listaner);
     }
 
-    protected GUIModel(Model model) {
-        model.addPropertyListener(this);
+    protected GUIModel(Model mainModel) {
+        this.mainModel = mainModel;
+        mainModel.addPropertyListener(this);
     }
 
     @Override

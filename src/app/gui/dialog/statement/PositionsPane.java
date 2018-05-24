@@ -1,8 +1,7 @@
-package app.gui.statement;
+package app.gui.dialog.statement;
 
 import app.API.BossaAPI;
 import app.gui.Controller;
-import app.gui.Model;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,11 +14,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 //TODO check behavior in concurrency; remember to remove tickerSelector from filter on close!
-class PositionsPane implements PropertyChangeListener, ActionListener {
+class PositionsPane<K extends StatementModel> implements PropertyChangeListener, ActionListener {
     private static final Logger logger =
             Logger.getLogger(Controller.class.getName());
     private JPanel positionsPanel;
-    private final Model model;
+    private final K model;
     private int selectedAccount;
     private List<BossaAPI.NolStatementAPI> accountList;
     private Map<String, Double> positionIsinsPrices;
@@ -27,16 +26,16 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
     private Map<String, Integer> positionIsinsCount;
     private Set<String> isinsInModelFilter;
 
-    private final StatementDialog dialog;
+    private final JDialog dialog;
 
-    PositionsPane(Model model, StatementDialog dialog) {
-        Object[] params = {model, dialog};
+    PositionsPane(K model, StatementView view) {
+        Object[] params = {model, view};
         logger.entering(this.getClass().getName(), "constructor", params);
 
-        this.dialog = dialog;
+        this.dialog = view.getDialog();
         this.model = model;
         try {
-            this.model.addPropertyListener(this);
+            this.model.addPropertyChangeListener(this);
         } catch (NullPointerException e) {
             NullPointerException exc = new NullPointerException("Unable to get accounts! Is API initialized?");
             logger.finer(exc.getMessage());
@@ -51,8 +50,8 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
         positionIsinsLabels = new HashMap<>();
         positionIsinsCount = new HashMap<>();
 
-        this.accountList = (List<BossaAPI.NolStatementAPI>) model.getProperty("Accounts"); //TODO will cause error when api is in investor offline status
-        isinsInModelFilter = model.getTickerISINSInFilter();
+        this.accountList = model.getAccounts(); //TODO will cause error when api is in investor offline status
+        isinsInModelFilter = model.getTickerISINSinFilter();
         //TODO this may be buggy
         updatePanel(0);
         logger.exiting(this.getClass().getName(), "constructor");
@@ -97,7 +96,7 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
         }
         int preferredHeight = positionsPanel.getPreferredSize().height;
         positionsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, preferredHeight));
-        dialog.resize();
+        dialog.setSize(dialog.getPreferredSize());
         logger.exiting(this.getClass().getName(), "updatePanel");
     }
 
@@ -136,7 +135,7 @@ class PositionsPane implements PropertyChangeListener, ActionListener {
                     updateValues(isin);
                     //remove redundant isin after price updates
                     if (!isinsInModelFilter.contains(isin)) {
-                        if (model.getTickerISINSInFilter().contains(isin)) {
+                        if (model.getTickerISINSinFilter().contains(isin)) {
                             Set<String> tmp = new HashSet<>();
                             tmp.add(isin);
                             model.removeFromFilter(tmp);

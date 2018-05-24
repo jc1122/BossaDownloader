@@ -1,7 +1,6 @@
-package app.gui.statement;
+package app.gui.dialog.statement;
 
 import app.API.BossaAPI;
-import app.gui.Model;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-class StatementPane implements PropertyChangeListener, ActionListener {
+class StatementPane<K extends StatementModel> implements PropertyChangeListener, ActionListener {
     private static final Logger logger =
             Logger.getLogger(StatementPane.class.getName());
     private JPanel statementPanel;
@@ -27,17 +26,17 @@ class StatementPane implements PropertyChangeListener, ActionListener {
 
     private int selectedAccount;
 
-    StatementPane(Model model) {
+    StatementPane(K model) {
         logger.entering(this.getClass().getName(), "constructor", model);
 
         try {
-            model.addPropertyListener(this);
+            model.addPropertyChangeListener(this);
         } catch (NullPointerException e) {
             throw new NullPointerException("Unable to get accounts! Is API initialized?");
         }
 
         //noinspection unchecked
-        this.accountList = (List<BossaAPI.NolStatementAPI>) model.getProperty("Accounts");
+        this.accountList = model.getAccounts();
 
         ikeStatusLabel = new JLabel(); //text will be set later
         accountTypeStatusLabel = new JLabel(); //text will be set later

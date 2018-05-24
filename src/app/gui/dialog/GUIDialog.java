@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import java.lang.reflect.Constructor;
 import java.util.logging.Logger;
 
+//TODO add documentation for all the three GUI template classes
 public class GUIDialog<K extends GUIModel, L extends GUIView, M extends GUIController<K, L>> {
     public static class CurrentClassGetter extends SecurityManager {
         public String getClassName() {
@@ -15,15 +16,17 @@ public class GUIDialog<K extends GUIModel, L extends GUIView, M extends GUIContr
         }
     }
 
-    protected static final Logger logger =
-            Logger.getLogger(new CurrentClassGetter().getClassName());
+    private static CurrentClassGetter classGetter = new CurrentClassGetter();
+    private static final Logger logger =
+            Logger.getLogger(classGetter.getClassName());
 
-    protected final JDialog dialog = new JDialog();
+    //protected final JDialog dialog = new JDialog();
     protected K model;
     protected L view;
     protected M controller;
 
     public GUIDialog(Model model, Class<K> modelClass, Class<L> viewClass, Class<M> controllerClass) {
+        logger.entering(classGetter.getClassName(), "constructor", model);
         Constructor[] constr = controllerClass.getDeclaredConstructors();
         try {
             Constructor<K> constructor = modelClass.getDeclaredConstructor(model.getClass());
@@ -36,7 +39,7 @@ public class GUIDialog<K extends GUIModel, L extends GUIView, M extends GUIContr
 
             this.view = controller.getView();
 
-            this.dialog.addWindowListener(new WindowAdapter() {
+            this.view.getDialog().addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
                     model.removePropertyListener(GUIDialog.this.model);
@@ -50,6 +53,8 @@ public class GUIDialog<K extends GUIModel, L extends GUIView, M extends GUIContr
             System.out.println("\n parameter is: " + model.getClass() + viewClass.toString());
 
             //TODO add exception handling
+        } finally {
+            logger.exiting(classGetter.getClassName(), "constructor");
         }
     }
 

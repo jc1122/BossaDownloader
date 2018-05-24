@@ -6,7 +6,6 @@ import app.gui.dialog.SaveToCSV.SaveToCSVDialog;
 import app.gui.dialog.SaveToCSV.SaveToCSVModel;
 import app.gui.dialog.SaveToCSV.SaveToCSVView;
 import app.gui.menu.MainMenuBarFactory;
-import app.gui.statement.StatementDialog;
 import app.gui.tickerSelector.SelectTickersDialog;
 
 import javax.swing.*;
@@ -98,7 +97,7 @@ class View {
 
     void showStatementDialog() {
         logger.entering(this.getClass().getName(), "showStatementDialog");
-        new StatementDialog(model);
+        GUIDialogFactory.getStatementDialog(model);//new StatementDialog(model);
         logger.exiting(this.getClass().getName(), "showStatementDialog");
     }
 
