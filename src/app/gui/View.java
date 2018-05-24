@@ -1,5 +1,6 @@
 package app.gui;
 
+import app.gui.dialog.GUIDialogFactory;
 import app.gui.dialog.SaveToCSV.SaveToCSVController;
 import app.gui.dialog.SaveToCSV.SaveToCSVDialog;
 import app.gui.dialog.SaveToCSV.SaveToCSVModel;
@@ -136,7 +137,7 @@ class View {
                 return;
             }
         }
-        saveToCSVDialog = new SaveToCSVDialog(model, SaveToCSVModel.class, SaveToCSVView.class, SaveToCSVController.class);
+        saveToCSVDialog = GUIDialogFactory.getSaveToCSVDialog(model);
         saveToCSVDialog.getDialog().setVisible(true);
         saveToCSVDialog.getDialog().requestFocus();
         logger.exiting(this.getClass().getName(), "showSelectTickersDialog", "created a new dialog");
