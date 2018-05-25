@@ -24,7 +24,7 @@ public class SelectTickersView<K extends SelectTickersModel,
         super(controller, model);
         ButtonPane buttonPane = new ButtonPane(model, dialog);
         TickerTablesPane tickerTablesPane = new TickerTablesPane(buttonPane.getSearchField(), model.getTickers(), model.getTickersInFilter());
-        
+
         buttonPane.setTickerTablesPane(tickerTablesPane);
 
         dialog.setLayout(new BorderLayout());

@@ -4,11 +4,13 @@ import app.API.BossaAPI;
 import app.gui.dialog.GUIModel;
 
 import java.beans.PropertyChangeEvent;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class SaveToCSVModel extends GUIModel {
     private Set<BossaAPI.NolTickerAPI> tickersInFilter;
+    private CSVSaver saver;
 
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
@@ -18,11 +20,17 @@ public class SaveToCSVModel extends GUIModel {
             this.tickersInFilter = (Set<BossaAPI.NolTickerAPI>) propertyChangeEvent.getNewValue();
             this.propertyChangeSupport.firePropertyChange("TickersInFilter", propertyChangeEvent.getOldValue(), tickersInFilter);
         }
+        if(Objects.equals(propertyChangeEvent.getPropertyName(), "Quotes")) {
+            this.propertyChangeSupport.firePropertyChange("Quotes", propertyChangeEvent.getOldValue(), propertyChangeEvent.getNewValue());
+        }
     }
 
-    protected SaveToCSVModel(app.gui.Model model) {
+    protected SaveToCSVModel(app.gui.Model model, CSVSaver saver) {
         super(model);
         tickersInFilter = model.getTickersInFilter();
+
+        this.saver = saver;
+        this.addPropertyChangeListener(saver);
     }
 
     public Set<BossaAPI.NolTickerAPI> getTickersInFilter() {
@@ -30,10 +38,11 @@ public class SaveToCSVModel extends GUIModel {
     }
 
     public void startSaving() {
-        //TODO add functionality for opening and writing to csv files
+
+        saver.startSaving(new HashSet<>(tickersInFilter));
     }
 
     public void stopSaving() {
-        //TODO add functionality for closing csv files
+        saver.stopSaving();
     }
 }

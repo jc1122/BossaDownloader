@@ -3,6 +3,13 @@ package app.gui.dialog;
 import javax.swing.*;
 import java.lang.reflect.Constructor;
 
+/**
+ * Controller part of MVC pattern. Provides basic functionality - creates and displays View
+ * @see GUIView
+ * @see GUIModel
+ * @param <K>
+ * @param <L>
+ */
 public class GUIController<K extends GUIModel, L extends GUIView> {
     protected K model;
     protected L view;

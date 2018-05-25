@@ -6,6 +6,14 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+/**
+ * Model part of MVC for dialogs. Provides basic functionality - property change support.
+ * Registers itself as listener to overlaying model provided in constructor.
+ *
+ * @see GUIDialog
+ * @see GUIView
+ * @see GUIController
+ */
 public abstract class GUIModel implements PropertyChangeListener {
     protected Model mainModel;
     protected PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
