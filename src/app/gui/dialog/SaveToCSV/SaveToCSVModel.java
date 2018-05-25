@@ -38,7 +38,6 @@ public class SaveToCSVModel extends GUIModel {
     }
 
     public void startSaving() {
-
         saver.startSaving(new HashSet<>(tickersInFilter));
     }
 

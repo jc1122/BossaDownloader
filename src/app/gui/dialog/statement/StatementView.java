@@ -26,7 +26,6 @@ public class StatementView<K extends StatementModel,
 
     StatementView(M controller, K model) {
         super(controller, model);
-
     }
 
     @Override
@@ -272,7 +271,7 @@ public class StatementView<K extends StatementModel,
         }
     }
 
-    //TODO check behavior in concurrency; remember to remove refactoredTickerSelector from filter on close!
+    //TODO check behavior in concurrency; remember to remove TickerSelector from filter on close!
     static class PositionsPane<K extends StatementModel> implements PropertyChangeListener, ActionListener {
         private static final Logger logger =
                 Logger.getLogger(Controller.class.getName());
