@@ -1,23 +1,21 @@
 package app.gui.dialog.SaveToCSV;
 
 import app.API.BossaAPI;
-import org.apache.commons.csv.CSVRecord;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileReader;
-import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CSVSaver implements PropertyChangeListener {
 
-    Set<BossaAPI.NolTickerAPI> tickersToSave = new HashSet<>();
+    Set<String> tickerISINSToSave = new HashSet<>();
     boolean saveToFile = false;
 
     @Override
@@ -25,7 +23,7 @@ public class CSVSaver implements PropertyChangeListener {
         if(saveToFile) {
             if (propertyChangeEvent.getPropertyName() == "Quotes") {
                 BossaAPI.NolRecentInfoAPI quote = (BossaAPI.NolRecentInfoAPI) propertyChangeEvent.getNewValue();
-                if (tickersToSave.contains(quote.getTicker())) {
+                if (tickerISINSToSave.contains(quote.getTicker().getIsin())) {
                     writeToCSV(quote);
                 }
             }
@@ -33,7 +31,7 @@ public class CSVSaver implements PropertyChangeListener {
     }
 
     public void startSaving(Set<BossaAPI.NolTickerAPI> tickers) {
-        this.tickersToSave = tickers;
+        this.tickerISINSToSave = tickers.stream().map(BossaAPI.NolTickerAPI::getIsin).collect(Collectors.toSet());
         saveToFile = true;
     }
 
@@ -63,7 +61,7 @@ public class CSVSaver implements PropertyChangeListener {
         try(Scanner lineScanner = new Scanner(quotesFile)) {
             while(lineScanner.hasNextLine()) {
                 String line = lineScanner.nextLine();
-                if(line == quoteToString.get(0)) {
+                if (line.equals(quoteToString.get(0))) {
                     lineScanner.close();
                     return;
                 }

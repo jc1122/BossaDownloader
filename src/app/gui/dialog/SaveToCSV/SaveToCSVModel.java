@@ -25,11 +25,10 @@ public class SaveToCSVModel extends GUIModel {
         }
     }
 
-    protected SaveToCSVModel(app.gui.Model model, CSVSaver saver) {
+    protected SaveToCSVModel(app.gui.Model model) {
         super(model);
         tickersInFilter = model.getTickersInFilter();
-
-        this.saver = saver;
+        saver = new CSVSaver();
         this.addPropertyChangeListener(saver);
     }
 
@@ -43,5 +42,9 @@ public class SaveToCSVModel extends GUIModel {
 
     public void stopSaving() {
         saver.stopSaving();
+    }
+
+    public void setCSVSaver(CSVSaver saver) {
+        this.saver = saver;
     }
 }

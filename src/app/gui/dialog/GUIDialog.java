@@ -8,6 +8,14 @@ import java.awt.event.WindowEvent;
 import java.lang.reflect.Constructor;
 import java.util.logging.Logger;
 
+/**
+ * TODO add javadoc
+ * The extended class must use constructors with the same arguments as base class, otherwise exception will be thrown.
+ *
+ * @param <K>
+ * @param <L>
+ * @param <M>
+ */
 //TODO add documentation for all the three GUI template classes
 public class GUIDialog<K extends GUIModel, L extends GUIView, M extends GUIController<K, L>> {
     public static class CurrentClassGetter extends SecurityManager {

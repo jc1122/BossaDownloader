@@ -23,7 +23,7 @@ class View {
     private MainMenuBarFactory mainMenuBarFactory;
     private SelectTickersDialog selectTickersDialog;
     private SaveToCSVDialog<SaveToCSVModel, SaveToCSVView,
-            SaveToCSVController<SaveToCSVModel, SaveToCSVView>> saveToCSVDialog;
+            SaveToCSVController<SaveToCSVModel, SaveToCSVView>> saveToCSVDialog = null;
 
     private JLabel bottomInfoLabel;
     View(Controller controller, Model model) {

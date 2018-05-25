@@ -15,7 +15,7 @@ public class StatementModel extends GUIModel {
 
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        if (propertyChangeEvent.getPropertyName() == "Quotes" ||propertyChangeEvent.getPropertyName() == "Accounts") {
+        if (propertyChangeEvent.getPropertyName() == "Quotes" || propertyChangeEvent.getPropertyName() == "Accounts") {
             propertyChangeSupport.firePropertyChange(propertyChangeEvent);
         }
     }

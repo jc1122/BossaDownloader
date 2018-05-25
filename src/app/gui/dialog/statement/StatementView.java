@@ -388,8 +388,8 @@ public class StatementView<K extends StatementModel,
                 case "Quotes":
                     BossaAPI.NolRecentInfoAPI quote = (BossaAPI.NolRecentInfoAPI) evt.getNewValue();
                     String isin = quote.getTicker().getIsin();
-                    if (quote.getBitMask().get("Close")) {
-                        this.positionIsinsPrices.replace(isin, quote.getClose() * this.positionIsinsCount.get(isin));
+                    if (quote.getBitMask().get("ReferPrice")) {
+                        this.positionIsinsPrices.replace(isin, quote.getReferPrice() * this.positionIsinsCount.get(isin));
                         updateValues(isin);
                         //remove redundant isin after price updates
                         if (!isinsInModelFilter.contains(isin)) {
