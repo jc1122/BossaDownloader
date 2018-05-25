@@ -69,17 +69,17 @@ class BossaAPITest {
         }
 
         @Test
-        @DisplayName("add 10 valid tickerSelector to filter")
+        @DisplayName("add 10 valid refactoredTickerSelector to filter")
         void addTickersToFilterTest10() {
             String message = BossaAPI.addTickersToFilter(addNumberOfTickers(10));
             assertEquals("add to filter", message);
         }
 
         @Test
-        @DisplayName("add 200 valid tickerSelector to filter (limit is 150)")
+        @DisplayName("add 200 valid refactoredTickerSelector to filter (limit is 150)")
         void addTickersToFilterTest200() {
             Executable test = () -> BossaAPI.addTickersToFilter(addNumberOfTickers(200));
-            assertThrows(IllegalArgumentException.class, test, "should complain about too much tickerSelector in filter!");
+            assertThrows(IllegalArgumentException.class, test, "should complain about too much refactoredTickerSelector in filter!");
         }
 
         @Test
@@ -89,11 +89,11 @@ class BossaAPITest {
             tickers.add(null);
             Executable test = () -> BossaAPI.addTickersToFilter(tickers);
             assertThrows(IllegalArgumentException.class, test);
-            //BossaAPI.addTickersToFilter(tickerSelector);
+            //BossaAPI.addTickersToFilter(refactoredTickerSelector);
         }
 
         @Test
-        @DisplayName("add single null ticker with 10 valid tickerSelector to filter")
+        @DisplayName("add single null ticker with 10 valid refactoredTickerSelector to filter")
         void addTickersToFilterValidNull() {
             Set<BossaAPI.NolTickerAPI> tickers = addNumberOfTickers(10);
             tickers.add(null);
@@ -111,7 +111,7 @@ class BossaAPITest {
         }
 
         @Test
-        @DisplayName("check quotes callback for 150 tickerSelector in filter")
+        @DisplayName("check quotes callback for 150 refactoredTickerSelector in filter")
         void callbackTest() throws InterruptedException {
             BossaAPI.clearFilter();
             int numberOfTickers = 150;
@@ -152,12 +152,12 @@ class BossaAPITest {
         }
 
         @Test
-        @DisplayName("exceed limit (150) of valid tickerSelector to filter")
+        @DisplayName("exceed limit (150) of valid refactoredTickerSelector to filter")
         void addToFilterTooManyTickers() {
             BossaAPI.clearFilter();
             Executable test = () -> BossaAPI.addToFilter(prepareIsins(300));
 
-            assertThrows(IllegalArgumentException.class, test, "should complain about too much tickerSelector in filter!");
+            assertThrows(IllegalArgumentException.class, test, "should complain about too much refactoredTickerSelector in filter!");
 
         }
     }
@@ -331,14 +331,14 @@ class BossaAPITest {
     @DisplayName("getTickers test")
     class GetTickersTest {
         @Test
-        @DisplayName("get list of tickerSelector with wrong type of list for in_ticker")
+        @DisplayName("get list of refactoredTickerSelector with wrong type of list for in_ticker")
         void getTickersWrongParameter() {
             Executable test = () -> BossaAPI.getTickers(TypeOfList.ISIN, null);
             assertThrows(IllegalArgumentException.class, test);
         }
 
         @Test
-        @DisplayName("get list of SYMBOL tickerSelector with single ticker symbol")
+        @DisplayName("get list of SYMBOL refactoredTickerSelector with single ticker symbol")
         void getTickersSymbol() {
             List<BossaAPI.NolTickerAPI> tickers = prepareAllTickers(TypeOfList.SYMBOL);
             System.out.println(tickers);
@@ -346,27 +346,27 @@ class BossaAPITest {
         }
 
         @Test
-        @DisplayName("get list of ALL tickerSelector with single ticker symbol")
+        @DisplayName("get list of ALL refactoredTickerSelector with single ticker symbol")
         void getTickersAll() {
             List<BossaAPI.NolTickerAPI> tickers = prepareAllTickers(TypeOfList.ALL);
         }
 
         @Test
-        @DisplayName("get default list of tickerSelector")
+        @DisplayName("get default list of refactoredTickerSelector")
         void getTickers() {
             List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
-            System.out.println("number of tickerSelector: " + tickers.size());
+            System.out.println("number of refactoredTickerSelector: " + tickers.size());
             assertTrue(tickers.size() > 1000);
         }
 
         private List<BossaAPI.NolTickerAPI> prepareAllTickers(TypeOfList typeOfList) {
             List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
             assumeFalse(tickers.isEmpty());
-            //List<BossaAPI.NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, tickerSelector.get(0));
+            //List<BossaAPI.NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, refactoredTickerSelector.get(0));
             List<BossaAPI.NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, tickers.get(0));
-            System.out.println("number of tickerSelector: " + tickers.size());
+            System.out.println("number of refactoredTickerSelector: " + tickers.size());
             System.out.println("Symbol: " + tickers.get(0).getName());
-            System.out.println("number of filtered tickerSelector: " + singleTicker.size());
+            System.out.println("number of filtered refactoredTickerSelector: " + singleTicker.size());
             return singleTicker;
         }
     }

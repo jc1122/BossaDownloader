@@ -144,7 +144,7 @@ class BossaAPIInterfaceTest {
     @DisplayName("Tests of RemFromFilter function")
     class RemFromFilterTests {
         @Test
-        @DisplayName("remove existing tickerSelector from filter and add valid isin")
+        @DisplayName("remove existing refactoredTickerSelector from filter and add valid isin")
         void remFromFilterValid() {
             INSTANCE.AddToFilter("PLDEBCA00016;", false);
             code = INSTANCE.RemFromFilter("PLDMLKR00023", false);
@@ -154,7 +154,7 @@ class BossaAPIInterfaceTest {
         }
 
         @Test
-        @DisplayName("remove existing tickerSelector from filter and add invalid isin")
+        @DisplayName("remove existing refactoredTickerSelector from filter and add invalid isin")
         void remFromFilterInalid() {
             INSTANCE.AddToFilter("PLDEBCA00016;", false);
             code = INSTANCE.RemFromFilter("PLDMLKR00023invalid", false);
@@ -164,7 +164,7 @@ class BossaAPIInterfaceTest {
         }
 
         @Test
-        @DisplayName("remove existing tickerSelector from filter and add empty isin")
+        @DisplayName("remove existing refactoredTickerSelector from filter and add empty isin")
         void remFromFilterEmpty() {
             INSTANCE.AddToFilter("PLDEBCA00016;", false);
             code = INSTANCE.RemFromFilter("", false);
@@ -174,7 +174,7 @@ class BossaAPIInterfaceTest {
         }
 
         @Test
-        @DisplayName("remove existing tickerSelector from filter and add null isin")
+        @DisplayName("remove existing refactoredTickerSelector from filter and add null isin")
         void remFromFilterNull() {
             INSTANCE.AddToFilter("PLDEBCA00016;", false);
             code = INSTANCE.RemFromFilter(null, false);
@@ -375,7 +375,7 @@ class BossaAPIInterfaceTest {
     @DisplayName("Tickers test")
     class TickersTest {
         @Test
-        @DisplayName("release tickerSelector list memory")
+        @DisplayName("release refactoredTickerSelector list memory")
         void releaseTickersList() {
             BossaAPIInterface.NolTickers tickers = INSTANCE.InitListTickers();
             code = INSTANCE.ReleaseTickersList(tickers);
@@ -383,7 +383,7 @@ class BossaAPIInterfaceTest {
         }
 
         @Test
-        @DisplayName("get all tickerSelector")
+        @DisplayName("get all refactoredTickerSelector")
         void getTickers() {
             BossaAPIInterface.NolTickers tickers = INSTANCE.InitListTickers();
             code = INSTANCE.GetTickers(tickers, TypeOfList.ALL, null);

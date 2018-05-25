@@ -67,7 +67,7 @@ public class Controller {
     }
 
     /**
-     * Select tickerSelector, whose market quotes will be tracked and updated.
+     * Select refactoredTickerSelector, whose market quotes will be tracked and updated.
      */
     void selectTickers() {
         logger.entering(this.getClass().getName(), "selectTickers");

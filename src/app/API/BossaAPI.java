@@ -193,14 +193,14 @@ public enum BossaAPI {
     }
 
     /**
-     * Adds tickerSelector to watch (order and transactions).
+     * Adds refactoredTickerSelector to watch (order and transactions).
      * To receive market data, this method should be called after {@link Quotes} is set up.
      * <p>
      * To receive market data, this method should be called after setting {@link BossaAPI#SetTradingSess(boolean)}
      * to {@code true}.
      * {@code isins} can be single ISIN obtained from ticker: {@link NolTickerAPI#getIsin()}
      * or may be multiple ISINs separated by {@code ";"} ex. {@code ISIN1;ISIN2 }.
-     * If there are any tickerSelector already in the filter, they will remain there. New tickerSelector will be appended to filter.
+     * If there are any refactoredTickerSelector already in the filter, they will remain there. New refactoredTickerSelector will be appended to filter.
      * </p>
      * <p>
      * {@link Quotes} property will be updated after calling this method.
@@ -246,7 +246,7 @@ public enum BossaAPI {
     }
 
     /**
-     * @param tickers a set of tickerSelector to be appended to filter
+     * @param tickers a set of refactoredTickerSelector to be appended to filter
      * @see BossaAPI#addToFilter(Set)
      */
     public static String addTickersToFilter(Set<BossaAPI.NolTickerAPI> tickers) {
@@ -259,11 +259,11 @@ public enum BossaAPI {
     }
 
     /**
-     * Removes given tickerSelector from filter.
+     * Removes given refactoredTickerSelector from filter.
      *
-     * @param isins of tickerSelector to be removed from filter
+     * @param isins of refactoredTickerSelector to be removed from filter
      * @return success message
-     * @throws IllegalStateException if any of given tickerSelector are not in filter
+     * @throws IllegalStateException if any of given refactoredTickerSelector are not in filter
      * @see BossaAPI#addToFilter(Set)
      */
     @SuppressWarnings("SameReturnValue")
@@ -337,17 +337,17 @@ public enum BossaAPI {
 
 
     /**
-     * Returns the requested tickerSelector.
+     * Returns the requested refactoredTickerSelector.
      * <br>
      * Usage: <br>
      * {@code typeOfList.ALL} or {@code typeOfList.UNDEF_LIST} with any {@code in_ticker}
-     * to get all tickerSelector from server. <br>
+     * to get all refactoredTickerSelector from server. <br>
      * {@code typeOfList.ISIN}, {@code typeOfList.CFI}, {@code typeOfList.MARKET_CODE}, {@code typeOfList.SYMBOL} with
      * non null {@code in_ticker} to get a list filtered by given field.
      *
      * @param typeOfList group filter
      * @param in_ticker  null or valid ticker
-     * @return tickerSelector
+     * @return refactoredTickerSelector
      */
     @NotNull
     public static List<NolTickerAPI> getTickers(TypeOfList typeOfList, NolTickerAPI in_ticker) {
@@ -380,8 +380,8 @@ public enum BossaAPI {
     }
 
     /**
-     * Stops tracking quotes of all tickerSelector.
-     * Removes all tickerSelector from tracking filter.
+     * Stops tracking quotes of all refactoredTickerSelector.
+     * Removes all refactoredTickerSelector from tracking filter.
      *
      * @return success or error message
      */
@@ -427,19 +427,19 @@ public enum BossaAPI {
     }
 
     /**
-     * Returns a set of ISINS of tickerSelector which are currently in filter. Adding elements to the received set will not affect
+     * Returns a set of ISINS of refactoredTickerSelector which are currently in filter. Adding elements to the received set will not affect
      * the elements in filter.
      *
-     * @return ISINs of tickerSelector in filter
+     * @return ISINs of refactoredTickerSelector in filter
      */
     public static Set<String> getTickerISINSInFilter() {
         return new HashSet<>(tickerISINSInFilter); //this should be immutable
     }
 
     /**
-     * Returns a set of tickerSelector which are currently in filter. Modyfing the returned set will not affect the filter.
+     * Returns a set of refactoredTickerSelector which are currently in filter. Modyfing the returned set will not affect the filter.
      *
-     * @return set of tickerSelector currently in filter
+     * @return set of refactoredTickerSelector currently in filter
      */
     public static Set<NolTickerAPI> getTickersInFilter() {
         return new HashSet<>(tickersInFilter); //this should be immutable
@@ -680,7 +680,7 @@ public enum BossaAPI {
     }
 
     /**
-     * Stores list of tickerSelector.
+     * Stores list of refactoredTickerSelector.
      * Needs to be closed manually using {@link NolTickersAPI#close()} after finished working with object to release
      * resources.
      *
@@ -734,10 +734,10 @@ public enum BossaAPI {
         }
 
         /**
-         * Returns list of tickerSelector. Throws exception if trying to access if resources are released. <br>
+         * Returns list of refactoredTickerSelector. Throws exception if trying to access if resources are released. <br>
          * See {@link NolTickersAPI#close()}.
          *
-         * @return list of tickerSelector
+         * @return list of refactoredTickerSelector
          */
         public List<NolTickerAPI> getTickersList() throws NullPointerException {
             if (wrappee == null) throw new NullPointerException("Tickers already closed!");
