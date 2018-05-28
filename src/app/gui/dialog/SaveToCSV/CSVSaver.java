@@ -47,10 +47,23 @@ public class CSVSaver implements PropertyChangeListener {
         String fileName = name + localDate + ".csv";
         File quotesFile = new File(fileName);
 
-        List<String> quoteToString = Arrays.asList("this is a test");
+        List<String> quoteToString = Arrays.asList(quote.getTicker().getName(),
+                Double.toString(quote.getOpen()),
+                Double.toString(quote.getHigh()),
+                Double.toString(quote.getLow()),
+                Double.toString(quote.getClose()),
+                Double.toString(quote.getOffers().get(0).getAmount()),
+                Double.toString(quote.getOffers().get(0).getDepth()),
+                Double.toString(quote.getOffers().get(0).getPrice()),
+                Double.toString(quote.getOffers().get(0).getSize()),
+                Double.toString(quote.getOffers().get(1).getAmount()),
+                Double.toString(quote.getOffers().get(1).getDepth()),
+                Double.toString(quote.getOffers().get(1).getPrice()),
+                Double.toString(quote.getOffers().get(1).getSize())
+                );
 
         if(!quotesFile.exists()) {
-            List<String> header = Arrays.asList("test,test,test,test");
+            List<String> header = Arrays.asList("name,open,high,low,close,bid1,bidvol1,ask1,askvol1");
             try {
                 Files.write(Paths.get(fileName), header, StandardCharsets.UTF_8);
             } catch (Exception e) {
