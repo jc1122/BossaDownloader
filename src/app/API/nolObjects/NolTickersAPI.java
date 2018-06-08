@@ -1,8 +1,10 @@
 package app.API.nolObjects;
 
-import app.API.BossaAPI;
+//import app.API.BossaAPI;
+import app.API.JNAinterface.BossaAPIInstance;
 import app.API.JNAinterface.BossaAPIInterface;
-import app.API.TypeOfList;
+import app.API.enums.TypeOfList;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ public final class NolTickersAPI
         Object[] params = {typeOfList, in_ticker};
         logger.entering(NolTickersAPI.class.getName(), "Constructor", params);
 
-        this.wrappee = BossaAPI.INSTANCE.InitListTickers();
+        this.wrappee = BossaAPIInstance.INSTANCE.InitListTickers();
         if (in_ticker == null) {
             if (typeOfList.getIntValue() > 0) {
                 IllegalArgumentException e =
@@ -30,7 +32,7 @@ public final class NolTickersAPI
                 logger.finer(e.getMessage());
                 throw e;
             }
-            BossaAPI.INSTANCE.GetTickers(wrappee, typeOfList, null);
+            BossaAPIInstance.INSTANCE.GetTickers(wrappee, typeOfList, null);
         } else {
             if (isTickerFieldEmpty(typeOfList, in_ticker)) {
                 IllegalArgumentException e =
@@ -38,11 +40,33 @@ public final class NolTickersAPI
                 logger.finer(e.getMessage());
                 throw e;
             }
-            BossaAPI.INSTANCE.GetTickers(wrappee, typeOfList, in_ticker.wrappee);
+            BossaAPIInstance.INSTANCE.GetTickers(wrappee, typeOfList, in_ticker.wrappee);
         }
         tickerListCache = BossaAPIClassWrapper.convertPointerToListHelper(wrappee.size, wrappee.ptrtickerslist,
                 NolTickerAPI.class);
         logger.exiting(this.getClass().getName(), "Constructor");
+    }
+
+    /**
+     * Returns the requested refactoredTickerSelector.
+     * <br>
+     * Usage: <br>
+     * {@code typeOfList.ALL} or {@code typeOfList.UNDEF_LIST} with any {@code in_ticker}
+     * to get all refactoredTickerSelector from server. <br>
+     * {@code typeOfList.ISIN}, {@code typeOfList.CFI}, {@code typeOfList.MARKET_CODE}, {@code typeOfList.SYMBOL} with
+     * non null {@code in_ticker} to get a list filtered by given field.
+     *
+     * @param typeOfList group filter
+     * @param in_ticker  null or valid ticker
+     * @return refactoredTickerSelector
+     */
+    @NotNull
+    public static List<NolTickerAPI> getTickers(TypeOfList typeOfList, NolTickerAPI in_ticker) {
+        Object[] params = {typeOfList, in_ticker};
+        logger.entering(NolTickersAPI.class.getName(), "getTickers", params);
+        NolTickersAPI nolTickersAPI = new NolTickersAPI(typeOfList, in_ticker);
+        logger.exiting(NolTickersAPI.class.getName(), "getTickers");
+        return nolTickersAPI.getTickersList();
     }
 
     //do not refactor this to constant specific enum method, it is made this way to decouple TypeOfList and NolTickerAPI
@@ -70,11 +94,11 @@ public final class NolTickersAPI
      */
     @Override
     public void close() {
-        int errorCode = BossaAPI.INSTANCE.ReleaseTickersList(wrappee);
+        int errorCode = BossaAPIInstance.INSTANCE.ReleaseTickersList(wrappee);
         wrappee = null;
         if (errorCode < 0) {
-            String message = BossaAPI.GetResultCodeDesc(errorCode);
-            IllegalStateException e = new IllegalStateException(message);
+            //String message = //BossaAPI.GetResultCodeDesc(errorCode);
+            IllegalStateException e = new IllegalStateException(Integer.toString(errorCode));
             logger.finer(e.getMessage());
             throw e;
         }

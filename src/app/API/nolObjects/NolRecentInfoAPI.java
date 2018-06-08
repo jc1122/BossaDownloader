@@ -1,6 +1,6 @@
 package app.API.nolObjects;
 
-import app.API.BossaAPI;
+//import app.API.BossaAPI;
 import app.API.JNAinterface.BossaAPIInterface;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -64,8 +64,8 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
 
 
         if (this.getError() < 0) {
-            String message = BossaAPI.GetResultCodeDesc(this.getError());
-            IllegalStateException e = new IllegalStateException(message);
+            int message = this.getError();//BossaAPI.GetResultCodeDesc(this.getError()); TODO try a better way to decouple this from BossaAPI
+            IllegalStateException e = new IllegalStateException(Integer.toString(message));
             logger.finer(e.getMessage());
             throw e;
         }

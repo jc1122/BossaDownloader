@@ -1,12 +1,11 @@
-package app.API;
+package app.API.enums;
 
-import app.API.enums.JnaEnum;
-import app.API.nolObjects.NolTickerAPI;
+import app.API.nolObjects.NolTickersAPI;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Used to set search mode for {@link BossaAPI#getTickers(TypeOfList, NolTickerAPI)}
+ * Used to set search mode for {@link NolTickersAPI#getTickers}
  */
 @SuppressWarnings("unused")
 public enum TypeOfList implements JnaEnum<TypeOfList> {

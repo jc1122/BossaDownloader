@@ -1,8 +1,8 @@
 package app.API.tests;
 
-import app.API.BossaAPI;
+import app.API.JNAinterface.BossaAPIInstance;
 import app.API.JNAinterface.BossaAPIInterface;
-import app.API.TypeOfList;
+import app.API.enums.TypeOfList;
 import org.junit.jupiter.api.*;
 
 import java.io.BufferedReader;
@@ -56,7 +56,7 @@ class BossaAPIInterfaceTest {
     //api will crash if initialization and shutdown is performed for each test
     static void setUp() {
         assumeTrue(checkIfNolIsRunning(), () -> "NOL is not running");
-        INSTANCE = BossaAPI.INSTANCE;
+        INSTANCE = BossaAPIInstance.INSTANCE;
         System.out.println("Init message: " + getMessage(INSTANCE.Initialize("BOS;BOS")));
 
     }

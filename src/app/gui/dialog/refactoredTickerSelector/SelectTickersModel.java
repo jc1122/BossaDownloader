@@ -1,6 +1,6 @@
 package app.gui.dialog.refactoredTickerSelector;
 
-import app.API.TypeOfList;
+import app.API.enums.TypeOfList;
 import app.API.nolObjects.NolTickerAPI;
 import app.gui.Model;
 import app.gui.dialog.GUIModel;

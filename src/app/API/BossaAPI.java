@@ -1,12 +1,11 @@
 package app.API;
 
+import app.API.JNAinterface.BossaAPIInstance;
 import app.API.JNAinterface.BossaAPIInterface;
-import app.API.enums.JnaEnum;
 import app.API.enums.OrderType;
+import app.API.enums.TypeOfList;
 import app.API.nolObjects.*;
 import app.API.properties.*;
-import com.sun.jna.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.beans.PropertyChangeListener;
 import java.util.*;
@@ -24,23 +23,19 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"unused", "Convert2MethodRef", "Convert2Lambda", "WeakerAccess"})
 public class BossaAPI {
 
-    public static final BossaAPIInterface INSTANCE; //TODO make private
+    private static final BossaAPIInterface INSTANCE; //TODO make private
     private static final Map<String, PropertyAPI> propertyMap = new HashMap<>();
     private static final Map<String, NolTickerAPI> tickersMap = new HashMap<>();
     private static Set<String> tickerISINSInFilter = new HashSet<>();
     private static Set<NolTickerAPI> tickersInFilter = new HashSet<>();
 
-    private NolTickerAPI test;
-//    public static NolTickerAPI getTest() {
-//        return test;
-//    }
     private static final Logger logger =
             Logger.getLogger(BossaAPI.class.getName());
 
     //initialize
     static {
         logger.finest("Initializing static");
-
+        INSTANCE = BossaAPIInstance.INSTANCE;
         //add propertyMap to map
         propertyMap.put("Quotes", Quotes.getInstance());
         propertyMap.put("Status", Status.getInstance());
@@ -50,52 +45,52 @@ public class BossaAPI {
         propertyMap.put("Outlook", Outlook.getInstance());
         propertyMap.put("TickersInFilter", TickersInFilter.getInstance());
 
-        Map<String, String> functionNames = new HashMap<>();
+//        Map<String, String> functionNames = new HashMap<>();
+//
+//        //map method names to mangled dll library function names
+//        functionNames.put("APIOrderRequest", "_APIOrderRequest@12");
+//        functionNames.put("AddToFilter", "_AddToFilter@8");
+//        functionNames.put("ClearFilter", "_ClearFilter@0");
+//        functionNames.put("GetResultCodeDesc", "_GetResultCodeDesc@4");
+//        functionNames.put("GetTickers", "_GetTickers@12");
+//        functionNames.put("Get_Version", "_Get_Version@0");
+//        functionNames.put("InitListTickers", "_InitListTickers@0");
+//        functionNames.put("Initialize", "_Initialize@4");
+//        functionNames.put("ReleaseTickersList", "_ReleaseTickersList@4");
+//        functionNames.put("RemFromFilter", "_RemFromFilter@8");
+//        functionNames.put("SetCallback", "_SetCallback@4");
+//        functionNames.put("SetCallbackAccount", "_SetCallbackAccount@4");
+//        functionNames.put("SetCallbackDelay", "_SetCallbackDelay@4");
+//        functionNames.put("SetCallbackOrder", "_SetCallbackOrder@4");
+//        functionNames.put("SetCallbackOutlook", "_SetCallbackOutlook@4");
+//        functionNames.put("SetCallbackStatus", "_SetCallbackStatus@4");
+//        functionNames.put("SetTradingSess", "_SetTradingSess@4");
+//        functionNames.put("Shutdown", "_Shutdown@0");
 
-        //map method names to mangled dll library function names
-        functionNames.put("APIOrderRequest", "_APIOrderRequest@12");
-        functionNames.put("AddToFilter", "_AddToFilter@8");
-        functionNames.put("ClearFilter", "_ClearFilter@0");
-        functionNames.put("GetResultCodeDesc", "_GetResultCodeDesc@4");
-        functionNames.put("GetTickers", "_GetTickers@12");
-        functionNames.put("Get_Version", "_Get_Version@0");
-        functionNames.put("InitListTickers", "_InitListTickers@0");
-        functionNames.put("Initialize", "_Initialize@4");
-        functionNames.put("ReleaseTickersList", "_ReleaseTickersList@4");
-        functionNames.put("RemFromFilter", "_RemFromFilter@8");
-        functionNames.put("SetCallback", "_SetCallback@4");
-        functionNames.put("SetCallbackAccount", "_SetCallbackAccount@4");
-        functionNames.put("SetCallbackDelay", "_SetCallbackDelay@4");
-        functionNames.put("SetCallbackOrder", "_SetCallbackOrder@4");
-        functionNames.put("SetCallbackOutlook", "_SetCallbackOutlook@4");
-        functionNames.put("SetCallbackStatus", "_SetCallbackStatus@4");
-        functionNames.put("SetTradingSess", "_SetTradingSess@4");
-        functionNames.put("Shutdown", "_Shutdown@0");
-
-        Map<String, Object> options = new HashMap<>();
-        options.put(Library.OPTION_FUNCTION_MAPPER,
-                (FunctionMapper) (library, method) -> functionNames.get(method.getName()));
-
-        options.put(Library.OPTION_TYPE_MAPPER, new DefaultTypeMapper() {
-            {
-                addTypeConverter(JnaEnum.class, new EnumConverter());
-            }
-        });
-        try {
-            INSTANCE = (BossaAPIInterface)
-                    Native.loadLibrary("nolclientapi",
-                            BossaAPIInterface.class,
-                            options);
-        } catch (UnsatisfiedLinkError e) {
-            StringBuilder stackTrace = new StringBuilder();
-            for (StackTraceElement element : e.getStackTrace()) {
-                stackTrace.append(element).append(System.lineSeparator());
-            }
-            logger.severe(e.getMessage()
-                    + "\n please put nolclientapi.dll to your windows/SysWOW64 folder and use x86 Java runtime \n"
-                    + stackTrace);
-            throw e;
-        }
+//        Map<String, Object> options = new HashMap<>();
+//        options.put(Library.OPTION_FUNCTION_MAPPER,
+//                (FunctionMapper) (library, method) -> functionNames.get(method.getName()));
+//
+//        options.put(Library.OPTION_TYPE_MAPPER, new DefaultTypeMapper() {
+//            {
+//                addTypeConverter(JnaEnum.class, new EnumConverter());
+//            }
+//        });
+//        try {
+//            INSTANCE = (BossaAPIInterface)
+//                    Native.loadLibrary("nolclientapi",
+//                            BossaAPIInterface.class,
+//                            options);
+//        } catch (UnsatisfiedLinkError e) {
+//            StringBuilder stackTrace = new StringBuilder();
+//            for (StackTraceElement element : e.getStackTrace()) {
+//                stackTrace.append(element).append(System.lineSeparator());
+//            }
+//            logger.severe(e.getMessage()
+//                    + "\n please put nolclientapi.dll to your windows/SysWOW64 folder and use x86 Java runtime \n"
+//                    + stackTrace);
+//            throw e;
+//        }
 
         logger.finest("Finished initializing static");
     }
@@ -124,7 +119,7 @@ public class BossaAPI {
         //the observable below must be initialized after the lib is initialized, otherwise "lib is not inicialized" error
         INSTANCE.SetCallback(Quotes.getInstance());
 
-        List<NolTickerAPI> tickers = getTickers(TypeOfList.ALL, null);
+        List<NolTickerAPI> tickers = NolTickersAPI.getTickers(TypeOfList.ALL, null);
         for (NolTickerAPI ticker : tickers) {
             tickersMap.put(ticker.getIsin(), ticker);
         }
@@ -292,28 +287,6 @@ public class BossaAPI {
         return output;
     }
 
-
-    /**
-     * Returns the requested refactoredTickerSelector.
-     * <br>
-     * Usage: <br>
-     * {@code typeOfList.ALL} or {@code typeOfList.UNDEF_LIST} with any {@code in_ticker}
-     * to get all refactoredTickerSelector from server. <br>
-     * {@code typeOfList.ISIN}, {@code typeOfList.CFI}, {@code typeOfList.MARKET_CODE}, {@code typeOfList.SYMBOL} with
-     * non null {@code in_ticker} to get a list filtered by given field.
-     *
-     * @param typeOfList group filter
-     * @param in_ticker  null or valid ticker
-     * @return refactoredTickerSelector
-     */
-    @NotNull
-    public static List<NolTickerAPI> getTickers(TypeOfList typeOfList, NolTickerAPI in_ticker) {
-        Object[] params = {typeOfList, in_ticker};
-        logger.entering(BossaAPI.class.getName(), "getTickers", params);
-        NolTickersAPI nolTickersAPI = new NolTickersAPI(typeOfList, in_ticker);
-        logger.exiting(BossaAPI.class.getName(), "getTickers");
-        return nolTickersAPI.getTickersList();
-    }
 
     // function for describing errors
     public static String GetResultCodeDesc(int code) {    /* code returned by function */

@@ -2,8 +2,9 @@ package app.gui;
 
 import app.API.BossaAPI;
 import app.API.nolObjects.NolTickerAPI;
+import app.API.nolObjects.NolTickersAPI;
 import app.API.properties.PropertyAPI;
-import app.API.TypeOfList;
+import app.API.enums.TypeOfList;
 
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -132,13 +133,13 @@ public class Model {
     }
 
     /**
-     * {@link BossaAPI#getTickers(TypeOfList, NolTickerAPI)}
+     * {@link NolTickersAPI#getTickers(TypeOfList, NolTickerAPI)}
      *
      * @param typeOfList {@link TypeOfList}
-     * @param in_ticker  {@link BossaAPI#getTickers(TypeOfList, NolTickerAPI)}
-     * @return {@link BossaAPI#getTickers(TypeOfList, NolTickerAPI)}
+     * @param in_ticker  {@link NolTickersAPI#getTickers(TypeOfList, NolTickerAPI)}
+     * @return {@link NolTickersAPI#getTickers(TypeOfList, NolTickerAPI)}
      */
     public List<NolTickerAPI> getTickers(TypeOfList typeOfList, NolTickerAPI in_ticker) {
-        return BossaAPI.getTickers(typeOfList, in_ticker);
+        return NolTickersAPI.getTickers(typeOfList, in_ticker);
     }
 }

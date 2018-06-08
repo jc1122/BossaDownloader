@@ -1,8 +1,9 @@
 package app.API.tests;
 
 import app.API.BossaAPI;
-import app.API.TypeOfList;
+import app.API.enums.TypeOfList;
 import app.API.nolObjects.NolTickerAPI;
+import app.API.nolObjects.NolTickersAPI;
 import app.API.properties.PropertyAPI;
 import app.API.properties.Quotes;
 import org.junit.jupiter.api.*;
@@ -53,7 +54,7 @@ class BossaAPITest {
         }
 
         private Set<NolTickerAPI> addNumberOfTickers(int number) {
-            List<NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
+            List<NolTickerAPI> tickers = NolTickersAPI.getTickers(TypeOfList.ALL, null);
             Set<NolTickerAPI> tickerSet = new HashSet<>();
 
             IntStream.range(0, number).forEach(value -> tickerSet.add(tickers.get(value)));
@@ -169,7 +170,7 @@ class BossaAPITest {
 
 
     private Set<String> prepareIsins(int numberOfIsins) {
-        List<NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
+        List<NolTickerAPI> tickers = NolTickersAPI.getTickers(TypeOfList.ALL, null);
         assumeTrue(tickers.size() > numberOfIsins, "ticker count is below 101!");
         Set<String> isins = new HashSet<>();
         for (int i = 0; i < numberOfIsins; i++) {
@@ -338,7 +339,7 @@ class BossaAPITest {
         @Test
         @DisplayName("get list of refactoredTickerSelector with wrong type of list for in_ticker")
         void getTickersWrongParameter() {
-            Executable test = () -> BossaAPI.getTickers(TypeOfList.ISIN, null);
+            Executable test = () -> NolTickersAPI.getTickers(TypeOfList.ISIN, null);
             assertThrows(IllegalArgumentException.class, test);
         }
 
@@ -359,16 +360,16 @@ class BossaAPITest {
         @Test
         @DisplayName("get default list of refactoredTickerSelector")
         void getTickers() {
-            List<NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
+            List<NolTickerAPI> tickers = NolTickersAPI.getTickers(TypeOfList.ALL, null);
             System.out.println("number of refactoredTickerSelector: " + tickers.size());
             assertTrue(tickers.size() > 1000);
         }
 
         private List<NolTickerAPI> prepareAllTickers(TypeOfList typeOfList) {
-            List<NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
+            List<NolTickerAPI> tickers = NolTickersAPI.getTickers(TypeOfList.ALL, null);
             assumeFalse(tickers.isEmpty());
             //List<BossaAPI.NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, refactoredTickerSelector.get(0));
-            List<NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, tickers.get(0));
+            List<NolTickerAPI> singleTicker = NolTickersAPI.getTickers(typeOfList, tickers.get(0));
             System.out.println("number of refactoredTickerSelector: " + tickers.size());
             System.out.println("Symbol: " + tickers.get(0).getName());
             System.out.println("number of filtered refactoredTickerSelector: " + singleTicker.size());

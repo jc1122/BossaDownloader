@@ -1,6 +1,6 @@
 package app.gui.tickerSelector;
 
-import app.API.TypeOfList;
+import app.API.enums.TypeOfList;
 import app.API.nolObjects.NolTickerAPI;
 import app.gui.Model;
 

@@ -4,7 +4,7 @@ import app.API.*;
 import app.API.enums.OrderType;
 import app.API.nolObjects.*;
 import app.API.enums.Nol3State;
-import app.API.TypeOfList;
+import app.API.enums.TypeOfList;
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
 import com.sun.jna.Structure;

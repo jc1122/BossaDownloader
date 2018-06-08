@@ -1,4 +1,4 @@
-package app.API;
+package app.API.enums;
 
 import app.API.enums.JnaEnum;
 import com.sun.jna.FromNativeContext;
@@ -10,7 +10,7 @@ import com.sun.jna.TypeConverter;
 /**
  * See <a href="http://technofovea.com/blog/archives/815">here</a> for details
  */
-class EnumConverter implements TypeConverter {
+public class EnumConverter implements TypeConverter {
 
     //private static final Logger logger = LoggerFactory.getLogger(EnumConverter.class);
 
