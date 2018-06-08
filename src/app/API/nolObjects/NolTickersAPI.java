@@ -32,7 +32,7 @@ public final class NolTickersAPI
             }
             BossaAPI.INSTANCE.GetTickers(wrappee, typeOfList, null);
         } else {
-            if (typeOfList.isTickerFieldEmpty(in_ticker)) {
+            if (isTickerFieldEmpty(typeOfList, in_ticker)) {
                 IllegalArgumentException e =
                         new IllegalArgumentException("Ticker field " + typeOfList.name() + " is empty!");
                 logger.finer(e.getMessage());
@@ -43,6 +43,26 @@ public final class NolTickersAPI
         tickerListCache = BossaAPIClassWrapper.convertPointerToListHelper(wrappee.size, wrappee.ptrtickerslist,
                 NolTickerAPI.class);
         logger.exiting(this.getClass().getName(), "Constructor");
+    }
+
+    //do not refactor this to constant specific enum method, it is made this way to decouple TypeOfList and NolTickerAPI
+    private boolean isTickerFieldEmpty(TypeOfList typeOfList, NolTickerAPI in_ticker) {
+        switch (typeOfList) {
+            case ALL:
+                return false;
+            case UNDEF_LIST:
+                return false;
+            case SYMBOL:
+                return in_ticker.getName().equals("");
+            case ISIN:
+                return in_ticker.getIsin().equals("");
+            case CFI:
+                return in_ticker.getCFI().equals("");
+            case MARKET_CODE:
+                return in_ticker.getMarketCode().equals("");
+            default:
+                   throw new IllegalArgumentException("Unknown type of list: " +typeOfList);
+        }
     }
 
     /**

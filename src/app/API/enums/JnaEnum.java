@@ -1,4 +1,4 @@
-package app.API;
+package app.API.enums;
 
 /**
  * Maps C type enums to Java enums. See <a href="http://technofovea.com/blog/archives/815">here</a> for details.

@@ -1,4 +1,4 @@
-package app.API;
+package app.API.enums;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;

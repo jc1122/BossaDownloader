@@ -1,7 +1,7 @@
 package app.API.properties;
 
 import app.API.JNAinterface.BossaAPIInterface;
-import app.API.Nol3State;
+import app.API.enums.Nol3State;
 
 /**
  * Updates info about current NOL3 app status. This class handles listeners for {@link Nol3State}

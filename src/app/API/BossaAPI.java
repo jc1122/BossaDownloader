@@ -1,13 +1,14 @@
 package app.API;
 
 import app.API.JNAinterface.BossaAPIInterface;
+import app.API.enums.JnaEnum;
+import app.API.enums.OrderType;
 import app.API.nolObjects.*;
 import app.API.properties.*;
 import com.sun.jna.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
