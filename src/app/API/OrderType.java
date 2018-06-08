@@ -1,10 +1,12 @@
 package app.API;
 
+import app.API.nolObjects.NolOrderReportAPI;
+import app.API.nolObjects.NolOrderRequestAPI;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Type of order request used by {@link BossaAPI#APIOrderRequest(BossaAPI.NolOrderRequestAPI, BossaAPI.NolOrderReportAPI, OrderType)}
+ * Type of order request used by {@link BossaAPI#APIOrderRequest(NolOrderRequestAPI, NolOrderReportAPI, OrderType)}
  */
 //http://technofovea.com/blog/archives/815
 public enum OrderType implements JnaEnum<OrderType> {

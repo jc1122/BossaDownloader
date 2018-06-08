@@ -1,6 +1,8 @@
 package app.gui.dialog.statement;
 
-import app.API.BossaAPI;
+import app.API.nolObjects.NolPosAPI;
+import app.API.nolObjects.NolRecentInfoAPI;
+import app.API.nolObjects.NolStatementAPI;
 import app.gui.Controller;
 import app.gui.dialog.GUIView;
 
@@ -60,7 +62,7 @@ public class StatementView<K extends StatementModel,
         private final JPanel accountPanel;
         private final JComboBox<String> accountNameComboBox;
 
-        private List<BossaAPI.NolStatementAPI> accountList;
+        private List<NolStatementAPI> accountList;
 
         AccountPane(K model) {
             logger.entering(this.getClass().getName(), "constructor", model);
@@ -102,7 +104,7 @@ public class StatementView<K extends StatementModel,
 
             int index = accountNameComboBox.getSelectedIndex();
 
-            this.accountList = (List<BossaAPI.NolStatementAPI>) evt.getNewValue();
+            this.accountList = (List<NolStatementAPI>) evt.getNewValue();
             synchronized (this) {
                 logger.finest("entering synchronized block");
                 //need to remove listeners before calling removeAllItems, or listeners will be notified of that
@@ -128,9 +130,9 @@ public class StatementView<K extends StatementModel,
             logger.exiting(this.getClass().getName(), "addAccountSelectionListener");
         }
 
-        private void addAccountsToComboBox(List<BossaAPI.NolStatementAPI> accounts) {
+        private void addAccountsToComboBox(List<NolStatementAPI> accounts) {
             logger.entering(this.getClass().getName(), "addAccountSelectionListener", accounts);
-            for (BossaAPI.NolStatementAPI account : accounts) {
+            for (NolStatementAPI account : accounts) {
                 accountNameComboBox.addItem(account.getName());
             }
             logger.exiting(this.getClass().getName(), "addAccountSelectionListener", accounts);
@@ -150,7 +152,7 @@ public class StatementView<K extends StatementModel,
         private JLabel accountTypeStatusLabel;
         private Map<String, JLabel> statementLabels;
         private Map<String, JLabel> statementValues;
-        private List<BossaAPI.NolStatementAPI> accountList;
+        private List<NolStatementAPI> accountList;
 
         private int selectedAccount;
 
@@ -225,7 +227,7 @@ public class StatementView<K extends StatementModel,
 
         private void updateStatementPanel(int index) {
             logger.entering(this.getClass().getName(), "updateStatementPanel", index);
-            BossaAPI.NolStatementAPI defaultAccount = accountList.get(Math.max(index, 0)); //Max is just in case, when no element = -1  selected
+            NolStatementAPI defaultAccount = accountList.get(Math.max(index, 0)); //Max is just in case, when no element = -1  selected
             ikeStatusLabel.setText(defaultAccount.getIke() ? "True" : "False");
             accountTypeStatusLabel.setText(defaultAccount.getType().equals("M") ? "Cash" : "Futures");
 
@@ -251,7 +253,7 @@ public class StatementView<K extends StatementModel,
             if (!evt.getPropertyName().equals("Accounts"))
                 return;
             //noinspection unchecked
-            this.accountList = (List<BossaAPI.NolStatementAPI>) evt.getNewValue();
+            this.accountList = (List<NolStatementAPI>) evt.getNewValue();
             updateStatementPanel(this.selectedAccount);
             logger.exiting(this.getClass().getName(), "propertyChange");
         }
@@ -278,7 +280,7 @@ public class StatementView<K extends StatementModel,
         private JPanel positionsPanel;
         private final K model;
         private int selectedAccount;
-        private List<BossaAPI.NolStatementAPI> accountList;
+        private List<NolStatementAPI> accountList;
         private Map<String, Double> positionIsinsPrices;
         private Map<String, JLabel> positionIsinsLabels;
         private Map<String, Integer> positionIsinsCount;
@@ -317,7 +319,7 @@ public class StatementView<K extends StatementModel,
 
         private synchronized void updatePanel(int index) {
             logger.entering(this.getClass().getName(), "updatePanel", index);
-            BossaAPI.NolStatementAPI currentAccount = accountList.get(index);
+            NolStatementAPI currentAccount = accountList.get(index);
 
             positionsPanel.removeAll();
             positionsPanel.add(new JLabel("Ticker"));
@@ -330,16 +332,16 @@ public class StatementView<K extends StatementModel,
             positionIsinsCount.clear();
 
             //TODO refactor to a set of isins
-            List<BossaAPI.NolPosAPI> positions = currentAccount.getPositions();
+            List<NolPosAPI> positions = currentAccount.getPositions();
             if (!positions.isEmpty()) {
-                for (BossaAPI.NolPosAPI position : positions) {
+                for (NolPosAPI position : positions) {
                     String isin = position.getTicker().getIsin();
                     positionIsinsPrices.put(isin, -1.);
                     positionIsinsLabels.put(isin, new JLabel());
                     positionIsinsCount.put(isin, -10);
                 }
 
-                for (BossaAPI.NolPosAPI position : positions) {
+                for (NolPosAPI position : positions) {
                     String isin = position.getTicker().getIsin();
                     positionsPanel.add(new JLabel(position.getTicker().getName()));
                     positionsPanel.add(new JLabel(Integer.toString(position.getAcc110())));
@@ -381,12 +383,12 @@ public class StatementView<K extends StatementModel,
             switch (evt.getPropertyName()) {
                 case "Accounts":
                     //noinspection unchecked
-                    this.accountList = (List<BossaAPI.NolStatementAPI>) evt.getNewValue();
+                    this.accountList = (List<NolStatementAPI>) evt.getNewValue();
                     updatePanel(this.selectedAccount);
                     logger.finest("updated account panel");
                     break;
                 case "Quotes":
-                    BossaAPI.NolRecentInfoAPI quote = (BossaAPI.NolRecentInfoAPI) evt.getNewValue();
+                    NolRecentInfoAPI quote = (NolRecentInfoAPI) evt.getNewValue();
                     String isin = quote.getTicker().getIsin();
                     if (quote.getBitMask().get("ReferPrice")) {
                         this.positionIsinsPrices.replace(isin, quote.getReferPrice() * this.positionIsinsCount.get(isin));

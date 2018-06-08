@@ -1,6 +1,7 @@
 package app.gui.dialog.SaveToCSV;
 
-import app.API.BossaAPI;
+import app.API.nolObjects.NolRecentInfoAPI;
+import app.API.nolObjects.NolTickerAPI;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -22,7 +23,7 @@ public class CSVSaver implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
         if(saveToFile) {
             if (propertyChangeEvent.getPropertyName() == "Quotes") {
-                BossaAPI.NolRecentInfoAPI quote = (BossaAPI.NolRecentInfoAPI) propertyChangeEvent.getNewValue();
+                NolRecentInfoAPI quote = (NolRecentInfoAPI) propertyChangeEvent.getNewValue();
                 if (tickerISINSToSave.contains(quote.getTicker().getIsin())) {
                     writeToCSV(quote);
                 }
@@ -30,8 +31,8 @@ public class CSVSaver implements PropertyChangeListener {
         }
     }
 
-    public void startSaving(Set<BossaAPI.NolTickerAPI> tickers) {
-        this.tickerISINSToSave = tickers.stream().map(BossaAPI.NolTickerAPI::getIsin).collect(Collectors.toSet());
+    public void startSaving(Set<NolTickerAPI> tickers) {
+        this.tickerISINSToSave = tickers.stream().map(NolTickerAPI::getIsin).collect(Collectors.toSet());
         saveToFile = true;
     }
 
@@ -40,28 +41,28 @@ public class CSVSaver implements PropertyChangeListener {
     }
 
     //this method needs to be synchronized by opened file
-    public void writeToCSV(BossaAPI.NolRecentInfoAPI quote) {
+    public void writeToCSV(NolRecentInfoAPI quote) {
 
         String name = quote.getTicker().getName();
         LocalDate localDate = LocalDate.now();
         String fileName = name + localDate + ".csv";
         File quotesFile = new File(fileName);
-
-        List<String> quoteToString = Arrays.asList(quote.getTicker().getName(),
-                Double.toString(quote.getOpen()),
-                Double.toString(quote.getHigh()),
-                Double.toString(quote.getLow()),
-                Double.toString(quote.getClose()),
-                Double.toString(quote.getOffers().get(0).getAmount()),
-                Double.toString(quote.getOffers().get(0).getDepth()),
-                Double.toString(quote.getOffers().get(0).getPrice()),
-                Double.toString(quote.getOffers().get(0).getSize()),
-                Double.toString(quote.getOffers().get(1).getAmount()),
-                Double.toString(quote.getOffers().get(1).getDepth()),
-                Double.toString(quote.getOffers().get(1).getPrice()),
-                Double.toString(quote.getOffers().get(1).getSize())
-                );
-
+        List<String> quoteToString = null;
+        System.out.println(quote);
+        quoteToString = Arrays.asList(quote.toString());
+// quote.getTicker().getName(),
+//                    Double.toString(quote.getOpen()),
+//                    Double.toString(quote.getHigh()),
+//                    Double.toString(quote.getLow()),
+//                    Double.toString(quote.getClose()),
+//                    Double.toString(quote.getOffers().get(0).getAmount()),
+//                    Double.toString(quote.getOffers().get(0).getDepth()),
+//                    Double.toString(quote.getOffers().get(0).getPrice()),
+//                    Double.toString(quote.getOffers().get(0).getSize())
+////                Double.toString(quote.getOffers().get(1).getAmount()),
+////                Double.toString(quote.getOffers().get(1).getDepth()),
+////                Double.toString(quote.getOffers().get(1).getPrice()),
+////                Double.toString(quote.getOffers().get(1).getSize())
         if(!quotesFile.exists()) {
             List<String> header = Arrays.asList("name,open,high,low,close,bid1,bidvol1,ask1,askvol1");
             try {

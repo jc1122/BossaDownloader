@@ -1,7 +1,7 @@
 package app.gui.tickerSelector;
 
-import app.API.BossaAPI;
 import app.API.TypeOfList;
+import app.API.nolObjects.NolTickerAPI;
 import app.gui.Model;
 
 import javax.swing.*;
@@ -32,11 +32,11 @@ public class SelectTickersDialog {
         dialog.setTitle("Tickers to watch");
 
         //TODO refactor this, possibly in BossaAPI, too many unnecessary conversions
-        Set<BossaAPI.NolTickerAPI> allTickers = new HashSet<>(model.getTickers(TypeOfList.ALL, null));
+        Set<NolTickerAPI> allTickers = new HashSet<>(model.getTickers(TypeOfList.ALL, null));
         allTickers.removeAll(model.getTickersInFilter());
 
-        List<BossaAPI.NolTickerAPI> tickers = new ArrayList<>(allTickers);
-        List<BossaAPI.NolTickerAPI> tickersInFilter = new ArrayList<>(model.getTickersInFilter());
+        List<NolTickerAPI> tickers = new ArrayList<>(allTickers);
+        List<NolTickerAPI> tickersInFilter = new ArrayList<>(model.getTickersInFilter());
 
         ButtonPane buttonPane = new ButtonPane(model, dialog);
         TickerTablesPane tickerTablesPane = new TickerTablesPane(buttonPane.getSearchField(), tickers, tickersInFilter);

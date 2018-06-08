@@ -6,7 +6,7 @@ package app.API;
  * @param <T> mapped enum should implement JnaEnum
  */
 //http://technofovea.com/blog/archives/815
-interface JnaEnum<T> {
+public interface JnaEnum<T> {
     /**
      * Returns ordinal value
      *

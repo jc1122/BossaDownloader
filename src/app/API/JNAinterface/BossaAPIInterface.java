@@ -1,5 +1,8 @@
-package app.API;
+package app.API.JNAinterface;
 
+import app.API.*;
+import app.API.nolObjects.*;
+import app.API.Nol3State;
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
 import com.sun.jna.Structure;
@@ -11,7 +14,7 @@ import com.sun.jna.Structure;
  * To use higher level functionality, use {@link BossaAPI}.
  */
 @SuppressWarnings({"WeakerAccess", "Convert2Lambda", "unused", "UnusedReturnValue"})
-interface BossaAPIInterface extends Library {
+public interface BossaAPIInterface extends Library {
 
     /**
      * Represents one level of market offers
@@ -68,32 +71,32 @@ interface BossaAPIInterface extends Library {
         /**
          * International Securities Identifying Number. Max length is 13. Ex. PLDEBCA00016
          *
-         * @see BossaAPI.NolTickerAPI#getIsin()
+         * @see NolTickerAPI#getIsin()
          */
         public byte[] Isin = new byte[13];        // International Securities Identifying Number
         /**
          * Short name of ticker. Max length is 21. Ex. DEBICA
          *
-         * @see BossaAPI.NolTickerAPI#getName()
+         * @see NolTickerAPI#getName()
          */
         public byte[] Name = new byte[21];        // Full name of the ticker
         /**
-         * Market code. See {@link BossaAPI.NolTickerAPI#getMarketCode()} for a list of available market codes.
+         * Market code. See {@link NolTickerAPI#getMarketCode()} for a list of available market codes.
          *
-         * @see BossaAPI.NolTickerAPI#getMarketCode()
+         * @see NolTickerAPI#getMarketCode()
          */
         public byte[] MarketCode = new byte[3];
         /**
          * CFI.
          *
-         * @see BossaAPI.NolTickerAPI#getCFI()
+         * @see NolTickerAPI#getCFI()
          */
         public byte[] CFI = new byte[7];
 
         /**
          * Market group.
          *
-         * @see BossaAPI.NolTickerAPI#getGroup()
+         * @see NolTickerAPI#getGroup()
          */
         public byte[] Group = new byte[3];
     }
@@ -256,7 +259,7 @@ interface BossaAPIInterface extends Library {
     /**
      * Stores description and value of funds in account.
      *
-     * @see app.API.BossaAPI.NolFundAPI
+     * @see NolFundAPI
      */
     class NolFund extends Structure {
         public static class ByReference extends NolFund implements Structure.ByReference {
@@ -269,7 +272,7 @@ interface BossaAPIInterface extends Library {
     /**
      * Stores positions - ticker and amount of ticker in given account.
      *
-     * @see app.API.BossaAPI.NolPosAPI
+     * @see NolPosAPI
      */
     class NolPos extends Structure {
         public static class ByReference extends NolPos implements Structure.ByReference {
@@ -283,7 +286,7 @@ interface BossaAPIInterface extends Library {
     /**
      * Account statement.
      *
-     * @see app.API.BossaAPI.NolStatementAPI
+     * @see NolStatementAPI
      */
     class NolStatement extends Structure {
         public static class ByReference extends NolStatement implements Structure.ByReference {
@@ -301,7 +304,7 @@ interface BossaAPIInterface extends Library {
     /**
      * Array of {@link NolStatement}. Contains pointer to array and size of array.
      *
-     * @see app.API.BossaAPI.NolAggrStatementAPI
+     * @see NolAggrStatementAPI
      */
     class NolAggrStatement extends Structure {
         /**

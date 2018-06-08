@@ -1,6 +1,6 @@
 package app.gui.tickerSelector;
 
-import app.API.BossaAPI;
+import app.API.nolObjects.NolTickerAPI;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
@@ -9,19 +9,19 @@ import java.util.logging.Logger;
 public class TickerTableModel extends AbstractTableModel {
     private static final Logger logger =
             Logger.getLogger(TickerTableModel.class.getName());
-    private List<BossaAPI.NolTickerAPI> tickers;
+    private List<NolTickerAPI> tickers;
 
-    public void setData(List<BossaAPI.NolTickerAPI> tickers) {
+    public void setData(List<NolTickerAPI> tickers) {
         logger.entering(this.getClass().getName(), "setData", tickers);
         this.tickers = tickers;
         logger.exiting(this.getClass().getName(), "setData");
     }
 
-    public List<BossaAPI.NolTickerAPI> getData() {
+    public List<NolTickerAPI> getData() {
         return tickers;
     }
 
-    public TickerTableModel(List<BossaAPI.NolTickerAPI> tickers) {
+    public TickerTableModel(List<NolTickerAPI> tickers) {
         logger.entering(this.getClass().getName(), "constructor", tickers);
         this.tickers = tickers;
         logger.exiting(this.getClass().getName(), "constructor");
@@ -76,23 +76,23 @@ public class TickerTableModel extends AbstractTableModel {
         return null;
     }
 
-    void addRow(BossaAPI.NolTickerAPI ticker) {
+    void addRow(NolTickerAPI ticker) {
         logger.entering(this.getClass().getName(), "addRow", ticker);
         tickers.add(ticker);
         this.fireTableDataChanged();
         logger.exiting(this.getClass().getName(), "addRow");
     }
 
-    BossaAPI.NolTickerAPI removeRow(int row) {
+    NolTickerAPI removeRow(int row) {
         logger.entering(this.getClass().getName(), "removeRow", row);
-        BossaAPI.NolTickerAPI ticker = tickers.remove(row);
+        NolTickerAPI ticker = tickers.remove(row);
         this.fireTableDataChanged();
         logger.exiting(this.getClass().getName(), "removeRow", ticker);
         return ticker;
     }
 
     @SuppressWarnings("unused")
-    BossaAPI.NolTickerAPI getRow(int row) {
+    NolTickerAPI getRow(int row) {
         return tickers.get(row);
     }
 

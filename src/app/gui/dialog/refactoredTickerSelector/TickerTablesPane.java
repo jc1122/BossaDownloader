@@ -1,6 +1,6 @@
 package app.gui.dialog.refactoredTickerSelector;
 
-import app.API.BossaAPI;
+import app.API.nolObjects.NolTickerAPI;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -44,7 +44,7 @@ class TickerTablesPane {
         logger.exiting(this.getClass().getName(), "newFilter");
     }
 
-    TickerTablesPane(JTextField filterText, List<BossaAPI.NolTickerAPI> tickers, List<BossaAPI.NolTickerAPI> tickersInFilter) {
+    TickerTablesPane(JTextField filterText, List<NolTickerAPI> tickers, List<NolTickerAPI> tickersInFilter) {
         Object[] params = {filterText, tickers, tickersInFilter};
         logger.entering(this.getClass().getName(), "constructor", params);
 
@@ -85,7 +85,7 @@ class TickerTablesPane {
         return pane;
     }
 
-    public List<BossaAPI.NolTickerAPI> getTickersInFilter() {
+    public List<NolTickerAPI> getTickersInFilter() {
         return right.getModel().getData();
     }
 }

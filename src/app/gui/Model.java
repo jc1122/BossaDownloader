@@ -1,6 +1,8 @@
 package app.gui;
 
 import app.API.BossaAPI;
+import app.API.nolObjects.NolTickerAPI;
+import app.API.properties.PropertyAPI;
 import app.API.TypeOfList;
 
 import java.beans.PropertyChangeListener;
@@ -12,7 +14,7 @@ import java.util.Set;
  * Communicates with NOL3 using {@link BossaAPI}.
  */
 public class Model {
-    private final Map<String, BossaAPI.PropertyAPI> propertyMap = BossaAPI.getPropertyMap();
+    private final Map<String, PropertyAPI> propertyMap = BossaAPI.getPropertyMap();
 
     /**
      * {@link BossaAPI#addToFilter(Set)}
@@ -28,7 +30,7 @@ public class Model {
      *
      * @param tickers to be tracked
      */
-    public String addTickersToFilter(Set<BossaAPI.NolTickerAPI> tickers) {
+    public String addTickersToFilter(Set<NolTickerAPI> tickers) {
         return BossaAPI.addTickersToFilter(tickers);
     }
 
@@ -46,7 +48,7 @@ public class Model {
      *
      * @return currently tracked refactoredTickerSelector
      */
-    public Set<BossaAPI.NolTickerAPI> getTickersInFilter() {
+    public Set<NolTickerAPI> getTickersInFilter() {
         return BossaAPI.getTickersInFilter();
     }
 
@@ -96,7 +98,7 @@ public class Model {
     }
 
     /**
-     * The {@code listener} will be added to each property which inherits from {@link BossaAPI.PropertyAPI}
+     * The {@code listener} will be added to each property which inherits from {@link PropertyAPI}
      * and is stored in {@link BossaAPI#getPropertyMap()}.
      *
      * @param listener callback for property
@@ -108,7 +110,7 @@ public class Model {
     }
 
     /**
-     * The {@code listener} will be removed from each property which inherits from {@link BossaAPI.PropertyAPI}
+     * The {@code listener} will be removed from each property which inherits from {@link PropertyAPI}
      * and is stored in {@link BossaAPI#getPropertyMap()}.
      *
      * @param listener callback for property
@@ -120,9 +122,9 @@ public class Model {
     }
 
     /**
-     * {@link BossaAPI.PropertyAPI#getProperty()}
+     * {@link PropertyAPI#getProperty()}
      *
-     * @param property any property of {@link BossaAPI.PropertyAPI}
+     * @param property any property of {@link PropertyAPI}
      * @return property, will need to be cast to appropriate class (class name should be the same as property name)
      */
     public Object getProperty(String property) {
@@ -130,13 +132,13 @@ public class Model {
     }
 
     /**
-     * {@link BossaAPI#getTickers(TypeOfList, BossaAPI.NolTickerAPI)}
+     * {@link BossaAPI#getTickers(TypeOfList, NolTickerAPI)}
      *
      * @param typeOfList {@link TypeOfList}
-     * @param in_ticker  {@link BossaAPI#getTickers(TypeOfList, BossaAPI.NolTickerAPI)}
-     * @return {@link BossaAPI#getTickers(TypeOfList, BossaAPI.NolTickerAPI)}
+     * @param in_ticker  {@link BossaAPI#getTickers(TypeOfList, NolTickerAPI)}
+     * @return {@link BossaAPI#getTickers(TypeOfList, NolTickerAPI)}
      */
-    public List<BossaAPI.NolTickerAPI> getTickers(TypeOfList typeOfList, BossaAPI.NolTickerAPI in_ticker) {
+    public List<NolTickerAPI> getTickers(TypeOfList typeOfList, NolTickerAPI in_ticker) {
         return BossaAPI.getTickers(typeOfList, in_ticker);
     }
 }

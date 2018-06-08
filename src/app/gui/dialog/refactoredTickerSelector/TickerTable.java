@@ -1,6 +1,6 @@
 package app.gui.dialog.refactoredTickerSelector;
 
-import app.API.BossaAPI;
+import app.API.nolObjects.NolTickerAPI;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -13,7 +13,7 @@ public class TickerTable {
     private final JScrollPane scrollPane;
     private JTable table;
 
-    private JScrollPane createTable(List<BossaAPI.NolTickerAPI> tickers) {
+    private JScrollPane createTable(List<NolTickerAPI> tickers) {
         logger.entering(this.getClass().getName(), "createTable", tickers);
         TickerTableModel model = new TickerTableModel(tickers);
 
@@ -25,7 +25,7 @@ public class TickerTable {
         return scrollPane2;
     }
 
-    public TickerTable(List<BossaAPI.NolTickerAPI> tickers, String title) {
+    public TickerTable(List<NolTickerAPI> tickers, String title) {
         Object[] params = {tickers, title};
         logger.entering(this.getClass().getName(), "constructor", params);
         scrollPane = createTable(tickers);

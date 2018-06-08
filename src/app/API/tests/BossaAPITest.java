@@ -1,5 +1,10 @@
-package app.API;
+package app.API.tests;
 
+import app.API.BossaAPI;
+import app.API.TypeOfList;
+import app.API.nolObjects.NolTickerAPI;
+import app.API.properties.PropertyAPI;
+import app.API.properties.Quotes;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 
@@ -47,9 +52,9 @@ class BossaAPITest {
             BossaAPI.clearFilter();
         }
 
-        private Set<BossaAPI.NolTickerAPI> addNumberOfTickers(int number) {
-            List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
-            Set<BossaAPI.NolTickerAPI> tickerSet = new HashSet<>();
+        private Set<NolTickerAPI> addNumberOfTickers(int number) {
+            List<NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
+            Set<NolTickerAPI> tickerSet = new HashSet<>();
 
             IntStream.range(0, number).forEach(value -> tickerSet.add(tickers.get(value)));
 
@@ -85,7 +90,7 @@ class BossaAPITest {
         @Test
         @DisplayName("add single null ticker to filter")
         void addTickersToFilterNull() {
-            Set<BossaAPI.NolTickerAPI> tickers = new HashSet<>();
+            Set<NolTickerAPI> tickers = new HashSet<>();
             tickers.add(null);
             Executable test = () -> BossaAPI.addTickersToFilter(tickers);
             assertThrows(IllegalArgumentException.class, test);
@@ -95,7 +100,7 @@ class BossaAPITest {
         @Test
         @DisplayName("add single null ticker with 10 valid refactoredTickerSelector to filter")
         void addTickersToFilterValidNull() {
-            Set<BossaAPI.NolTickerAPI> tickers = addNumberOfTickers(10);
+            Set<NolTickerAPI> tickers = addNumberOfTickers(10);
             tickers.add(null);
             String message = BossaAPI.addTickersToFilter(tickers);
             assertEquals("add to filter", message);
@@ -104,7 +109,7 @@ class BossaAPITest {
         @Test
         @DisplayName("add invalid ticker to filter")
         void addTickersToFilterInvalid() {
-            Set<BossaAPI.NolTickerAPI> tickers = addNumberOfTickers(10);
+            Set<NolTickerAPI> tickers = addNumberOfTickers(10);
             tickers.add(null);
             String message = BossaAPI.addTickersToFilter(tickers);
             assertEquals("add to filter", message);
@@ -130,7 +135,7 @@ class BossaAPITest {
                     }
                 }
             };
-            BossaAPI.Quotes.getInstance().addPropertyChangeListener(listener);
+            Quotes.getInstance().addPropertyChangeListener(listener);
             synchronized (listener) {
                 listener.wait(6000);
             }
@@ -164,7 +169,7 @@ class BossaAPITest {
 
 
     private Set<String> prepareIsins(int numberOfIsins) {
-        List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
+        List<NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
         assumeTrue(tickers.size() > numberOfIsins, "ticker count is below 101!");
         Set<String> isins = new HashSet<>();
         for (int i = 0; i < numberOfIsins; i++) {
@@ -227,7 +232,7 @@ class BossaAPITest {
     @DisplayName("get properties after initialization")
         //watch out, properties are initialized only after callback has returned their values!
     void getPropertyMap() {
-        Map<String, BossaAPI.PropertyAPI> propertyMap = BossaAPI.getPropertyMap();
+        Map<String, PropertyAPI> propertyMap = BossaAPI.getPropertyMap();
         for (String propertyName : propertyMap.keySet()) {
             try {
                 Object property = propertyMap.get(propertyName).getProperty();
@@ -340,7 +345,7 @@ class BossaAPITest {
         @Test
         @DisplayName("get list of SYMBOL refactoredTickerSelector with single ticker symbol")
         void getTickersSymbol() {
-            List<BossaAPI.NolTickerAPI> tickers = prepareAllTickers(TypeOfList.SYMBOL);
+            List<NolTickerAPI> tickers = prepareAllTickers(TypeOfList.SYMBOL);
             System.out.println(tickers);
             assertEquals(1, tickers.size());
         }
@@ -348,22 +353,22 @@ class BossaAPITest {
         @Test
         @DisplayName("get list of ALL refactoredTickerSelector with single ticker symbol")
         void getTickersAll() {
-            List<BossaAPI.NolTickerAPI> tickers = prepareAllTickers(TypeOfList.ALL);
+            List<NolTickerAPI> tickers = prepareAllTickers(TypeOfList.ALL);
         }
 
         @Test
         @DisplayName("get default list of refactoredTickerSelector")
         void getTickers() {
-            List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
+            List<NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
             System.out.println("number of refactoredTickerSelector: " + tickers.size());
             assertTrue(tickers.size() > 1000);
         }
 
-        private List<BossaAPI.NolTickerAPI> prepareAllTickers(TypeOfList typeOfList) {
-            List<BossaAPI.NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
+        private List<NolTickerAPI> prepareAllTickers(TypeOfList typeOfList) {
+            List<NolTickerAPI> tickers = BossaAPI.getTickers(TypeOfList.ALL, null);
             assumeFalse(tickers.isEmpty());
             //List<BossaAPI.NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, refactoredTickerSelector.get(0));
-            List<BossaAPI.NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, tickers.get(0));
+            List<NolTickerAPI> singleTicker = BossaAPI.getTickers(typeOfList, tickers.get(0));
             System.out.println("number of refactoredTickerSelector: " + tickers.size());
             System.out.println("Symbol: " + tickers.get(0).getName());
             System.out.println("number of filtered refactoredTickerSelector: " + singleTicker.size());

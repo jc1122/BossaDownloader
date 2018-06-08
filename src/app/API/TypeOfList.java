@@ -1,10 +1,11 @@
 package app.API;
 
+import app.API.nolObjects.NolTickerAPI;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Used to set search mode for {@link BossaAPI#getTickers(TypeOfList, BossaAPI.NolTickerAPI)}
+ * Used to set search mode for {@link BossaAPI#getTickers(TypeOfList, NolTickerAPI)}
  */
 @SuppressWarnings("unused")
 public enum TypeOfList implements JnaEnum<TypeOfList> {
@@ -13,7 +14,7 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
      */
     UNDEF_LIST {
         @Override
-        public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
+        public boolean isTickerFieldEmpty(NolTickerAPI ticker) {
             return false;
         }
     },// = -1;
@@ -22,7 +23,7 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
      */
     ALL {
         @Override
-        public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
+        public boolean isTickerFieldEmpty(NolTickerAPI ticker) {
             return false;
         }
     }, //= 0;
@@ -31,7 +32,7 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
      */
     SYMBOL {
         @Override
-        public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
+        public boolean isTickerFieldEmpty(NolTickerAPI ticker) {
             return ticker.getName().equals("");
         }
     }, //= 1;
@@ -40,7 +41,7 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
      */
     ISIN {
         @Override
-        public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
+        public boolean isTickerFieldEmpty(NolTickerAPI ticker) {
             return ticker.getIsin().equals("");
         }
     }, //= 2;
@@ -49,7 +50,7 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
      */
     CFI {
         @Override
-        public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
+        public boolean isTickerFieldEmpty(NolTickerAPI ticker) {
             return ticker.getCFI().equals("");
         }
     }, //= 3;
@@ -58,7 +59,7 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
      */
     MARKET_CODE {
         @Override
-        public boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker) {
+        public boolean isTickerFieldEmpty(NolTickerAPI ticker) {
             return ticker.getMarketCode().equals("");
         }
     }; //= 4;
@@ -85,10 +86,10 @@ public enum TypeOfList implements JnaEnum<TypeOfList> {
 
     /**
      * Used to ckeck if getting list of refactoredTickerSelector is possible by
-     * {@link BossaAPI#getTickers(TypeOfList, BossaAPI.NolTickerAPI)}
+     * {@link BossaAPI#getTickers(TypeOfList, NolTickerAPI)}
      *
      * @param ticker whose fields you wish to check
      * @return {@code True} if given field of ticker is not empty
      */
-    public abstract boolean isTickerFieldEmpty(BossaAPI.NolTickerAPI ticker);
+    public abstract boolean isTickerFieldEmpty(NolTickerAPI ticker);
 }

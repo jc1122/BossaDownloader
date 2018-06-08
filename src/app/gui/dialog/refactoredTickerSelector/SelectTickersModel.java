@@ -1,7 +1,7 @@
 package app.gui.dialog.refactoredTickerSelector;
 
-import app.API.BossaAPI;
 import app.API.TypeOfList;
+import app.API.nolObjects.NolTickerAPI;
 import app.gui.Model;
 import app.gui.dialog.GUIModel;
 
@@ -17,11 +17,11 @@ public class SelectTickersModel extends GUIModel {
         super(mainModel);
 
         //TODO refactor this, possibly in BossaAPI, too many unnecessary conversions
-        Set<BossaAPI.NolTickerAPI> allTickers = new HashSet<>(mainModel.getTickers(TypeOfList.ALL, null));
+        Set<NolTickerAPI> allTickers = new HashSet<>(mainModel.getTickers(TypeOfList.ALL, null));
         allTickers.removeAll(mainModel.getTickersInFilter());
 
-        List<BossaAPI.NolTickerAPI> tickers = new ArrayList<>(allTickers);
-        List<BossaAPI.NolTickerAPI> tickersInFilter = new ArrayList<>(mainModel.getTickersInFilter());
+        List<NolTickerAPI> tickers = new ArrayList<>(allTickers);
+        List<NolTickerAPI> tickersInFilter = new ArrayList<>(mainModel.getTickersInFilter());
 
     }
     @Override
@@ -33,14 +33,14 @@ public class SelectTickersModel extends GUIModel {
         mainModel.clearFilter();
     }
 
-    public void addTickersToFilter(Set<BossaAPI.NolTickerAPI> isins) {
+    public void addTickersToFilter(Set<NolTickerAPI> isins) {
         mainModel.addTickersToFilter(isins);
     }
 
-    public List<BossaAPI.NolTickerAPI> getTickersInFilter() {
+    public List<NolTickerAPI> getTickersInFilter() {
         return new ArrayList<>(mainModel.getTickersInFilter());
     }
-    public List<BossaAPI.NolTickerAPI> getTickers() {
+    public List<NolTickerAPI> getTickers() {
         return mainModel.getTickers(TypeOfList.ALL, null);
     }
 }

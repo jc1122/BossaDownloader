@@ -1,5 +1,8 @@
-package app.API;
+package app.API.tests;
 
+import app.API.BossaAPI;
+import app.API.JNAinterface.BossaAPIInterface;
+import app.API.TypeOfList;
 import org.junit.jupiter.api.*;
 
 import java.io.BufferedReader;

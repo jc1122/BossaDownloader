@@ -1,6 +1,6 @@
 package app.gui.dialog.statement;
 
-import app.API.BossaAPI;
+import app.API.nolObjects.NolStatementAPI;
 import app.gui.Model;
 import app.gui.dialog.GUIModel;
 
@@ -20,8 +20,8 @@ public class StatementModel extends GUIModel {
         }
     }
 
-    public List<BossaAPI.NolStatementAPI> getAccounts() {
-        return (List<BossaAPI.NolStatementAPI>) mainModel.getProperty("Accounts");
+    public List<NolStatementAPI> getAccounts() {
+        return (List<NolStatementAPI>) mainModel.getProperty("Accounts");
     }
 
     public Set<String> getTickerISINSinFilter() {

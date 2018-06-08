@@ -1,4 +1,4 @@
-package app.API;
+package app.API.nolObjects;
 
 /**
  * Stores possible market sides - BID and ASK
