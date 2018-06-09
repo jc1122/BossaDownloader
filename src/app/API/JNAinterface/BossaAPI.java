@@ -1,7 +1,6 @@
 package app.API.JNAinterface;
 
 import app.API.JNAenums.OrderType;
-import app.API.JNAenums.TypeOfList;
 
 import java.beans.PropertyChangeListener;
 import java.util.*;
@@ -22,8 +21,6 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
 
     private static final BossaAPIInterface INSTANCE; //TODO make private
     private static final Map<String, PropertyAPI> propertyMap = new HashMap<>();
-    private static final Map<String, NolTickerAPI> tickersMap = new HashMap<>();
-    private static Set<String> tickerISINSInFilter = new HashSet<>();
     private static Set<NolTickerAPI> tickersInFilter = new HashSet<>();
 
     private static final Logger logger =
@@ -70,11 +67,6 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
         //the observable below must be initialized after the lib is initialized, otherwise "lib is not inicialized" error
         INSTANCE.SetCallback(Quotes.getCallbackHelper());
 
-        List<NolTickerAPI> tickers = NolTickersAPI.getTickers(TypeOfList.ALL, null);
-        for (NolTickerAPI ticker : tickers) {
-            tickersMap.put(ticker.getIsin(), ticker);
-        }
-
         return output;
     }
 
@@ -96,45 +88,36 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
     }
 
     /**
-     * Adds refactoredTickerSelector to watch (order and transactions).
-     * To receive market data, this method should be called after {@link Quotes} is set up.
-     * <p>
-     * To receive market data, this method should be called after setting {@link BossaAPI#SetTradingSess(boolean)}
-     * to {@code true}.
-     * {@code isins} can be single ISIN obtained from ticker: {@link NolTickerAPI#getIsin()}
-     * or may be multiple ISINs separated by {@code ";"} ex. {@code ISIN1;ISIN2 }.
-     * If there are any refactoredTickerSelector already in the filter, they will remain there. New refactoredTickerSelector will be appended to filter.
-     * </p>
-     * <p>
-     * {@link Quotes} property will be updated after calling this method.
-     * </p>
-     *
-     * @param isins ISIN or name of ticker added to filter (name doesn't seem to work as of showVersion 1.0.0.70 of native library)
-     * @return success message
-     * @throws IllegalStateException if failed
+     * @param tickers a set of refactoredTickerSelector to be appended to filter
      */
-    private String addToFilter(Set<String> isins) throws IllegalArgumentException {
+
+    @Override
+    public String addTickersToFilter(Set<NolTickerAPI> tickers) {
+        tickers.remove(null);
+        Set<String> isins = tickers
+                .stream()
+                .map(NolTickerAPI::getIsin)
+                .collect(Collectors.toSet());
         Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "addToFilter", params);
 
         //need to be saved, or will be cleared by clearFilter
-        Set<String> saveTickerISINSInFilter = new HashSet<>(tickerISINSInFilter);
+        Set<String> saveTickerISINSInFilter = tickersInFilter
+                .stream()
+                .map(NolTickerAPI::getIsin)
+                .distinct()
+                .collect(Collectors.toSet()); //get a new hashset
         Set<NolTickerAPI> saveTickersInFilter = new HashSet<>(tickersInFilter);
 
         clearFilter();
 
-        tickerISINSInFilter = saveTickerISINSInFilter;
         tickersInFilter = saveTickersInFilter;
 
         //TODO this logic is potentially buggy, if tickers are added to filter first, then exception occurs,
         // TODO effectively no tickers will be in filter but present in the maps
-        tickerISINSInFilter.addAll(isins);
+        tickersInFilter.addAll(tickers);
 
-        for (String isin : isins) {
-            tickersInFilter.add(tickersMap.get(isin));
-        }
-
-        String tickerString = isinSetToString(tickerISINSInFilter);
+        String tickerString = tickerSetToString(tickersInFilter);
         int errorCode = INSTANCE.AddToFilter(tickerString, false);
         String output = GetResultCodeDesc(errorCode);
         if (errorCode < 0) {
@@ -149,50 +132,21 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
         return output;
     }
 
-    /**
-     * @param tickers a set of refactoredTickerSelector to be appended to filter
-     * @see BossaAPI#addToFilter(Set)
-     */
     @Override
-    public String addTickersToFilter(Set<NolTickerAPI> tickers) {
-        tickers.remove(null);
-        Set<String> isins = tickers
-                .stream()
-                .map(NolTickerAPI::getIsin)
-                .collect(Collectors.toSet());
-        return addToFilter(isins);
-    }
-
-    /**
-     * Removes given refactoredTickerSelector from filter.
-     *
-     * @param isins of refactoredTickerSelector to be removed from filter
-     * @return success message
-     * @throws IllegalStateException if any of given refactoredTickerSelector are not in filter
-     * @see BossaAPI#addToFilter(Set)
-     */
-    @SuppressWarnings("SameReturnValue")
-    private String removeFromFilter(Set<String> isins) throws IllegalStateException {
-        Object[] params = {isins};
-        logger.entering(BossaAPI.class.getName(), "removeTickersFromFilter", params);
-        if (!tickerISINSInFilter.containsAll(isins)) {
-            throw new IllegalArgumentException(isins.removeAll(tickerISINSInFilter) + " not in filter");
+    public String removeTickersFromFilter(Set<NolTickerAPI> tickers) throws IllegalStateException {
+        logger.entering(BossaAPI.class.getName(), "removeTickersFromFilter", tickers);
+        if (!tickersInFilter.containsAll(tickers)) {
+            throw new IllegalArgumentException(tickers.removeAll(tickersInFilter) + " not in filter");
         }
-        tickerISINSInFilter.removeAll(isins);
-        tickersInFilter.removeIf(ticker -> isins.contains(ticker.getIsin()));
+        tickersInFilter.removeAll(tickers);
 
-        if (tickerISINSInFilter.size() > 0) {
-            addToFilter(tickerISINSInFilter);
+        if (tickersInFilter.size() > 0) {
+            addTickersToFilter(tickersInFilter);
         } else {
             clearFilter();
         }
 
-        return "remove from filter"; //safe, exception in addToFilter guards this
-    }
-
-    @Override
-    public String removeTickersFromFilter(Set<NolTickerAPI> tickers) throws IllegalStateException {
-        return removeFromFilter(tickers.stream().map(NolTickerAPI::getIsin).collect(Collectors.toSet()));
+        return "remove from filter"; //safe, exception in addTickersToFilter guards this
     }
     /**
      * TODO test this method, add exception and add javadoc
@@ -224,7 +178,7 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
     }
 
     /**
-     * This method should be invoked before adding papers to filter {@link BossaAPI#addToFilter(Set)}.
+     * This method should be invoked before adding papers to filter.
      * Sets the request for trading session phase and status update.
      *
      * @param val true for update request, false for no request
@@ -278,7 +232,6 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
     @SuppressWarnings("UnusedReturnValue")
     public String clearFilter() {
         logger.entering(BossaAPI.class.getName(), "clearFilter");
-        tickerISINSInFilter.clear();
         tickersInFilter.clear();
         int errorCode = INSTANCE.ClearFilter();
         String message = GetResultCodeDesc(errorCode);
@@ -312,7 +265,7 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
      * @see PropertyAPI
      */
     public static Map<String, PropertyAPI> getPropertyMap() {
-        return propertyMap;
+        return Collections.unmodifiableMap(propertyMap);
     }
 
     /**
@@ -326,7 +279,9 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
     }
 
     //makes a semicolon separated string from given set of strings
-    private static String isinSetToString(Set<String> isins) {
+    private static String tickerSetToString(Set<NolTickerAPI> tickers) {
+        Set<String> isins = tickers.stream().map(NolTickerAPI::getIsin).collect(Collectors.toSet());
+
         StringBuilder filterFormat = new StringBuilder();
         for (String isin : isins) {
             filterFormat.append(isin);
