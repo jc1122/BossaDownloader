@@ -113,8 +113,7 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
      * @return success message
      * @throws IllegalStateException if failed
      */
-    @Override
-    public String addToFilter(Set<String> isins) throws IllegalArgumentException {
+    private String addToFilter(Set<String> isins) throws IllegalArgumentException {
         Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "addToFilter", params);
 
@@ -172,11 +171,10 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
      * @throws IllegalStateException if any of given refactoredTickerSelector are not in filter
      * @see BossaAPI#addToFilter(Set)
      */
-    @Override
     @SuppressWarnings("SameReturnValue")
-    public String removeFromFilter(Set<String> isins) throws IllegalStateException {
+    private String removeFromFilter(Set<String> isins) throws IllegalStateException {
         Object[] params = {isins};
-        logger.entering(BossaAPI.class.getName(), "removeFromFilter", params);
+        logger.entering(BossaAPI.class.getName(), "removeTickersFromFilter", params);
         if (!tickerISINSInFilter.containsAll(isins)) {
             throw new IllegalArgumentException(isins.removeAll(tickerISINSInFilter) + " not in filter");
         }
@@ -192,6 +190,10 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
         return "remove from filter"; //safe, exception in addToFilter guards this
     }
 
+    @Override
+    public String removeTickersFromFilter(Set<NolTickerAPI> tickers) throws IllegalStateException {
+        return removeFromFilter(tickers.stream().map(NolTickerAPI::getIsin).collect(Collectors.toSet()));
+    }
     /**
      * TODO test this method, add exception and add javadoc
      *

@@ -26,9 +26,9 @@ public class Model {
      *
      * @param isins of refactoredTickerSelector to be tracked
      */
-    public String addToFilter(Set<String> isins) {
-        return filterOperations.addToFilter(isins);
-    }
+//    public String addToFilter(Set<String> isins) {
+//        return filterOperations.addToFilter(isins);
+//    }
 
     /**
      * {@link BossaAPI#addTickersToFilter(Set)}
@@ -60,10 +60,10 @@ public class Model {
     /**
      * {@link BossaAPI#removeFromFilter(Set)}
      *
-     * @param isins stop tracking the refactoredTickerSelector with given isins
+     * @param tickers stop tracking the refactoredTickerSelector with given tickers
      */
-    public String removeFromFilter(Set<String> isins) {
-        return filterOperations.removeFromFilter(isins);
+    public String removeTickersFromFilter(Set<NolTickerAPI> tickers) {
+        return filterOperations.removeTickersFromFilter(tickers);
     }
 
     /**

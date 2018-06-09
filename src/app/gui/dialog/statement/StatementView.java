@@ -283,10 +283,10 @@ public class StatementView<K extends StatementModel,
         private final K model;
         private int selectedAccount;
         private List<NolStatementAPI> accountList;
-        private Map<String, Double> positionIsinsPrices;
-        private Map<String, JLabel> positionIsinsLabels;
-        private Map<String, Integer> positionIsinsCount;
-        private Set<String> isinsInModelFilter;
+        private Map<NolTickerAPI, Double> positionTickersPrices;
+        private Map<NolTickerAPI, JLabel> positionTickersLabels;
+        private Map<NolTickerAPI, Integer> positionTickersCount;
+        private Set<NolTickerAPI> tickersInModelFilter;
 
         private final JDialog dialog;
 
@@ -308,12 +308,12 @@ public class StatementView<K extends StatementModel,
             //positionsPanel.setBackground(new Color(133, 133, 233));
             positionsPanel.setLayout(new GridLayout(0, 4));
 
-            positionIsinsPrices = new HashMap<>();
-            positionIsinsLabels = new HashMap<>();
-            positionIsinsCount = new HashMap<>();
+            positionTickersPrices = new HashMap<>();
+            positionTickersLabels = new HashMap<>();
+            positionTickersCount = new HashMap<>();
 
             this.accountList = model.getAccounts(); //TODO will cause error when api is in investor offline status
-            isinsInModelFilter = model.getTickersInFilter().stream().map(NolTickerAPI::getIsin).collect(Collectors.toSet());
+            tickersInModelFilter = model.getTickersInFilter();
             //TODO this may be buggy
             updatePanel(0);
             logger.exiting(this.getClass().getName(), "constructor");
@@ -329,32 +329,32 @@ public class StatementView<K extends StatementModel,
             positionsPanel.add(new JLabel("Blocked for sale"));
             positionsPanel.add(new JLabel("Value"));
 
-            positionIsinsPrices.clear();
-            positionIsinsLabels.clear();
-            positionIsinsCount.clear();
+            positionTickersPrices.clear();
+            positionTickersLabels.clear();
+            positionTickersCount.clear();
 
             //TODO refactor to a set of isins
             List<NolPosAPI> positions = currentAccount.getPositions();
             if (!positions.isEmpty()) {
                 for (NolPosAPI position : positions) {
-                    String isin = position.getTicker().getIsin();
-                    positionIsinsPrices.put(isin, -1.);
-                    positionIsinsLabels.put(isin, new JLabel());
-                    positionIsinsCount.put(isin, -10);
+                    NolTickerAPI ticker = position.getTicker();
+                    positionTickersPrices.put(ticker, -1.);
+                    positionTickersLabels.put(ticker, new JLabel());
+                    positionTickersCount.put(ticker, -10);
                 }
 
                 for (NolPosAPI position : positions) {
-                    String isin = position.getTicker().getIsin();
+                    NolTickerAPI ticker = position.getTicker();
                     positionsPanel.add(new JLabel(position.getTicker().getName()));
                     positionsPanel.add(new JLabel(Integer.toString(position.getAcc110())));
                     positionsPanel.add(new JLabel(Integer.toString(position.getAcc120())));
-                    positionsPanel.add(positionIsinsLabels.get(isin));
-                    positionIsinsCount.replace(isin, position.getAcc110() + position.getAcc120());
+                    positionsPanel.add(positionTickersLabels.get(ticker));
+                    positionTickersCount.replace(ticker, position.getAcc110() + position.getAcc120());
                 }
 
                 //add to filter forces callback, it must be called last, otherwise there may be race condition with code above
                 logger.finest("adding isins to filter, callback execution expected");
-                model.addToFilter(positionIsinsPrices.keySet());
+                model.addTickersToFilter(positionTickersPrices.keySet());
             }
             int preferredHeight = positionsPanel.getPreferredSize().height;
             positionsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, preferredHeight));
@@ -372,10 +372,10 @@ public class StatementView<K extends StatementModel,
             logger.exiting(this.getClass().getName(), "actionPerformed");
         }
 
-        private void updateValues(String isin) {
-            logger.entering(this.getClass().getName(), "updateValues", isin);
-            double price = positionIsinsPrices.get(isin);
-            positionIsinsLabels.get(isin).setText(Double.toString(price));
+        private void updateValues(NolTickerAPI ticker) {
+            logger.entering(this.getClass().getName(), "updateValues", ticker);
+            double price = positionTickersPrices.get(ticker);
+            positionTickersLabels.get(ticker).setText(Double.toString(price));
             logger.exiting(this.getClass().getName(), "updateValues");
         }
 
@@ -391,12 +391,12 @@ public class StatementView<K extends StatementModel,
                     break;
                 case "Quotes":
                     NolRecentInfoAPI quote = (NolRecentInfoAPI) evt.getNewValue();
-                    String isin = quote.getTicker().getIsin();
+                    NolTickerAPI ticker = quote.getTicker();
                     if (quote.getBitMask().get("ReferPrice")) {
-                        this.positionIsinsPrices.replace(isin, quote.getReferPrice() * this.positionIsinsCount.get(isin));
-                        updateValues(isin);
+                        this.positionTickersPrices.replace(ticker, quote.getReferPrice() * this.positionTickersCount.get(ticker));
+                        updateValues(ticker);
                         //remove redundant isin after price updates
-                        if (!isinsInModelFilter.contains(isin)) {
+                        if (!tickersInModelFilter.contains(ticker)) {
 
                             Set<String> tickerISINSinFilter = model
                                     .getTickersInFilter()
@@ -404,10 +404,10 @@ public class StatementView<K extends StatementModel,
                                     .map(NolTickerAPI::getIsin)
                                     .collect(Collectors.toSet());
 
-                            if (tickerISINSinFilter.contains(isin)) {
-                                Set<String> tmp = new HashSet<>();
-                                tmp.add(isin);
-                                model.removeFromFilter(tmp);
+                            if (tickerISINSinFilter.contains(ticker)) {
+                                Set<NolTickerAPI> tmp = new HashSet<>();
+                                tmp.add(ticker);
+                                model.removeTickersFromFilter(tmp);
                             }
                         }
                     }

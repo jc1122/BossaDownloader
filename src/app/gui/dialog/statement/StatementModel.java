@@ -29,11 +29,11 @@ public class StatementModel extends GUIModel {
         return mainModel.getTickersInFilter();
     }
 
-    public void addToFilter(Set<String> isins) {
-        mainModel.addToFilter(isins);
+    public void addTickersToFilter(Set<NolTickerAPI> tickers) {
+        mainModel.addTickersToFilter(tickers);
     }
 
-    public void removeFromFilter(Set<String> isins) {
-        mainModel.removeFromFilter(isins);
+    public void removeTickersFromFilter(Set<NolTickerAPI> isins) {
+        mainModel.removeTickersFromFilter(isins);
     }
 }
