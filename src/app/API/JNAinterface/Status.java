@@ -1,6 +1,5 @@
-package app.API.properties;
+package app.API.JNAinterface;
 
-import app.API.JNAinterface.BossaAPIInterface;
 import app.API.enums.Nol3State;
 
 /**

@@ -1,6 +1,4 @@
-package app.API.nolObjects;
-
-import app.API.JNAinterface.BossaAPIInterface;
+package app.API.JNAinterface;
 
 /**
  * Contains information about funds in portfolio.
@@ -34,9 +32,10 @@ import app.API.JNAinterface.BossaAPIInterface;
  *
  * @see NolStatementAPI
  */
-public final class NolFundAPI extends BossaAPIClassWrapper<NolFundAPI, BossaAPIInterface.NolFund> {
+final class NolFundAPI extends BossaAPIClassWrapper<NolFundAPI, BossaAPIInterface.NolFund> {
 
-    String name, value;
+    private final String name;
+    private final String value;
 
     private NolFundAPI(BossaAPIInterface.NolFund nolFund) {
         this.wrappee = nolFund;

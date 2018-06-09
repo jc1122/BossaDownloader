@@ -1,13 +1,16 @@
-package app.API.nolObjects;
+package app.API.JNAinterface;
 
-import app.API.JNAinterface.BossaAPIInterface;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Stores data of single ticker. Each field is a {@link String}.
  */
 public final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, BossaAPIInterface.NolTicker> {
-    String isin, name, marketCode, cfi, group;
+    private final String isin;
+    private final String name;
+    private final String marketCode;
+    private final String cfi;
+    private final String group;
 
     public NolTickerAPI(BossaAPIInterface.NolTicker wrappee) {
         this.wrappee = wrappee;

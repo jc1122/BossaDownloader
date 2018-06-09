@@ -1,6 +1,6 @@
 package app.gui.dialog.refactoredTickerSelector;
 
-import app.API.nolObjects.NolTickerAPI;
+import app.API.JNAinterface.NolTickerAPI;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;

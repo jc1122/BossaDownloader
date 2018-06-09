@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class BossaAPIInstance {
-    public static final BossaAPIInterface INSTANCE; //TODO make private
+class BossaAPIInstance {
+    static final BossaAPIInterface INSTANCE; //TODO make private
     private static final Logger logger =
             Logger.getLogger(BossaAPIInstance.class.getName());
     static {

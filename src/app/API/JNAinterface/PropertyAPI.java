@@ -1,4 +1,4 @@
-package app.API.properties;
+package app.API.JNAinterface;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -14,9 +14,9 @@ import java.util.logging.Logger;
 //refactoring CallbackHelpers to generic class impossible due to type erasure...
 //cannot map Object type in JNA to multiple classes with typemapper, it would break ordinary type mapping
 public abstract class PropertyAPI<T> {
-    protected final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-    protected T property;
-    protected static final Logger logger =
+    final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    T property;
+    static final Logger logger =
             Logger.getLogger(PropertyAPI.class.getName());
 
 //    private PropertyAPI() {

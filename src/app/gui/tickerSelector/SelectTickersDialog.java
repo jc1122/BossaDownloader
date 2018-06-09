@@ -1,7 +1,7 @@
 package app.gui.tickerSelector;
 
+import app.API.JNAinterface.NolTickerAPI;
 import app.API.enums.TypeOfList;
-import app.API.nolObjects.NolTickerAPI;
 import app.gui.Model;
 
 import javax.swing.*;

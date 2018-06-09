@@ -6,6 +6,6 @@
  * to use the functionality of this package.
  *
  * @author jc1122
- * @see app.API.BossaAPI
+ * @see app.API.JNAinterface.BossaAPI
  */
 package app.API;

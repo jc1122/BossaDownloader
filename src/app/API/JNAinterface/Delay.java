@@ -1,6 +1,4 @@
-package app.API.properties;
-
-import app.API.JNAinterface.BossaAPIInterface;
+package app.API.JNAinterface;
 
 /**
  * Updates delay time to server. This class handles listeners for delay to NOL server.

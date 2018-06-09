@@ -1,6 +1,6 @@
 package app.gui.dialog.SaveToCSV;
 
-import app.API.nolObjects.NolTickerAPI;
+import app.API.JNAinterface.NolTickerAPI;
 import app.gui.dialog.GUIView;
 import app.gui.tickerSelector.TickerTable;
 

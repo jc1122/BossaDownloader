@@ -1,8 +1,6 @@
-package app.API.nolObjects;
+package app.API.JNAinterface;
 
-//import app.API.BossaAPI;
-import app.API.JNAinterface.BossaAPIInstance;
-import app.API.JNAinterface.BossaAPIInterface;
+//import app.API.JNAinterface.BossaAPI;
 import app.API.enums.TypeOfList;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +18,7 @@ public final class NolTickersAPI
         implements AutoCloseable {
     private List<NolTickerAPI> tickerListCache;
 
-    public NolTickersAPI(TypeOfList typeOfList, NolTickerAPI in_ticker) {
+    private NolTickersAPI(TypeOfList typeOfList, NolTickerAPI in_ticker) {
         Object[] params = {typeOfList, in_ticker};
         logger.entering(NolTickersAPI.class.getName(), "Constructor", params);
 
@@ -110,7 +108,7 @@ public final class NolTickersAPI
      *
      * @return list of refactoredTickerSelector
      */
-    public List<NolTickerAPI> getTickersList() throws NullPointerException {
+    private List<NolTickerAPI> getTickersList() throws NullPointerException {
         if (wrappee == null) throw new NullPointerException("Tickers already closed!");
         return tickerListCache;
     }

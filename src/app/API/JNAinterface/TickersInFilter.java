@@ -1,6 +1,4 @@
-package app.API.properties;
-
-import app.API.nolObjects.NolTickerAPI;
+package app.API.JNAinterface;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,6 +1,5 @@
-package app.API.nolObjects;
+package app.API.JNAinterface;
 
-import app.API.JNAinterface.BossaAPIInterface;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,11 +12,12 @@ import java.util.Map;
  */
 public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI, BossaAPIInterface.NolStatement> {
     //private List<NolFundAPI> fundList;
-    private Map<String, Double> fundMap;
-    private List<NolPosAPI> positionList;
+    private final Map<String, Double> fundMap;
+    private final List<NolPosAPI> positionList;
 
-    String name, type;
-    boolean ikeStatus;
+    private final String name;
+    private final String type;
+    private final boolean ikeStatus;
 
     private NolStatementAPI(BossaAPIInterface.NolStatement nolStatement) {
         logger.entering(NolStatementAPI.class.getName(), "Constructor");

@@ -1,6 +1,4 @@
-package app.API.properties;
-
-import app.API.JNAinterface.BossaAPIInterface;
+package app.API.JNAinterface;
 
 /**
  * Updates diagnostic data from NOL3. This class handles listeners for {@link Outlook}

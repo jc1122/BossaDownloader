@@ -1,8 +1,4 @@
-package app.API.properties;
-
-import app.API.JNAinterface.BossaAPIInterface;
-import app.API.nolObjects.NolAggrStatementAPI;
-import app.API.nolObjects.NolStatementAPI;
+package app.API.JNAinterface;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,5 +1,6 @@
 package app.datadownloader;
 
+import app.API.JNAinterface.BossaAPI;
 import app.gui.Controller;
 import app.gui.Model;
 
@@ -15,7 +16,7 @@ public class Main {
         FileInputStream loggingProperties = new FileInputStream("./lib/logging.properties");
         LogManager.getLogManager().readConfiguration(loggingProperties);
 
-        Model model = new Model();
+        Model model = new Model(BossaAPI.API);
         /*SaveToCSVController controller = */
         new Controller(model);
     }

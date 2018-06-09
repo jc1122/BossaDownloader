@@ -1,6 +1,5 @@
-package app.API.nolObjects;
+package app.API.JNAinterface;
 
-import app.API.JNAinterface.BossaAPIInterface;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -10,9 +9,9 @@ import java.util.List;
  *
  * @see NolBidAskTblAPI
  */
-public final class NolBidAskStrAPI extends BossaAPIClassWrapper<NolBidAskStrAPI, BossaAPIInterface.NolBidAskStr> {
+final class NolBidAskStrAPI extends BossaAPIClassWrapper<NolBidAskStrAPI, BossaAPIInterface.NolBidAskStr> {
 
-    List<NolBidAskTblAPI> bidAskList;
+    private final List<NolBidAskTblAPI> bidAskList;
 
     public NolBidAskStrAPI(BossaAPIInterface.NolBidAskStr nolBidAskStr) {
         logger.entering(NolBidAskStrAPI.class.getName(), "Constructor");

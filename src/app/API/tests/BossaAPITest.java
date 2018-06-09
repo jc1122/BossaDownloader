@@ -1,11 +1,11 @@
 package app.API.tests;
 
-import app.API.BossaAPI;
+import app.API.JNAinterface.BossaAPI;
 import app.API.enums.TypeOfList;
-import app.API.nolObjects.NolTickerAPI;
-import app.API.nolObjects.NolTickersAPI;
-import app.API.properties.PropertyAPI;
-import app.API.properties.Quotes;
+import app.API.JNAinterface.NolTickerAPI;
+import app.API.JNAinterface.NolTickersAPI;
+import app.API.JNAinterface.PropertyAPI;
+import app.API.JNAinterface.Quotes;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 

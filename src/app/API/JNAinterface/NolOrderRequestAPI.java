@@ -1,14 +1,22 @@
-package app.API.nolObjects;
+package app.API.JNAinterface;
 
-import app.API.JNAinterface.BossaAPIInterface;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * //TODO check behavior and add javadoc
  */
-public final class NolOrderRequestAPI extends BossaAPIClassWrapper<NolOrderRequestAPI, BossaAPIInterface.NolOrderRequest> {
-    String origID, origID2, acct, side, ordTyp, tmInForce, expireDt, defPayTyp, sessionDt, expireTm;
-    NolTickerAPI ticker;
+final class NolOrderRequestAPI extends BossaAPIClassWrapper<NolOrderRequestAPI, BossaAPIInterface.NolOrderRequest> {
+    private final String origID;
+    private final String origID2;
+    private final String acct;
+    private final String side;
+    private final String ordTyp;
+    private final String tmInForce;
+    private final String expireDt;
+    private final String defPayTyp;
+    private final String sessionDt;
+    private final String expireTm;
+    private final NolTickerAPI ticker;
 
     private NolOrderRequestAPI(BossaAPIInterface.NolOrderRequest nolOrderRequest) {
         logger.exiting(NolOrderRequestAPI.class.getName(), "Constructor");

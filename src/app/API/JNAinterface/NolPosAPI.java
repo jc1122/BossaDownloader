@@ -1,13 +1,12 @@
-package app.API.nolObjects;
+package app.API.JNAinterface;
 
-import app.API.JNAinterface.BossaAPIInterface;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Contains information about position in portfolio.
  */
 public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInterface.NolPos> {
-    NolTickerAPI ticker;
+    private final NolTickerAPI ticker;
 
     private NolPosAPI(BossaAPIInterface.NolPos nolPos) {
         this.wrappee = nolPos;

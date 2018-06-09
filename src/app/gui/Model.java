@@ -1,9 +1,6 @@
 package app.gui;
 
-import app.API.BossaAPI;
-import app.API.nolObjects.NolTickerAPI;
-import app.API.nolObjects.NolTickersAPI;
-import app.API.properties.PropertyAPI;
+import app.API.JNAinterface.*;
 import app.API.enums.TypeOfList;
 
 import java.beans.PropertyChangeListener;
@@ -17,13 +14,20 @@ import java.util.Set;
 public class Model {
     private final Map<String, PropertyAPI> propertyMap = BossaAPI.getPropertyMap();
 
+    private FilterOperations filterOperations;
+
+    public Model(FilterOperations filterOperations) {
+        this.filterOperations = filterOperations;
+    }
+
+
     /**
      * {@link BossaAPI#addToFilter(Set)}
      *
      * @param isins of refactoredTickerSelector to be tracked
      */
     public String addToFilter(Set<String> isins) {
-        return BossaAPI.addToFilter(isins);
+        return filterOperations.addToFilter(isins);
     }
 
     /**
@@ -32,16 +36,7 @@ public class Model {
      * @param tickers to be tracked
      */
     public String addTickersToFilter(Set<NolTickerAPI> tickers) {
-        return BossaAPI.addTickersToFilter(tickers);
-    }
-
-    /**
-     * {@link BossaAPI#getTickerISINSInFilter()}
-     *
-     * @return isins of currently tracked refactoredTickerSelector
-     */
-    public Set<String> getTickerISINSInFilter() {
-        return BossaAPI.getTickerISINSInFilter();
+        return filterOperations.addTickersToFilter(tickers);
     }
 
     /**
@@ -50,7 +45,7 @@ public class Model {
      * @return currently tracked refactoredTickerSelector
      */
     public Set<NolTickerAPI> getTickersInFilter() {
-        return BossaAPI.getTickersInFilter();
+        return filterOperations.getTickersInFilter();
     }
 
     /**
@@ -59,7 +54,7 @@ public class Model {
      * @return message of success or failure
      */
     public String clearFilter() {
-        return BossaAPI.clearFilter();
+        return filterOperations.clearFilter();
     }
 
     /**
@@ -68,7 +63,7 @@ public class Model {
      * @param isins stop tracking the refactoredTickerSelector with given isins
      */
     public String removeFromFilter(Set<String> isins) {
-        return BossaAPI.removeFromFilter(isins);
+        return filterOperations.removeFromFilter(isins);
     }
 
     /**

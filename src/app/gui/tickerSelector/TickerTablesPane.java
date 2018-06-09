@@ -1,6 +1,6 @@
 package app.gui.tickerSelector;
 
-import app.API.nolObjects.NolTickerAPI;
+import app.API.JNAinterface.NolTickerAPI;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

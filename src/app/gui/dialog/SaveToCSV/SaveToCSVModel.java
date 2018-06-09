@@ -1,6 +1,6 @@
 package app.gui.dialog.SaveToCSV;
 
-import app.API.nolObjects.NolTickerAPI;
+import app.API.JNAinterface.NolTickerAPI;
 import app.gui.dialog.GUIModel;
 
 import java.beans.PropertyChangeEvent;

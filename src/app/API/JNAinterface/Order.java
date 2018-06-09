@@ -1,7 +1,4 @@
-package app.API.properties;
-
-import app.API.JNAinterface.BossaAPIInterface;
-import app.API.nolObjects.NolOrderReportAPI;
+package app.API.JNAinterface;
 
 /**
  * Updates information about current orders. This class handles listeners for {@link NolOrderReportAPI}

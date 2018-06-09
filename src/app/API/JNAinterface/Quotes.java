@@ -1,7 +1,4 @@
-package app.API.properties;
-
-import app.API.JNAinterface.BossaAPIInterface;
-import app.API.nolObjects.NolRecentInfoAPI;
+package app.API.JNAinterface;
 
 /**
  * Updates information about quotes. This class handles listeners for {@link NolRecentInfoAPI}

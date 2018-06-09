@@ -1,6 +1,7 @@
 package app.gui.dialog.statement;
 
-import app.API.nolObjects.NolStatementAPI;
+import app.API.JNAinterface.NolStatementAPI;
+import app.API.JNAinterface.NolTickerAPI;
 import app.gui.Model;
 import app.gui.dialog.GUIModel;
 
@@ -24,8 +25,8 @@ public class StatementModel extends GUIModel {
         return (List<NolStatementAPI>) mainModel.getProperty("Accounts");
     }
 
-    public Set<String> getTickerISINSinFilter() {
-        return mainModel.getTickerISINSInFilter();
+    public Set<NolTickerAPI> getTickersInFilter() {
+        return mainModel.getTickersInFilter();
     }
 
     public void addToFilter(Set<String> isins) {

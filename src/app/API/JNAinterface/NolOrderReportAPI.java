@@ -1,15 +1,29 @@
-package app.API.nolObjects;
+package app.API.JNAinterface;
 
-import app.API.JNAinterface.BossaAPIInterface;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * TODO check behavior of this class
  */
-public final class NolOrderReportAPI extends BossaAPIClassWrapper<NolOrderReportAPI, BossaAPIInterface.NolOrderReport> {
-    String ordID, ordID2, statReqID, execID, execTyp, stat, acct, side, ordTyp, ccy, tmInForce, expireDt, txnTm;
-    String defPayTyp, getBizRejRsn, txt, expireTm;
-    NolTickerAPI ticker;
+final class NolOrderReportAPI extends BossaAPIClassWrapper<NolOrderReportAPI, BossaAPIInterface.NolOrderReport> {
+    private final String ordID;
+    private final String ordID2;
+    private final String statReqID;
+    private final String execID;
+    private final String execTyp;
+    private final String stat;
+    private final String acct;
+    private final String side;
+    private final String ordTyp;
+    private final String ccy;
+    private final String tmInForce;
+    private final String expireDt;
+    private final String txnTm;
+    private final String defPayTyp;
+    private final String getBizRejRsn;
+    private final String txt;
+    private final String expireTm;
+    private final NolTickerAPI ticker;
 
     public NolOrderReportAPI(BossaAPIInterface.NolOrderReport nolOrderReport) {
         this.wrappee = nolOrderReport;

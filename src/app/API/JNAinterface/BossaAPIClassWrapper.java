@@ -1,6 +1,6 @@
-package app.API.nolObjects;
+package app.API.JNAinterface;
 
-//import app.API.BossaAPI;
+//import app.API.JNAinterface.BossaAPI;
 import com.sun.jna.Structure;
 
 import java.lang.reflect.Constructor;
@@ -16,8 +16,8 @@ import java.util.logging.Logger;
  * @param <Q> class of the object to be wrapped
  */
 //extracted to help composition
-public abstract class BossaAPIClassWrapper<T, Q extends Structure> {
-    protected static final Logger logger =
+abstract class BossaAPIClassWrapper<T, Q extends Structure> {
+    static final Logger logger =
             Logger.getLogger(BossaAPIClassWrapper.class.getName());
     public Q wrappee; //TODO change to protected
 

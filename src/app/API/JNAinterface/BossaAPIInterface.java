@@ -1,9 +1,7 @@
 package app.API.JNAinterface;
 
-import app.API.*;
-import app.API.enums.OrderType;
-import app.API.nolObjects.*;
 import app.API.enums.Nol3State;
+import app.API.enums.OrderType;
 import app.API.enums.TypeOfList;
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
@@ -16,7 +14,7 @@ import com.sun.jna.Structure;
  * To use higher level functionality, use {@link BossaAPI}.
  */
 @SuppressWarnings({"WeakerAccess", "Convert2Lambda", "unused", "UnusedReturnValue"})
-public interface BossaAPIInterface extends Library {
+interface BossaAPIInterface extends Library {
 
     /**
      * Represents one level of market offers

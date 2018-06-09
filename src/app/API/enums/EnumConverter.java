@@ -1,6 +1,5 @@
 package app.API.enums;
 
-import app.API.enums.JnaEnum;
 import com.sun.jna.FromNativeContext;
 import com.sun.jna.ToNativeContext;
 import com.sun.jna.TypeConverter;

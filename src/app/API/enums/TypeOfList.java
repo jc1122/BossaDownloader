@@ -1,11 +1,10 @@
 package app.API.enums;
 
-import app.API.nolObjects.NolTickersAPI;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Used to set search mode for {@link NolTickersAPI#getTickers}
+ * Used to set search mode for Nol tickers
  */
 @SuppressWarnings("unused")
 public enum TypeOfList implements JnaEnum<TypeOfList> {

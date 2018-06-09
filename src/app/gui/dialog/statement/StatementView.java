@@ -1,8 +1,9 @@
 package app.gui.dialog.statement;
 
-import app.API.nolObjects.NolPosAPI;
-import app.API.nolObjects.NolRecentInfoAPI;
-import app.API.nolObjects.NolStatementAPI;
+import app.API.JNAinterface.NolPosAPI;
+import app.API.JNAinterface.NolRecentInfoAPI;
+import app.API.JNAinterface.NolStatementAPI;
+import app.API.JNAinterface.NolTickerAPI;
 import app.gui.Controller;
 import app.gui.dialog.GUIView;
 
@@ -15,6 +16,7 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class StatementView<K extends StatementModel,
         L extends StatementView<K, L, M>,
@@ -311,7 +313,7 @@ public class StatementView<K extends StatementModel,
             positionIsinsCount = new HashMap<>();
 
             this.accountList = model.getAccounts(); //TODO will cause error when api is in investor offline status
-            isinsInModelFilter = model.getTickerISINSinFilter();
+            isinsInModelFilter = model.getTickersInFilter().stream().map(NolTickerAPI::getIsin).collect(Collectors.toSet());
             //TODO this may be buggy
             updatePanel(0);
             logger.exiting(this.getClass().getName(), "constructor");
@@ -395,7 +397,14 @@ public class StatementView<K extends StatementModel,
                         updateValues(isin);
                         //remove redundant isin after price updates
                         if (!isinsInModelFilter.contains(isin)) {
-                            if (model.getTickerISINSinFilter().contains(isin)) {
+
+                            Set<String> tickerISINSinFilter = model
+                                    .getTickersInFilter()
+                                    .stream()
+                                    .map(NolTickerAPI::getIsin)
+                                    .collect(Collectors.toSet());
+
+                            if (tickerISINSinFilter.contains(isin)) {
                                 Set<String> tmp = new HashSet<>();
                                 tmp.add(isin);
                                 model.removeFromFilter(tmp);

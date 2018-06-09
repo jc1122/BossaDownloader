@@ -1,6 +1,5 @@
-package app.API.nolObjects;
+package app.API.JNAinterface;
 
-import app.API.JNAinterface.BossaAPIInterface;
 import org.jetbrains.annotations.Contract;
 
 import java.util.List;
@@ -10,9 +9,9 @@ import java.util.List;
  *
  * @see NolStatementAPI
  */
-public final class NolAggrStatementAPI extends BossaAPIClassWrapper<NolAggrStatementAPI, BossaAPIInterface.NolAggrStatement> {
+final class NolAggrStatementAPI extends BossaAPIClassWrapper<NolAggrStatementAPI, BossaAPIInterface.NolAggrStatement> {
 
-    private List<NolStatementAPI> statementList;
+    private final List<NolStatementAPI> statementList;
 
     public NolAggrStatementAPI(BossaAPIInterface.NolAggrStatement nolAggrStatement) {
         logger.entering(NolAggrStatementAPI.class.getName(), "Constructor");
