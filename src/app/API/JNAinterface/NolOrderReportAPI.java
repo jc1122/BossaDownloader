@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * TODO check behavior of this class
  */
-final class NolOrderReportAPI extends BossaAPIClassWrapper<NolOrderReportAPI, BossaAPIInterface.NolOrderReport> {
+public final class NolOrderReportAPI extends BossaAPIClassWrapper<NolOrderReportAPI, BossaAPIInterface.NolOrderReport> {
     private final String ordID;
     private final String ordID2;
     private final String statReqID;

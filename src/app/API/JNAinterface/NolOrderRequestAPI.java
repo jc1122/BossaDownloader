@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * //TODO check behavior and add javadoc
  */
-final class NolOrderRequestAPI extends BossaAPIClassWrapper<NolOrderRequestAPI, BossaAPIInterface.NolOrderRequest> {
+public final class NolOrderRequestAPI extends BossaAPIClassWrapper<NolOrderRequestAPI, BossaAPIInterface.NolOrderRequest> {
     private final String origID;
     private final String origID2;
     private final String acct;

@@ -1,7 +1,12 @@
 package app.gui;
 
+import app.API.FilterOperations;
 import app.API.JNAenums.TypeOfList;
-import app.API.JNAinterface.*;
+import app.API.JNAinterface.NolTickerAPI;
+import app.API.JNAinterface.NolTickersAPI;
+import app.API.OnOffOperations;
+import app.API.Properties;
+import app.API.PropertyAPI;
 
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -9,29 +14,22 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Communicates with NOL3 using {@link BossaAPI}.
+ * Communicates with NOL3.
  */
 public class Model {
-    private final Map<String, PropertyAPI> propertyMap = BossaAPI.getPropertyMap();
+    private final Map<String, PropertyAPI> propertyMap;// = Properties.getPropertyMap();
 
-    private FilterOperations filterOperations;
+    private final FilterOperations filterOperations;
+    private final OnOffOperations onOff;
 
-    public Model(FilterOperations filterOperations) {
+    public Model(FilterOperations filterOperations, Properties properties, OnOffOperations onOff) {
         this.filterOperations = filterOperations;
+        this.propertyMap = properties.getPropertyMap();
+        this.onOff = onOff;
     }
 
 
     /**
-     * {@link BossaAPI#addToFilter(Set)}
-     *
-     * @param isins of refactoredTickerSelector to be tracked
-     */
-//    public String addToFilter(Set<String> isins) {
-//        return filterOperations.addToFilter(isins);
-//    }
-
-    /**
-     * {@link BossaAPI#addTickersToFilter(Set)}
      *
      * @param tickers to be tracked
      */
@@ -40,7 +38,6 @@ public class Model {
     }
 
     /**
-     * {@link BossaAPI#getTickersInFilter()}
      *
      * @return currently tracked refactoredTickerSelector
      */
@@ -49,7 +46,6 @@ public class Model {
     }
 
     /**
-     * {@link BossaAPI#clearFilter()}
      *
      * @return message of success or failure
      */
@@ -58,7 +54,7 @@ public class Model {
     }
 
     /**
-     * {@link BossaAPI#removeFromFilter(Set)}
+     *
      *
      * @param tickers stop tracking the refactoredTickerSelector with given tickers
      */
@@ -67,35 +63,33 @@ public class Model {
     }
 
     /**
-     * {@link BossaAPI#initialize()}
+
      *
      * @return success or error message
      */
     public String initialize() {
-        return BossaAPI.initialize();
+        return onOff.initialize();
     }
 
     /**
-     * {@link BossaAPI#shutdown()}
      *
      * @return success or error message
      */
     public String shutdown() {
-        return BossaAPI.shutdown();
+        return onOff.shutdown();
     }
 
     /**
-     * {@link BossaAPI#getVersion()}
      *
      * @return success or error message
      */
     public String getVersion() {
-        return BossaAPI.getVersion();
+        return onOff.getVersion();
     }
 
     /**
      * The {@code listener} will be added to each property which inherits from {@link PropertyAPI}
-     * and is stored in {@link BossaAPI#getPropertyMap()}.
+     * and is stored
      *
      * @param listener callback for property
      */
@@ -107,7 +101,7 @@ public class Model {
 
     /**
      * The {@code listener} will be removed from each property which inherits from {@link PropertyAPI}
-     * and is stored in {@link BossaAPI#getPropertyMap()}.
+     * and is stored
      *
      * @param listener callback for property
      */
@@ -118,7 +112,6 @@ public class Model {
     }
 
     /**
-     * {@link PropertyAPI#getProperty()}
      *
      * @param property any property of {@link PropertyAPI}
      * @return property, will need to be cast to appropriate class (class name should be the same as property name)

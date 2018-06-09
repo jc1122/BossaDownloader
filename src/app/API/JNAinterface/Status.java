@@ -1,6 +1,7 @@
 package app.API.JNAinterface;
 
 import app.API.JNAenums.Nol3State;
+import app.API.PropertyAPI;
 
 /**
  * Updates info about current NOL3 app status. This class handles listeners for {@link Nol3State}

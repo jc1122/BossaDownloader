@@ -1,5 +1,7 @@
 package app.API.JNAinterface;
 
+import app.API.PropertyAPI;
+
 /**
  * Updates information about current orders. This class handles listeners for {@link NolOrderReportAPI}
  *

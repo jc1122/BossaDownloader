@@ -1,4 +1,6 @@
-package app.API.JNAinterface;
+package app.API;
+
+import app.API.JNAinterface.NolTickerAPI;
 
 import java.util.Set;
 

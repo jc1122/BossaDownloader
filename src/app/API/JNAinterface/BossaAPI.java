@@ -1,6 +1,8 @@
 package app.API.JNAinterface;
 
+import app.API.*;
 import app.API.JNAenums.OrderType;
+import app.API.Properties;
 
 import java.beans.PropertyChangeListener;
 import java.util.*;
@@ -16,7 +18,7 @@ import java.util.stream.Collectors;
  * <p> ALL methods of this class are <i>static</i></p>
  */
 @SuppressWarnings({"unused", "Convert2MethodRef", "Convert2Lambda", "WeakerAccess"})
-public enum BossaAPI implements FilterOperations, OrderOperations {
+public enum BossaAPI implements FilterOperations, OrderOperations, Properties, OnOffOperations {
     API;
 
     private static final BossaAPIInterface INSTANCE; //TODO make private
@@ -53,7 +55,8 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
      * @return intialization comment, will return only commentary about successful init
      * @throws IllegalStateException if unsuccessful
      */
-    public static String initialize() throws IllegalStateException {
+    @Override
+    public String initialize() throws IllegalStateException {
         logger.entering(BossaAPI.class.toString(), "initialize");
         InitializeObservers();
         int errorCode = INSTANCE.Initialize("BOS;BOS"); //the only accepted AppId by server
@@ -201,7 +204,7 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
 
 
     // function for describing errors
-    public static String GetResultCodeDesc(int code) {    /* code returned by function */
+    private static String GetResultCodeDesc(int code) {    /* code returned by function */
         logger.entering(BossaAPI.class.getName(), "GetResultCodeDesc", code);
         String message = INSTANCE.GetResultCodeDesc(code);
         logger.exiting(BossaAPI.class.getName(), "GetResultCodeDesc", message);
@@ -214,7 +217,8 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
      * @return showVersion
      */
     // function for getting the information about verson of dll
-    public static String getVersion() {
+    @Override
+    public String getVersion() {
         logger.entering(BossaAPI.class.getName(), "getVersion");
         String version = INSTANCE.Get_Version();
         logger.exiting(BossaAPI.class.getName(), "getVersion", version);
@@ -249,7 +253,8 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
      *
      * @return message
      */
-    public static String shutdown() {
+    @Override
+    public String shutdown() {
         logger.entering(BossaAPI.class.getName(), "shutdown");
         int errorCode = INSTANCE.Shutdown();
         String message = GetResultCodeDesc(INSTANCE.Shutdown());
@@ -264,7 +269,8 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
      * @return property names associated with instance of property class
      * @see PropertyAPI
      */
-    public static Map<String, PropertyAPI> getPropertyMap() {
+    @Override
+    public Map<String, PropertyAPI> getPropertyMap() {
         return Collections.unmodifiableMap(propertyMap);
     }
 
