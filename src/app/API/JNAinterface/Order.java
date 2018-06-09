@@ -5,9 +5,10 @@ package app.API.JNAinterface;
  *
  * @see NolOrderReportAPI
  */
-public final class Order extends PropertyAPI<NolOrderReportAPI> implements BossaAPIInterface.SetCallbackOrderDummy {
+public final class Order extends PropertyAPI<NolOrderReportAPI> {
     //private NolOrderReportAPI nolOrderReportAPI;
     private static final Order INSTANCE = new Order();
+    private static final OrderCallbackHelper CALLBACK_HELPER = INSTANCE.new OrderCallbackHelper();
 
     private Order() {
     }
@@ -17,7 +18,11 @@ public final class Order extends PropertyAPI<NolOrderReportAPI> implements Bossa
         return INSTANCE;
     }
 
+    static OrderCallbackHelper getCallbackHelper() {
+        return CALLBACK_HELPER;
+    }
 
+    final class OrderCallbackHelper implements BossaAPIInterface.SetCallbackOrderDummy {
         @Override
         public void invoke(BossaAPIInterface.NolOrderReport nolOrderReport) {
             logger.exiting(this.getClass().getName(), "invoke");
@@ -28,4 +33,5 @@ public final class Order extends PropertyAPI<NolOrderReportAPI> implements Bossa
                     .propertyChangeSupport
                     .firePropertyChange("Order", oldVal, Order.this.property);
         }
+    }
 }

@@ -1,7 +1,7 @@
 package app.API.JNAinterface;
 
-import app.API.enums.EnumConverter;
-import app.API.enums.JnaEnum;
+import app.API.JNAenums.EnumConverter;
+import app.API.JNAenums.JnaEnum;
 import com.sun.jna.DefaultTypeMapper;
 import com.sun.jna.FunctionMapper;
 import com.sun.jna.Library;

@@ -1,7 +1,7 @@
 package app.API.JNAinterface;
 
-import app.API.enums.OrderType;
-import app.API.enums.TypeOfList;
+import app.API.JNAenums.OrderType;
+import app.API.JNAenums.TypeOfList;
 
 import java.beans.PropertyChangeListener;
 import java.util.*;
@@ -68,7 +68,7 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
         }
         SetTradingSess(true);
         //the observable below must be initialized after the lib is initialized, otherwise "lib is not inicialized" error
-        INSTANCE.SetCallback(Quotes.getInstance());
+        INSTANCE.SetCallback(Quotes.getCallbackHelper());
 
         List<NolTickerAPI> tickers = NolTickersAPI.getTickers(TypeOfList.ALL, null);
         for (NolTickerAPI ticker : tickers) {
@@ -87,11 +87,11 @@ public enum BossaAPI implements FilterOperations, OrderOperations {
         logger.entering(BossaAPI.class.getName(), "InitializeObservers");
         //this below is messy, and could easily be cleaned using generics, however JNA will complain about
         //custom type mapping of Object type if you try to use generics
-        INSTANCE.SetCallbackStatus(Status.getInstance());
-        INSTANCE.SetCallbackAccount(Accounts.getInstance());
-        INSTANCE.SetCallbackDelay(Delay.getInstance());
-        INSTANCE.SetCallbackOrder(Order.getInstance());
-        INSTANCE.SetCallbackOutlook(Outlook.getInstance());
+        INSTANCE.SetCallbackStatus(Status.getCallbackHelper());
+        INSTANCE.SetCallbackAccount(Accounts.getCallbackHelper());
+        INSTANCE.SetCallbackDelay(Delay.getCallbackHelper());
+        INSTANCE.SetCallbackOrder(Order.getCallbackHelper());
+        INSTANCE.SetCallbackOutlook(Outlook.getCallbackHelper());
         logger.exiting(BossaAPI.class.getName(), "InitializeObservers");
     }
 

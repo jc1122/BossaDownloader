@@ -1,7 +1,7 @@
 package app.gui;
 
+import app.API.JNAenums.TypeOfList;
 import app.API.JNAinterface.*;
-import app.API.enums.TypeOfList;
 
 import java.beans.PropertyChangeListener;
 import java.util.List;

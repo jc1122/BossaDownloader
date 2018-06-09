@@ -1,8 +1,8 @@
 package app.API.JNAinterface;
 
-import app.API.enums.OrderType;
+import app.API.JNAenums.OrderType;
 
-public interface OrderOperations {
+interface OrderOperations {
     String APIOrderRequest(
             NolOrderRequestAPI nolorderrequest,
             NolOrderReportAPI nolorderreport,

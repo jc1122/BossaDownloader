@@ -1,7 +1,7 @@
-package app.API.enums;
+package app.API.JNAenums;
 
 /**
- * Maps C type enums to Java enums. See <a href="http://technofovea.com/blog/archives/815">here</a> for details.
+ * Maps C type JNAenums to Java JNAenums. See <a href="http://technofovea.com/blog/archives/815">here</a> for details.
  *
  * @param <T> mapped enum should implement JnaEnum
  */

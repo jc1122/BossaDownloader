@@ -13,7 +13,7 @@ final class NolAggrStatementAPI extends BossaAPIClassWrapper<NolAggrStatementAPI
 
     private final List<NolStatementAPI> statementList;
 
-    public NolAggrStatementAPI(BossaAPIInterface.NolAggrStatement nolAggrStatement) {
+    NolAggrStatementAPI(BossaAPIInterface.NolAggrStatement nolAggrStatement) {
         logger.entering(NolAggrStatementAPI.class.getName(), "Constructor");
         this.wrappee = nolAggrStatement;
         this.statementList = BossaAPIClassWrapper.convertPointerToListHelper(wrappee.size, wrappee.ptrstate, NolStatementAPI.class);

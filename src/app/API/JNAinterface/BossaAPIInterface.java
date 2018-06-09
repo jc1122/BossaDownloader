@@ -1,8 +1,8 @@
 package app.API.JNAinterface;
 
-import app.API.enums.Nol3State;
-import app.API.enums.OrderType;
-import app.API.enums.TypeOfList;
+import app.API.JNAenums.Nol3State;
+import app.API.JNAenums.OrderType;
+import app.API.JNAenums.TypeOfList;
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
 import com.sun.jna.Structure;

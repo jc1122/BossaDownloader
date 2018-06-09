@@ -1,7 +1,8 @@
 package app.API.JNAinterface;
 
 //import app.API.JNAinterface.BossaAPI;
-import app.API.enums.TypeOfList;
+
+import app.API.JNAenums.TypeOfList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

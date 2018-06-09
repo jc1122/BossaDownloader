@@ -1,4 +1,4 @@
-package app.API.enums;
+package app.API.JNAenums;
 
 import com.sun.jna.FromNativeContext;
 import com.sun.jna.ToNativeContext;

@@ -8,10 +8,10 @@ import java.util.List;
  *
  * @see NolStatementAPI
  */
-public final class Accounts extends PropertyAPI<List<NolStatementAPI>> implements BossaAPIInterface.SetCallbackAccountDummy {
+public final class Accounts extends PropertyAPI<List<NolStatementAPI>> {
     //private NolAggrStatementAPI nolAggrStatementAPI;
     private static final Accounts INSTANCE = new Accounts();
-
+    private static final AccountsCallbackHelper CALLBACK_HELPER = INSTANCE.new AccountsCallbackHelper();
     private Accounts() {
     }
 
@@ -20,6 +20,11 @@ public final class Accounts extends PropertyAPI<List<NolStatementAPI>> implement
         return INSTANCE;
     }
 
+    static AccountsCallbackHelper getCallbackHelper() {
+        return CALLBACK_HELPER;
+    }
+
+    final class AccountsCallbackHelper implements BossaAPIInterface.SetCallbackAccountDummy {
         @Override
         public void invoke(BossaAPIInterface.NolAggrStatement nolAggrStatement) {
             logger.exiting(this.getClass().getName(), "invoke");
@@ -32,4 +37,5 @@ public final class Accounts extends PropertyAPI<List<NolStatementAPI>> implement
                     .firePropertyChange(
                             "Accounts", statementList, Accounts.this.property);
         }
+    }
 }

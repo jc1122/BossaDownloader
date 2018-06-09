@@ -1,15 +1,16 @@
 package app.API.JNAinterface;
 
-import app.API.enums.Nol3State;
+import app.API.JNAenums.Nol3State;
 
 /**
  * Updates info about current NOL3 app status. This class handles listeners for {@link Nol3State}
  *
  * @see Nol3State
  */
-public final class Status extends PropertyAPI<Nol3State> implements BossaAPIInterface.SetCallbackStatusDummy{
+public final class Status extends PropertyAPI<Nol3State> {
 
     private static final Status INSTANCE = new Status();
+    private static final Status.StatusCallbackHelper CALLBACK_HELPER = INSTANCE.new StatusCallbackHelper();
 
     private Status() {
     }
@@ -19,6 +20,11 @@ public final class Status extends PropertyAPI<Nol3State> implements BossaAPIInte
         return INSTANCE;
     }
 
+    static StatusCallbackHelper getCallbackHelper() {
+        return CALLBACK_HELPER;
+    }
+
+    final class StatusCallbackHelper implements BossaAPIInterface.SetCallbackStatusDummy {
         @Override
         public void invoke(Nol3State nol3State) {
             logger.exiting(this.getClass().getName(), "invoke");
@@ -26,4 +32,6 @@ public final class Status extends PropertyAPI<Nol3State> implements BossaAPIInte
             Status.this.property = nol3State;
             Status.this.propertyChangeSupport.firePropertyChange("Status", oldVal, property);
         }
+    }
 }
+

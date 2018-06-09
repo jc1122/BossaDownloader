@@ -1,7 +1,7 @@
 package app.gui.dialog.refactoredTickerSelector;
 
+import app.API.JNAenums.TypeOfList;
 import app.API.JNAinterface.NolTickerAPI;
-import app.API.enums.TypeOfList;
 import app.gui.Model;
 import app.gui.dialog.GUIModel;
 

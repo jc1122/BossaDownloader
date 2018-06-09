@@ -3,9 +3,10 @@ package app.API.JNAinterface;
 /**
  * Updates delay time to server. This class handles listeners for delay to NOL server.
  */
-public final class Delay extends PropertyAPI<Float> implements BossaAPIInterface.SetCallbackDelayDummy {
+public final class Delay extends PropertyAPI<Float> {
 
     private static final Delay INSTANCE = new Delay();
+    private static final DelayCallbackHelper CALLBACK_HELPER = INSTANCE.new DelayCallbackHelper();
 
     private Delay() {
     }
@@ -15,6 +16,11 @@ public final class Delay extends PropertyAPI<Float> implements BossaAPIInterface
         return INSTANCE;
     }
 
+    static DelayCallbackHelper getCallbackHelper() {
+        return CALLBACK_HELPER;
+    }
+
+    final class DelayCallbackHelper implements BossaAPIInterface.SetCallbackDelayDummy {
         @Override
         public void invoke(float delay) {
             logger.exiting(this.getClass().getName(), "invoke");
@@ -22,4 +28,5 @@ public final class Delay extends PropertyAPI<Float> implements BossaAPIInterface
             Delay.this.property = delay;
             Delay.this.propertyChangeSupport.firePropertyChange("Delay", oldVal, delay);
         }
+    }
 }

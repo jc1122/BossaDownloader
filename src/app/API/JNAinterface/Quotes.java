@@ -5,9 +5,11 @@ package app.API.JNAinterface;
  *
  * @see NolRecentInfoAPI
  */
-public final class Quotes extends PropertyAPI<NolRecentInfoAPI> implements BossaAPIInterface.SetCallbackDummy {
+public final class Quotes extends PropertyAPI<NolRecentInfoAPI> {
 
     private static final Quotes INSTANCE = new Quotes();
+    private static final QuotesCallbackHelper CALLBACK_HELPER = INSTANCE.new QuotesCallbackHelper();
+
     //private NolRecentInfoAPI nolRecentInfoAPI;
 
     private Quotes() {
@@ -18,6 +20,11 @@ public final class Quotes extends PropertyAPI<NolRecentInfoAPI> implements Bossa
         return INSTANCE;
     }
 
+    static QuotesCallbackHelper getCallbackHelper() {
+        return CALLBACK_HELPER;
+    }
+
+    class QuotesCallbackHelper implements BossaAPIInterface.SetCallbackDummy {
         @Override
         public void invoke(BossaAPIInterface.NolRecentInfo nolrecentinfo) {
             logger.entering(this.getClass().getName(), "invoke");
@@ -29,4 +36,5 @@ public final class Quotes extends PropertyAPI<NolRecentInfoAPI> implements Bossa
                     .firePropertyChange("Quotes", oldValue, property);
             logger.exiting(this.getClass().getName(), "invoke", property);
         }
+    }
 }

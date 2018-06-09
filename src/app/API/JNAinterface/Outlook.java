@@ -5,9 +5,10 @@ package app.API.JNAinterface;
  *
  * @see Outlook
  */
-public final class Outlook extends PropertyAPI<String> implements BossaAPIInterface.SetCallbackOutlookDummy {
+public final class Outlook extends PropertyAPI<String> {
     //private String outlook;
     private static final Outlook INSTANCE = new Outlook();
+    private static final OutlookCallbackHelper CALLBACK_HELPER = INSTANCE.new OutlookCallbackHelper();
 
     private Outlook() {
     }
@@ -17,6 +18,11 @@ public final class Outlook extends PropertyAPI<String> implements BossaAPIInterf
         return INSTANCE;
     }
 
+    static OutlookCallbackHelper getCallbackHelper() {
+        return CALLBACK_HELPER;
+    }
+
+    class OutlookCallbackHelper implements BossaAPIInterface.SetCallbackOutlookDummy {
         @Override
         public void invoke(String outlook) {
             logger.exiting(this.getClass().getName(), "invoke");
@@ -24,4 +30,5 @@ public final class Outlook extends PropertyAPI<String> implements BossaAPIInterf
             Outlook.this.property = outlook;
             Outlook.this.propertyChangeSupport.firePropertyChange("Outlook", oldVal, outlook);
         }
+    }
 }
