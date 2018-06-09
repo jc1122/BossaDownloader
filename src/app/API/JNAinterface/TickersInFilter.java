@@ -1,22 +1,23 @@
 package app.API.JNAinterface;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class TickersInFilter extends PropertyAPI<Set<NolTickerAPI>> {
+final class TickersInFilter extends PropertyAPI<Set<NolTickerAPI>> {
     private static final TickersInFilter INSTANCE = new TickersInFilter();
 
     private TickersInFilter() {
         this.property = new HashSet<>();
     }
 
-    public static TickersInFilter getInstance() {
+    static TickersInFilter getInstance() {
         return INSTANCE;
     }
 
     public void update(Set<NolTickerAPI> tickersInFilter) {
         Set<NolTickerAPI> oldValue = this.property;
-        this.property = tickersInFilter;
+        this.property = Collections.unmodifiableSet(tickersInFilter);
         this.propertyChangeSupport.firePropertyChange("TickersInFilter", oldValue, this.property);
     }
 

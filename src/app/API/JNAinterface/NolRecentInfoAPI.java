@@ -4,6 +4,7 @@ package app.API.JNAinterface;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,27 +43,28 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
 
     private final NolBidAskStrAPI offers;
     private final NolTickerAPI ticker;
-    private String bitMask;
+    private final String bitMask;
     private final String toLT;
     private final String phase;
     private final String status;
     private final Map<String, Boolean> fieldInMessage;
 
-    public NolRecentInfoAPI(BossaAPIInterface.NolRecentInfo nolRecentInfo) {
+    NolRecentInfoAPI(BossaAPIInterface.NolRecentInfo nolRecentInfo) {
+        super(nolRecentInfo);
         logger.entering(NolRecentInfoAPI.class.getName(), "Constructor");
-        this.wrappee = nolRecentInfo;
         offers = new NolBidAskStrAPI(wrappee.offers);
         ticker = new NolTickerAPI(wrappee.ticker);
-        bitMask = Integer.toBinaryString(wrappee.BitMask);
+
         toLT = new String(wrappee.ToLT).trim();
         phase = new String(wrappee.Phase).trim();
         status = new String(wrappee.Status).trim();
         fieldInMessage = new HashMap<>();
 
+        String tmpBitMask = Integer.toBinaryString(wrappee.BitMask);
         //fill with zeros to get 32 bits
-        bitMask = new String(new char[32 - bitMask.length()]).replace("\0", "0") + bitMask;
+        tmpBitMask = new String(new char[32 - tmpBitMask.length()]).replace("\0", "0") + tmpBitMask;
         //reverse to get youngest bits at start
-        bitMask = new StringBuilder(bitMask).reverse().toString();
+        bitMask = new StringBuilder(tmpBitMask).reverse().toString();
 
 
         if (this.getError() < 0) {
@@ -71,18 +73,10 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
             logger.finer(e.getMessage());
             throw e;
         }
+        fillBitMask();
     }
 
-    /**
-     * Returned map contains information, if a given field is valid.
-     * The keys to the map are property names of this object, see {@link NolRecentInfoAPI} for property names.
-     * {@code True} for filled filled {@code False} for unfilled.
-     *
-     * @return map of property names associated with a boolean value
-     */
-    @Contract(pure = true)
-    public Map<String, Boolean> getBitMask() {
-        logger.exiting(NolRecentInfoAPI.class.getName(), "getBitMask", wrappee.BitMask);
+    private void fillBitMask() {
         char[] arrayBitMask = bitMask.toCharArray();
         fieldInMessage.put("ValoLT", arrayBitMask[0] == '1');
         fieldInMessage.put("VoLT", arrayBitMask[1] == '1');
@@ -107,7 +101,19 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
         fieldInMessage.put("ReferPrice", arrayBitMask[20] == '1');
         fieldInMessage.put("Offers", arrayBitMask[21] == '1');
         fieldInMessage.put("Error", arrayBitMask[22] == '1');
-        return fieldInMessage;
+    }
+
+    /**
+     * Returned map contains information, if a given field is valid.
+     * The keys to the map are property names of this object, see {@link NolRecentInfoAPI} for property names.
+     * {@code True} for filled filled {@code False} for unfilled.
+     *
+     * @return map of property names associated with a boolean value
+     */
+    @Contract(pure = true)
+    public Map<String, Boolean> getBitMask() {
+        logger.exiting(NolRecentInfoAPI.class.getName(), "getBitMask", wrappee.BitMask);
+        return Collections.unmodifiableMap(fieldInMessage);
     }
 
     @NotNull

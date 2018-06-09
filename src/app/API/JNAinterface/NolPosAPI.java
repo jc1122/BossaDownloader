@@ -8,8 +8,9 @@ import org.jetbrains.annotations.NotNull;
 public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInterface.NolPos> {
     private final NolTickerAPI ticker;
 
+    //constructor accessed by reflection
     private NolPosAPI(BossaAPIInterface.NolPos nolPos) {
-        this.wrappee = nolPos;
+        super(nolPos);
         this.ticker = new NolTickerAPI(wrappee.ticker);
     }
 

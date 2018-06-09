@@ -5,7 +5,7 @@ package app.API.JNAinterface;
  *
  * @see NolOrderReportAPI
  */
-public final class Order extends PropertyAPI<NolOrderReportAPI> {
+final class Order extends PropertyAPI<NolOrderReportAPI> {
     //private NolOrderReportAPI nolOrderReportAPI;
     private static final Order INSTANCE = new Order();
     private static final OrderCallbackHelper CALLBACK_HELPER = INSTANCE.new OrderCallbackHelper();

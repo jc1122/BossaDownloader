@@ -17,10 +17,13 @@ import java.util.logging.Logger;
  */
 //extracted to help composition
 abstract class BossaAPIClassWrapper<T, Q extends Structure> {
-    static final Logger logger =
+    protected static final Logger logger =
             Logger.getLogger(BossaAPIClassWrapper.class.getName());
-    public Q wrappee; //TODO change to protected
+    protected final Q wrappee; //TODO change to protected
 
+    protected BossaAPIClassWrapper(Q wrappee) {
+        this.wrappee = wrappee;
+    }
     /**
      * Method used to convert Java Native Access mapped pointer to array of given class,
      * to Java List of wrapper class. Pointer class must extend {@link Structure} or implement
@@ -35,7 +38,7 @@ abstract class BossaAPIClassWrapper<T, Q extends Structure> {
      */
     //TODO this may be converted to Set instead of List
     static <U extends Structure,
-            T extends BossaAPIClassWrapper<? extends BossaAPIClassWrapper, U>>
+            T extends BossaAPIClassWrapper<? extends BossaAPIClassWrapper<T, U>, U>> //added type parameters to bossa api class wrapper
     List<T> convertPointerToListHelper(int size, U pointer, Class<T> wrapperClass) {
         Object[] params = {size, pointer, wrapperClass};
         logger.entering(BossaAPIClassWrapper.class.toString(), "convertPointerToListHelper", params);

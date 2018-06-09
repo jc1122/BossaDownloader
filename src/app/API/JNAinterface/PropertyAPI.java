@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  * Provides {@link PropertyChangeSupport} for callbacks of API and wraps property.
  * Property may be accessed only after it has been initialized!
  * Property name should be the same as the name of class inheriting from this class.
- * //TODO abstract getInstance of all child classes
+ * Child classes should be immutable.
  * @param <T> class of wrapped property
  */
 //refactoring CallbackHelpers to generic class impossible due to type erasure...

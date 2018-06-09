@@ -8,8 +8,9 @@ import org.jetbrains.annotations.Contract;
  */
 final class NolBidAskTblAPI extends BossaAPIClassWrapper<NolBidAskTblAPI, BossaAPIInterface.NolBidAskTbl> {
 
+    //this constructor is accessed by reflection
     private NolBidAskTblAPI(BossaAPIInterface.NolBidAskTbl nolBidAskTbl) {
-        this.wrappee = nolBidAskTbl;
+        super(nolBidAskTbl);
     }
 
     /**

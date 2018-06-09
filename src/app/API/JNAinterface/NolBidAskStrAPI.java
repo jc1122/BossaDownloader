@@ -13,15 +13,14 @@ final class NolBidAskStrAPI extends BossaAPIClassWrapper<NolBidAskStrAPI, BossaA
 
     private final List<NolBidAskTblAPI> bidAskList;
 
-    public NolBidAskStrAPI(BossaAPIInterface.NolBidAskStr nolBidAskStr) {
+    NolBidAskStrAPI(BossaAPIInterface.NolBidAskStr nolBidAskStr) {
+        super(nolBidAskStr);
         logger.entering(NolBidAskStrAPI.class.getName(), "Constructor");
-        this.wrappee = nolBidAskStr;
         bidAskList = BossaAPIClassWrapper.convertPointerToListHelper(wrappee.offersize, wrappee.bidask_table,
                 NolBidAskTblAPI.class);
     }
 
-    @NotNull
-    public List<NolBidAskTblAPI> getBidask_table() {
+    @NotNull List<NolBidAskTblAPI> getBidask_table() {
         logger.exiting(NolBidAskStrAPI.class.getName(), "getBidask_table", bidAskList);
         return bidAskList;
     }

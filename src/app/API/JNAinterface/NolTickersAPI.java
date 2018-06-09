@@ -5,6 +5,7 @@ package app.API.JNAinterface;
 import app.API.JNAenums.TypeOfList;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,13 +18,14 @@ import java.util.List;
 public final class NolTickersAPI
         extends BossaAPIClassWrapper<NolTickersAPI, BossaAPIInterface.NolTickers>
         implements AutoCloseable {
-    private List<NolTickerAPI> tickerListCache;
+    private final List<NolTickerAPI> tickerListCache;
 
+    //accessed by reflection
     private NolTickersAPI(TypeOfList typeOfList, NolTickerAPI in_ticker) {
+        super(BossaAPIInstance.INSTANCE.InitListTickers());
         Object[] params = {typeOfList, in_ticker};
         logger.entering(NolTickersAPI.class.getName(), "Constructor", params);
 
-        this.wrappee = BossaAPIInstance.INSTANCE.InitListTickers();
         if (in_ticker == null) {
             if (typeOfList.getIntValue() > 0) {
                 IllegalArgumentException e =
@@ -94,7 +96,6 @@ public final class NolTickersAPI
     @Override
     public void close() {
         int errorCode = BossaAPIInstance.INSTANCE.ReleaseTickersList(wrappee);
-        wrappee = null;
         if (errorCode < 0) {
             //String message = //BossaAPI.GetResultCodeDesc(errorCode);
             IllegalStateException e = new IllegalStateException(Integer.toString(errorCode));
@@ -111,7 +112,7 @@ public final class NolTickersAPI
      */
     private List<NolTickerAPI> getTickersList() throws NullPointerException {
         if (wrappee == null) throw new NullPointerException("Tickers already closed!");
-        return tickerListCache;
+        return Collections.unmodifiableList(tickerListCache);
     }
 
     @Override

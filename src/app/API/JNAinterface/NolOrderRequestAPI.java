@@ -19,8 +19,8 @@ final class NolOrderRequestAPI extends BossaAPIClassWrapper<NolOrderRequestAPI, 
     private final NolTickerAPI ticker;
 
     private NolOrderRequestAPI(BossaAPIInterface.NolOrderRequest nolOrderRequest) {
+        super(nolOrderRequest);
         logger.exiting(NolOrderRequestAPI.class.getName(), "Constructor");
-        this.wrappee = nolOrderRequest;
 
         origID = new String(wrappee.OrigID).trim();
         origID2 = new String(wrappee.OrdID2).trim();
@@ -35,115 +35,115 @@ final class NolOrderRequestAPI extends BossaAPIClassWrapper<NolOrderRequestAPI, 
         ticker = new NolTickerAPI(wrappee.ticker);
     }
 
-    public int getBitMask() {
+    int getBitMask() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getBitMask", wrappee.BitMask);
         return wrappee.BitMask;
     }
 
     @NotNull
-    public String getOrigID() {
+    String getOrigID() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getOrigID");
         return origID;
     }
 
     @NotNull
-    public String getOrdID() {
+    String getOrdID() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getOrdID");
         return new String(wrappee.OrdID).trim();
     }
 
     @NotNull
-    public String getOrdID2() {
+    String getOrdID2() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getOrdID2");
         return origID2;
     }
 
     @NotNull
-    public String getAcct() {
+    String getAcct() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getAcct");
         return acct;
     }
 
-    public int getMinQty() {
+    int getMinQty() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getMinQty", wrappee.MinQty);
         return wrappee.MinQty;
     }
 
-    public int getDisplayQty() {
+    int getDisplayQty() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getDisplayQty", wrappee.DisplayQty);
         return wrappee.DisplayQty;
     }
 
     @NotNull
-    public NolTickerAPI getTicker() {
+    NolTickerAPI getTicker() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getTicker");
         return ticker;
     }
 
     @NotNull
-    public String getSide() {
+    String getSide() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getSide");
         return side;
     }
 
-    public int getQty() {
+    int getQty() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getQty");
         return wrappee.Qty;
     }
 
     @NotNull
-    public String getOrdTyp() {
+    String getOrdTyp() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getOrdTyp");
         return ordTyp;
     }
 
-    public float getPx() {
+    float getPx() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getPx");
         return wrappee.Px;
     }
 
-    public float getStopPx() {
+    float getStopPx() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getStopPx");
         return wrappee.StopPx;
     }
 
     @NotNull
-    public String getCcy() {
+    String getCcy() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getCcy");
         return new String(wrappee.Ccy).trim();
     }
 
     @NotNull
-    public String getTmInForce() {
+    String getTmInForce() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getTmInForce");
         return tmInForce;
     }
 
     @NotNull
-    public String getExpireDt() {
+    String getExpireDt() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getExpireDt");
         return expireDt;
     }
 
-    public float getTrgrPx() {
+    float getTrgrPx() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getTrgrPx");
         return wrappee.TrgrPx;
     }
 
     @NotNull
-    public String getDefPayTyp() {
+    String getDefPayTyp() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getDefPayTyp");
         return defPayTyp;
     }
 
     @NotNull
-    public String getSessionDt() {
+    String getSessionDt() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getSessionDt");
         return sessionDt;
     }
 
     @NotNull
-    public String getExpireTm() {
+    String getExpireTm() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getExpireTm");
         return expireTm;
     }

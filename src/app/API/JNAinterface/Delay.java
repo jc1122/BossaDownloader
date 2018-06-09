@@ -3,7 +3,7 @@ package app.API.JNAinterface;
 /**
  * Updates delay time to server. This class handles listeners for delay to NOL server.
  */
-public final class Delay extends PropertyAPI<Float> {
+final class Delay extends PropertyAPI<Float> {
 
     private static final Delay INSTANCE = new Delay();
     private static final DelayCallbackHelper CALLBACK_HELPER = INSTANCE.new DelayCallbackHelper();
@@ -11,7 +11,7 @@ public final class Delay extends PropertyAPI<Float> {
     private Delay() {
     }
 
-    public static Delay getInstance() {
+    static Delay getInstance() {
         logger.exiting(Delay.class.getName(), "getInstance");
         return INSTANCE;
     }

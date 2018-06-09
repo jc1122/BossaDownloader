@@ -37,13 +37,14 @@ final class NolFundAPI extends BossaAPIClassWrapper<NolFundAPI, BossaAPIInterfac
     private final String name;
     private final String value;
 
+    //this constructor is accessed by reflection
     private NolFundAPI(BossaAPIInterface.NolFund nolFund) {
-        this.wrappee = nolFund;
+        super(nolFund);
         name = new String(wrappee.name).trim();
         value = new String(wrappee.value).trim();
     }
 
-    public String getName() {
+    String getName() {
         logger.exiting(NolFundAPI.class.getName(), "getName");
         return name;
     }
@@ -51,7 +52,7 @@ final class NolFundAPI extends BossaAPIClassWrapper<NolFundAPI, BossaAPIInterfac
     /**
      * @return cash value
      */
-    public String getValue() {
+    String getValue() {
         logger.exiting(NolFundAPI.class.getName(), "getValue");
         return value;
     }

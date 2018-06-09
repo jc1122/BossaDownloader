@@ -12,13 +12,13 @@ public final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, Bossa
     private final String cfi;
     private final String group;
 
-    public NolTickerAPI(BossaAPIInterface.NolTicker wrappee) {
-        this.wrappee = wrappee;
-        isin = new String(wrappee.Isin).trim();
-        name = new String(wrappee.Name).trim();
-        marketCode = new String(wrappee.MarketCode).trim();
-        cfi = new String(wrappee.CFI).trim();
-        group = new String(wrappee.Group).trim();
+    NolTickerAPI(BossaAPIInterface.NolTicker nolTicker) {
+        super(nolTicker);
+        isin = new String(nolTicker.Isin).trim();
+        name = new String(nolTicker.Name).trim();
+        marketCode = new String(nolTicker.MarketCode).trim();
+        cfi = new String(nolTicker.CFI).trim();
+        group = new String(nolTicker.Group).trim();
     }
 
     /**

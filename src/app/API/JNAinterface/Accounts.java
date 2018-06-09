@@ -8,14 +8,14 @@ import java.util.List;
  *
  * @see NolStatementAPI
  */
-public final class Accounts extends PropertyAPI<List<NolStatementAPI>> {
+final class Accounts extends PropertyAPI<List<NolStatementAPI>> {
     //private NolAggrStatementAPI nolAggrStatementAPI;
     private static final Accounts INSTANCE = new Accounts();
     private static final AccountsCallbackHelper CALLBACK_HELPER = INSTANCE.new AccountsCallbackHelper();
     private Accounts() {
     }
 
-    public static Accounts getInstance() {
+    static Accounts getInstance() {
         logger.exiting(Accounts.class.getName(), "getInstance");
         return INSTANCE;
     }

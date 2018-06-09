@@ -5,7 +5,7 @@ package app.API.JNAinterface;
  *
  * @see NolRecentInfoAPI
  */
-public final class Quotes extends PropertyAPI<NolRecentInfoAPI> {
+final class Quotes extends PropertyAPI<NolRecentInfoAPI> {
 
     private static final Quotes INSTANCE = new Quotes();
     private static final QuotesCallbackHelper CALLBACK_HELPER = INSTANCE.new QuotesCallbackHelper();
@@ -15,7 +15,7 @@ public final class Quotes extends PropertyAPI<NolRecentInfoAPI> {
     private Quotes() {
     }
 
-    public static Quotes getInstance() {
+    static Quotes getInstance() {
         logger.exiting(Quotes.class.getName(), "getInstance");
         return INSTANCE;
     }

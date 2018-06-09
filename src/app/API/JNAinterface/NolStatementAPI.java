@@ -3,6 +3,7 @@ package app.API.JNAinterface;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +20,11 @@ public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI,
     private final String type;
     private final boolean ikeStatus;
 
+    //accessed through reflection
     private NolStatementAPI(BossaAPIInterface.NolStatement nolStatement) {
+        super(nolStatement);
         logger.entering(NolStatementAPI.class.getName(), "Constructor");
-        this.wrappee = nolStatement;
+
         name = new String(wrappee.name).trim();
         ikeStatus = new String(wrappee.ike).trim().equals("T");
         type = new String(wrappee.type).trim();
@@ -80,7 +83,7 @@ public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI,
     @Contract(pure = true)
     public Map<String, Double> getFundMap() {
         logger.exiting(NolStatementAPI.class.getName(), "getFundMap", fundMap);
-        return fundMap;
+        return Collections.unmodifiableMap(fundMap);
     }
 
     /**

@@ -7,7 +7,7 @@ import app.API.JNAenums.Nol3State;
  *
  * @see Nol3State
  */
-public final class Status extends PropertyAPI<Nol3State> {
+final class Status extends PropertyAPI<Nol3State> {
 
     private static final Status INSTANCE = new Status();
     private static final Status.StatusCallbackHelper CALLBACK_HELPER = INSTANCE.new StatusCallbackHelper();
@@ -15,7 +15,7 @@ public final class Status extends PropertyAPI<Nol3State> {
     private Status() {
     }
 
-    public static Status getInstance() {
+    static Status getInstance() {
         logger.exiting(Status.class.getName(), "getInstance");
         return INSTANCE;
     }
