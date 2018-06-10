@@ -19,8 +19,6 @@ public abstract class PropertyAPI<T> {
     protected static final Logger logger =
             Logger.getLogger(PropertyAPI.class.getName());
 
-//    private PropertyAPI() {
-//    }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         logger.exiting(this.getClass().getName(), "addPropertyChangeListener");
