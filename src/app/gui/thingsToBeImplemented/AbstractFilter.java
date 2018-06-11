@@ -2,7 +2,6 @@ package app.gui.thingsToBeImplemented;
 
 import app.API.FilterOperations;
 import app.API.JNAinterface.NolTickerAPI;
-import app.API.JNAinterface.NolTickersAPI;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,20 +12,22 @@ public abstract class AbstractFilter implements FilterOperations {
     /**
      * map tickers in filter to the composites watching it
      */
-    HashMap<NolTickerAPI, Set<AbstractFilter>> tickerWatchers;
-    /**
-     * children of this composite
-     */
-    HashSet<AbstractFilter> composites;
+    private final HashMap<NolTickerAPI, Set<AbstractFilter>> tickerWatchers;
+
+    public AbstractFilter getParent() {
+        return parent;
+    }
+
+    protected AbstractFilter(AbstractFilter parent) {
+        this.parent = parent;
+        tickerWatchers = new HashMap<>();
+    }
+
     /**
      * parent of this component, valid only for non-master nodes, top node should be a different implementation of
      * this class than the children
      */
-    AbstractFilter parent;
-    /**
-     * tickers currently in filter, this should be indentical to keyset of tickerWatchers
-     */
-    HashSet<NolTickersAPI> tickers;
+    protected final AbstractFilter parent;
 
     /**
      * Add tickers to this filter and all of its parent filters
@@ -37,12 +38,11 @@ public abstract class AbstractFilter implements FilterOperations {
     @Override
     public String addTickersToFilter(Set<NolTickerAPI> tickers) {
         addToWatchers(tickers, this);
-        parent.addToWatchers(tickers, this);
         return null;
     }
 
     /**
-     * For given set of tickers, add a new watcher of each of them.
+     * For given set of tickers, add a new watcher of each of them. Propagate through all parents.
      *
      * @param tickers
      * @param watcher
@@ -57,6 +57,9 @@ public abstract class AbstractFilter implements FilterOperations {
                 tickerWatchers.put(ticker, watchers);
             }
         }
+        if (parent != null) {
+            parent.addToWatchers(tickers, watcher);
+        }
     }
 
     /**
@@ -70,12 +73,12 @@ public abstract class AbstractFilter implements FilterOperations {
     @Override
     public String removeTickersFromFilter(Set<NolTickerAPI> tickers) throws IllegalStateException {
         //need to copy the keys, or they will get lost during intersection
-        Set<NolTickerAPI> intersection = new HashSet<>();
-        intersection.addAll(tickerWatchers.keySet());
+        Set<NolTickerAPI> intersection = new HashSet<>(tickerWatchers.keySet());
         intersection.retainAll(tickers);
 
-        //now remove tickers from each watcher child
+        //now remove tickers from each watcher child;
         for (NolTickerAPI ticker : intersection) {
+            tickerWatchers.get(ticker).remove(this); //without this will be infinite loop
             tickerWatchers.get(ticker).forEach(e -> removeTickersFromFilter(tickers));
         }
         removeFromParentFilters(tickers, this);
@@ -83,8 +86,7 @@ public abstract class AbstractFilter implements FilterOperations {
     }
 
     protected void removeFromParentFilters(Set<NolTickerAPI> tickers, AbstractFilter child) {
-        Set<NolTickerAPI> intersection = new HashSet<>();
-        intersection.addAll(tickerWatchers.keySet());
+        Set<NolTickerAPI> intersection = new HashSet<>(tickerWatchers.keySet());
         intersection.retainAll(tickers);
 
         //now remove tickers from each watcher child
@@ -96,6 +98,7 @@ public abstract class AbstractFilter implements FilterOperations {
 
     @Override
     public String clearFilter() {
+        removeTickersFromFilter(this.tickerWatchers.keySet());
         return null;
     }
 
