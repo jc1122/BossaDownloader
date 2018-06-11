@@ -11,7 +11,7 @@ public interface FilterOperations {
     String addTickersToFilter(Set<NolTickerAPI> tickers);
 
     @SuppressWarnings("SameReturnValue")
-    String removeTickersFromFilter(Set<NolTickerAPI> isins) throws IllegalStateException;
+    String removeTickersFromFilter(Set<NolTickerAPI> tickers) throws IllegalStateException;
 
     //clear filter before adding new papers
     @SuppressWarnings("UnusedReturnValue")
