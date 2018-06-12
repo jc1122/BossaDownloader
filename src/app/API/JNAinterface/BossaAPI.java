@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * <p> ALL methods of this class are <i>static</i></p>
  */
 @SuppressWarnings({"unused", "Convert2MethodRef", "Convert2Lambda", "WeakerAccess"})
-public enum BossaAPI implements FilterOperations, OrderOperations, Properties, OnOffOperations {
+public enum BossaAPI implements FilterOperations<NolTickerAPI>, OrderOperations, Properties, OnOffOperations {
     API;
 
     private static final BossaAPIInterface INSTANCE; //TODO make private

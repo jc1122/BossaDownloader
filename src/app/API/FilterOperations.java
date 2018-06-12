@@ -4,18 +4,18 @@ import app.API.JNAinterface.NolTickerAPI;
 
 import java.util.Set;
 
-public interface FilterOperations {
+public interface FilterOperations<T> {
     //@Deprecated
     //String addToFilter(Set<String> isins) throws IllegalArgumentException;
 
-    String addTickersToFilter(Set<NolTickerAPI> tickers);
+    String addTickersToFilter(Set<T> tickers);
 
     @SuppressWarnings("SameReturnValue")
-    String removeTickersFromFilter(Set<NolTickerAPI> tickers) throws IllegalStateException;
+    String removeTickersFromFilter(Set<T> tickers) throws IllegalStateException;
 
     //clear filter before adding new papers
     @SuppressWarnings("UnusedReturnValue")
     String clearFilter();
 
-    Set<NolTickerAPI> getTickersInFilter();
+    Set<T> getTickersInFilter();
 }
