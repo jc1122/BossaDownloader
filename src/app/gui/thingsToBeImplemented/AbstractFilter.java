@@ -10,24 +10,32 @@ import java.util.Set;
 //TODO implement this class, this should be fun as it is recurrence
 public abstract class AbstractFilter<T> implements FilterOperations<T> {
     /**
+     * parent of this component, valid only for non-master nodes, top node should be a different implementation of
+     * this class than the children
+     */
+    private final AbstractFilter<T> parent;
+
+    private final Set<AbstractFilter<T>> childs;
+    /**
      * map tickers in filter to the composites watching it
      */
     private final HashMap<T, Set<AbstractFilter<T>>> tickerWatchers;
 
+    AbstractFilter(AbstractFilter<T> parent) {
+        this.parent = parent;
+        tickerWatchers = new HashMap<>();
+        childs = new HashSet<>();
+        if(parent != null) {
+            parent.addChild(this);
+        }
+    }
+
+    public void addChild(AbstractFilter<T> filter) {
+        this.childs.add(filter);
+    }
     public AbstractFilter getParent() {
         return parent;
     }
-
-    protected AbstractFilter(AbstractFilter<String> parent) {
-        this.parent = parent;
-        tickerWatchers = new HashMap<>();
-    }
-
-    /**
-     * parent of this component, valid only for non-master nodes, top node should be a different implementation of
-     * this class than the children
-     */
-    protected final AbstractFilter parent;
 
     /**
      * Add tickers to this filter and all of its parent filters
@@ -72,33 +80,31 @@ public abstract class AbstractFilter<T> implements FilterOperations<T> {
      */
     @Override
     public String removeTickersFromFilter(Set<T> tickers) throws IllegalStateException {
-        //need to copy the keys, or they will get lost during intersection
-        Set<T> intersection = new HashSet<>(tickerWatchers.keySet());
-        intersection.retainAll(tickers);
-
-        //now remove tickers from each watcher child;
-        for (T ticker : intersection) {
-            Set<AbstractFilter<T>> watchers = tickerWatchers.get(ticker);
-            boolean value = watchers.remove(this); //without this will be infinite loop
-            watchers.forEach(e -> removeFromParentFilters(tickers, e));
-            if(tickerWatchers.get(ticker).isEmpty()) {
-                tickerWatchers.remove(ticker);
-            }
-        }
+        removeFromParent(tickers, this);
+        removeFromChilds(tickers);
         return null;
     }
 
-    protected void removeFromParentFilters(Set<T> tickers, AbstractFilter<T> child) {
-        Set<T> intersection = new HashSet<>(tickerWatchers.keySet());
-        intersection.retainAll(tickers);
-
-        child.removeTickersFromFilter(tickers);
-
+    private void removeFromParent(Set<T> tickers, AbstractFilter<T> filter) {
+        for(T ticker : tickers) {
+            if(this.tickerWatchers.get(ticker) != null) {
+                this.tickerWatchers.get(ticker).remove(filter);
+            }
+        }
         if(parent != null) {
-            parent.removeFromParentFilters(tickers, child);
+            parent.removeFromParent(tickers, filter);
         }
     }
 
+    private void removeFromChilds(Set<T> tickers) {
+        for(AbstractFilter<T> filter : childs) {
+            filter.removeFromParent(tickers, filter);
+            filter.removeFromChilds(tickers);
+        }
+        for(T ticker : tickers) {
+            this.tickerWatchers.remove(ticker);
+        }
+    }
     @Override
     public String clearFilter() {
         removeTickersFromFilter(this.tickerWatchers.keySet());
@@ -112,5 +118,10 @@ public abstract class AbstractFilter<T> implements FilterOperations<T> {
 
     public Set<AbstractFilter<T>> getWatchers(T ticker) {
         return tickerWatchers.get(ticker);
+    }
+
+    @Override
+    public void finalize() {
+        removeTickersFromFilter(getTickersInFilter());
     }
 }
