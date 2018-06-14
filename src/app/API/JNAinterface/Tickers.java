@@ -21,6 +21,14 @@ public class Tickers extends PropertyAPI<Set<Ticker>, String> {
 
     private Tickers() {
         super("Tickers");
-        property = Collections.unmodifiableSet(new HashSet<>(NolTickersAPI.getTickers(TypeOfList.ALL, null)));
+
+    }
+
+    @Override
+    public Set<Ticker> getValue() {
+        if (property == null) {
+            property = Collections.unmodifiableSet(new HashSet<>(NolTickersAPI.getTickers(TypeOfList.ALL, null)));
+        }
+        return super.getValue();
     }
 }

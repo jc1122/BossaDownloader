@@ -1,9 +1,9 @@
 package app.gui.dialog.statement;
 
-//import app.API.JNAinterface.Position;
+
 import app.API.JNAinterface.NolRecentInfoAPI;
-import app.API.JNAinterface.NolStatementAPI;
-import app.API.JNAinterface.Position;
+import app.API.PublicAPI.Position;
+import app.API.PublicAPI.Statement;
 import app.API.PublicAPI.Ticker;
 import app.gui.Controller;
 import app.gui.dialog.GUIView;
@@ -65,7 +65,7 @@ public class StatementView<K extends StatementModel,
         private final JPanel accountPanel;
         private final JComboBox<String> accountNameComboBox;
 
-        private List<NolStatementAPI> accountList;
+        private List<Statement> accountList;
 
         AccountPane(K model) {
             logger.entering(this.getClass().getName(), "constructor", model);
@@ -107,7 +107,7 @@ public class StatementView<K extends StatementModel,
 
             int index = accountNameComboBox.getSelectedIndex();
 
-            this.accountList = (List<NolStatementAPI>) evt.getNewValue();
+            this.accountList = (List<Statement>) evt.getNewValue();
             synchronized (this) {
                 logger.finest("entering synchronized block");
                 //need to remove listeners before calling removeAllItems, or listeners will be notified of that
@@ -133,9 +133,9 @@ public class StatementView<K extends StatementModel,
             logger.exiting(this.getClass().getName(), "addAccountSelectionListener");
         }
 
-        private void addAccountsToComboBox(List<NolStatementAPI> accounts) {
+        private void addAccountsToComboBox(List<Statement> accounts) {
             logger.entering(this.getClass().getName(), "addAccountSelectionListener", accounts);
-            for (NolStatementAPI account : accounts) {
+            for (Statement account : accounts) {
                 accountNameComboBox.addItem(account.getName());
             }
             logger.exiting(this.getClass().getName(), "addAccountSelectionListener", accounts);
@@ -155,7 +155,7 @@ public class StatementView<K extends StatementModel,
         private JLabel accountTypeStatusLabel;
         private Map<String, JLabel> statementLabels;
         private Map<String, JLabel> statementValues;
-        private List<NolStatementAPI> accountList;
+        private List<Statement> accountList;
 
         private int selectedAccount;
 
@@ -230,7 +230,7 @@ public class StatementView<K extends StatementModel,
 
         private void updateStatementPanel(int index) {
             logger.entering(this.getClass().getName(), "updateStatementPanel", index);
-            NolStatementAPI defaultAccount = accountList.get(Math.max(index, 0)); //Max is just in case, when no element = -1  selected
+            Statement defaultAccount = accountList.get(Math.max(index, 0)); //Max is just in case, when no element = -1  selected
             ikeStatusLabel.setText(defaultAccount.getIke() ? "True" : "False");
             accountTypeStatusLabel.setText(defaultAccount.getType().equals("M") ? "Cash" : "Futures");
 
@@ -256,7 +256,7 @@ public class StatementView<K extends StatementModel,
             if (!evt.getPropertyName().equals("Accounts"))
                 return;
             //noinspection unchecked
-            this.accountList = (List<NolStatementAPI>) evt.getNewValue();
+            this.accountList = (List<Statement>) evt.getNewValue();
             updateStatementPanel(this.selectedAccount);
             logger.exiting(this.getClass().getName(), "propertyChange");
         }
@@ -283,7 +283,7 @@ public class StatementView<K extends StatementModel,
         private JPanel positionsPanel;
         private final K model;
         private int selectedAccount;
-        private List<NolStatementAPI> accountList;
+        private List<Statement> accountList;
         private Map<Ticker, Double> positionTickersPrices;
         private Map<Ticker, JLabel> positionTickersLabels;
         private Map<Ticker, Integer> positionTickersCount;
@@ -322,7 +322,7 @@ public class StatementView<K extends StatementModel,
 
         private synchronized void updatePanel(int index) {
             logger.entering(this.getClass().getName(), "updatePanel", index);
-            NolStatementAPI currentAccount = accountList.get(index);
+            Statement currentAccount = accountList.get(index);
 
             positionsPanel.removeAll();
             positionsPanel.add(new JLabel("Ticker"));
@@ -386,7 +386,7 @@ public class StatementView<K extends StatementModel,
             switch (evt.getPropertyName()) {
                 case "Accounts":
                     //noinspection unchecked
-                    this.accountList = (List<NolStatementAPI>) evt.getNewValue();
+                    this.accountList = (List<Statement>) evt.getNewValue();
                     updatePanel(this.selectedAccount);
                     logger.finest("updated account panel");
                     break;

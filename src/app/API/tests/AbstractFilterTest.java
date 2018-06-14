@@ -1,4 +1,4 @@
-package app.gui.thingsToBeImplemented;
+package app.API.PublicAPI;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,32 +1,45 @@
-package app.gui.thingsToBeImplemented;
+package app.API.PublicAPI;
 
-import app.API.PublicAPI.FilterOperations;
+import app.API.JNAinterface.BossaAPI;
 
+import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class AbstractFilter<T> implements FilterOperations<T> {
+/**
+ * Adds listener to quotes. Manages watched tickers. Generic was only used for testing. Remove generics in the future.
+ * TODO remove generics
+ *
+ * @param <T>
+ */
+public abstract class AbstractFilter<T> implements FilterOperations<T>, PropertyChangeListener {
     /**
      * parent of this component, valid only for non-master nodes, top node should be a different implementation of
      * this class than the children
      */
     private final AbstractFilter<T> parent;
-
     private final Set<AbstractFilter<T>> childs;
+
     /**
      * map tickers in filter to the composites watching it
      */
     private final HashMap<T, Set<AbstractFilter<T>>> tickerWatchers;
 
-    AbstractFilter(AbstractFilter<T> parent) {
+    public AbstractFilter() {
+        this(null);
+    }
+
+    public AbstractFilter(AbstractFilter<T> parent) {
         this.parent = parent;
         tickerWatchers = new HashMap<>();
         childs = new HashSet<>();
+        BossaAPI.API.getProperty("Quotes").addPropertyChangeListener(this);
         if(parent != null) {
             parent.addChild(this);
         }
+
     }
 
     public void addChild(AbstractFilter<T> filter) {
@@ -122,5 +135,6 @@ public abstract class AbstractFilter<T> implements FilterOperations<T> {
     @Override
     public void finalize() {
         removeTickersFromFilter(getTickersInFilter());
+        BossaAPI.API.getProperty("Quotes").removePropertyChangeListener(this);
     }
 }

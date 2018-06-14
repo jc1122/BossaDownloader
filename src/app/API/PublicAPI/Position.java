@@ -1,6 +1,5 @@
-package app.API.JNAinterface;
+package app.API.PublicAPI;
 
-import app.API.PublicAPI.Ticker;
 import org.jetbrains.annotations.NotNull;
 
 public interface Position {

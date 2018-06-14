@@ -14,11 +14,15 @@ public class Model implements FilterOperations<Ticker>, Properties<String, Prope
 
     private final FilterOperations<Ticker> filterOperations;
     private final OnOffOperations onOff;
+    private final AbstractFilter<Ticker> modelFilter;
 
-    public Model(FilterOperations<Ticker> filterOperations, Properties<String, PropertyAPI<?,String>> properties, OnOffOperations onOff) {
-        this.filterOperations = filterOperations;
+    public Model(Properties<String, PropertyAPI<?, String>> properties, OnOffOperations onOff) {
+
         this.properties = properties;
         this.onOff = onOff;
+
+        modelFilter = new DefaultFilter();
+        this.filterOperations = modelFilter;
     }
 
 
@@ -129,6 +133,7 @@ public class Model implements FilterOperations<Ticker>, Properties<String, Prope
      * @param property any property of {@link PropertyAPI}
      * @return property, will need to be cast to appropriate class (class name should be the same as property name)
      */
+    @Override
     public PropertyAPI<?,String> getProperty(String property) {
         return properties.getProperty(property);
     }

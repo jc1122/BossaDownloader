@@ -1,5 +1,7 @@
 package app.API.JNAinterface;
 
+import app.API.PublicAPI.Position;
+import app.API.PublicAPI.Statement;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +13,7 @@ import java.util.Map;
 /**
  * Stores information about trading account.
  */
-public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI, BossaAPIInterface.NolStatement> {
+public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI, BossaAPIInterface.NolStatement> implements Statement {
     //private List<NolFundAPI> fundList;
     private final Map<String, Double> fundMap;
     private final List<Position> positionList;
@@ -44,6 +46,7 @@ public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI,
      *
      * @return account number
      */
+    @Override
     @NotNull
     public String getName() {
         logger.exiting(NolStatementAPI.class.getName(), "getName");
@@ -56,6 +59,7 @@ public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI,
      *
      * @return ike status
      */
+    @Override
     public boolean getIke() {
         logger.exiting(NolStatementAPI.class.getName(), "getIke");
         return ikeStatus;
@@ -68,6 +72,7 @@ public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI,
      *
      * @return account type
      */
+    @Override
     @NotNull
     public String getType() {
         logger.exiting(NolStatementAPI.class.getName(), "getType");
@@ -80,6 +85,7 @@ public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI,
      * @return map
      * @see NolFundAPI
      */
+    @Override
     @Contract(pure = true)
     public Map<String, Double> getFundMap() {
         logger.exiting(NolStatementAPI.class.getName(), "getFundMap", fundMap);
@@ -91,6 +97,7 @@ public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI,
      *
      * @return positions
      */
+    @Override
     @Contract(pure = true)
     public List<Position> getPositions() {
         logger.exiting(NolStatementAPI.class.getName(), "getPositions", fundMap);

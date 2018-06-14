@@ -16,7 +16,7 @@ public class Main {
         FileInputStream loggingProperties = new FileInputStream("./lib/logging.properties");
         LogManager.getLogManager().readConfiguration(loggingProperties);
 
-        Model model = new Model(BossaAPI.API, BossaAPI.API, BossaAPI.API);
+        Model model = new Model(BossaAPI.API, BossaAPI.API);
         /*SaveToCSVController controller = */
         new Controller(model);
     }

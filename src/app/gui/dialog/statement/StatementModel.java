@@ -1,6 +1,6 @@
 package app.gui.dialog.statement;
 
-import app.API.JNAinterface.NolStatementAPI;
+import app.API.PublicAPI.Statement;
 import app.API.PublicAPI.Ticker;
 import app.gui.Model;
 import app.gui.dialog.GUIModel;
@@ -21,8 +21,8 @@ public class StatementModel extends GUIModel {
         }
     }
 
-    public List<NolStatementAPI> getAccounts() {
-        return (List<NolStatementAPI>) mainModel.getProperty("Accounts");
+    public List<Statement> getAccounts() {
+        return (List<Statement>) mainModel.getProperty("Accounts").getValue();
     }
 
     public Set<Ticker> getTickersInFilter() {

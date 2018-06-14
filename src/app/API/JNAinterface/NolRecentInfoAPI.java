@@ -106,7 +106,6 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
 
     /**
      * Returned map contains information, if a given field is valid.
-     * The keys to the map are property names of this object, see {@link NolRecentInfoAPI} for property names.
      * {@code True} for filled filled {@code False} for unfilled.
      *
      * @return map of property names associated with a boolean value

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * <p> ALL methods of this class are <i>static</i></p>
  */
 @SuppressWarnings({"unused", "Convert2MethodRef", "Convert2Lambda", "WeakerAccess"})
-public enum BossaAPI implements FilterOperations<Ticker>, OrderOperations, Properties<String, PropertyAPI<?, String>>, OnOffOperations {
+public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<?, String>>, OnOffOperations {
     API;
 
     private static final BossaAPIInterface INSTANCE; //TODO make private
@@ -40,7 +40,7 @@ public enum BossaAPI implements FilterOperations<Ticker>, OrderOperations, Prope
         propertyMap.put(Delay.getInstance().getName(), Delay.getInstance());
         propertyMap.put(Order.getInstance().getName(), Order.getInstance());
         propertyMap.put(Outlook.getInstance().getName(), Outlook.getInstance());
-        propertyMap.put(TickersInFilter.getInstance().getName(), TickersInFilter.getInstance());
+        propertyMap.put(Filter.getInstance().getName(), Filter.getInstance());
         propertyMap.put(Tickers.getInstance().getName(), Tickers.getInstance());
         logger.finest("Finished initializing static");
     }
@@ -93,9 +93,7 @@ public enum BossaAPI implements FilterOperations<Ticker>, OrderOperations, Prope
     /**
      * @param tickers a set of refactoredTickerSelector to be appended to filter
      */
-
-    @Override
-    public String addTickersToFilter(Set<Ticker> tickers) {
+    String addTickersToFilter(Set<Ticker> tickers) {
         tickers.remove(null);
         Set<String> isins = tickers
                 .stream()
@@ -104,12 +102,6 @@ public enum BossaAPI implements FilterOperations<Ticker>, OrderOperations, Prope
         Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "addToFilter", params);
 
-        //need to be saved, or will be cleared by clearFilter
-        Set<String> saveTickerISINSInFilter = tickersInFilter
-                .stream()
-                .map(Ticker::getIsin)
-                .distinct()
-                .collect(Collectors.toSet()); //get a new hashset
         Set<Ticker> saveTickersInFilter = new HashSet<>(tickersInFilter);
 
         clearFilter();
@@ -131,12 +123,11 @@ public enum BossaAPI implements FilterOperations<Ticker>, OrderOperations, Prope
 
         logger.exiting(BossaAPI.class.getName(), "addToFilter", output);
         //noinspection LawOfDemeter
-        TickersInFilter.getInstance().update(tickersInFilter);
+        Filter.getInstance().update(tickersInFilter);
         return output;
     }
 
-    @Override
-    public String removeTickersFromFilter(Set<Ticker> tickers) throws IllegalStateException {
+    String removeTickersFromFilter(Set<Ticker> tickers) throws IllegalStateException {
         logger.entering(BossaAPI.class.getName(), "removeTickersFromFilter", tickers);
         if (!tickersInFilter.containsAll(tickers)) {
             throw new IllegalArgumentException(tickers.removeAll(tickersInFilter) + " not in filter");
@@ -232,9 +223,7 @@ public enum BossaAPI implements FilterOperations<Ticker>, OrderOperations, Prope
      * @return success or error message
      */
     //clear filter before adding new papers
-    @Override
-    @SuppressWarnings("UnusedReturnValue")
-    public String clearFilter() {
+    String clearFilter() {
         logger.entering(BossaAPI.class.getName(), "clearFilter");
         tickersInFilter.clear();
         int errorCode = INSTANCE.ClearFilter();
@@ -306,7 +295,7 @@ public enum BossaAPI implements FilterOperations<Ticker>, OrderOperations, Prope
 
     @Override
     public PropertyAPI<?, String> getProperty(String name) {
-        return null;
+        return propertyMap.get(name);
     }
 
     /**
@@ -314,8 +303,7 @@ public enum BossaAPI implements FilterOperations<Ticker>, OrderOperations, Prope
      *
      * @return set of refactoredTickerSelector currently in filter
      */
-    @Override
-    public Set<Ticker> getTickersInFilter() {
+    Set<Ticker> getTickersInFilter() {
         return new HashSet<>(tickersInFilter); //this should be immutable
     }
 
