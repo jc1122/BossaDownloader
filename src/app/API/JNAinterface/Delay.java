@@ -1,6 +1,6 @@
 package app.API.JNAinterface;
 
-import app.API.PropertyAPI;
+import app.API.PublicAPI.PropertyAPI;
 
 /**
  * Updates delay time to server. This class handles listeners for delay to NOL server.

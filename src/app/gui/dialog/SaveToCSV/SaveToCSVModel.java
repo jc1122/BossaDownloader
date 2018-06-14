@@ -1,6 +1,6 @@
 package app.gui.dialog.SaveToCSV;
 
-import app.API.Ticker;
+import app.API.PublicAPI.Ticker;
 import app.gui.dialog.GUIModel;
 
 import java.beans.PropertyChangeEvent;

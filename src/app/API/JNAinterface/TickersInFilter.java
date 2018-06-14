@@ -1,7 +1,7 @@
 package app.API.JNAinterface;
 
-import app.API.PropertyAPI;
-import app.API.Ticker;
+import app.API.PublicAPI.PropertyAPI;
+import app.API.PublicAPI.Ticker;
 
 import java.util.Collections;
 import java.util.HashSet;

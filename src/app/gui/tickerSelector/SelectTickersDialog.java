@@ -1,13 +1,11 @@
 package app.gui.tickerSelector;
 
-import app.API.JNAenums.TypeOfList;
-import app.API.Ticker;
+import app.API.PublicAPI.Ticker;
 import app.gui.Model;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -32,7 +30,7 @@ public class SelectTickersDialog {
         dialog.setTitle("Tickers to watch");
 
         //TODO refactor this, possibly in BossaAPI, too many unnecessary conversions
-        Set<Ticker> allTickers = new HashSet<>(model.getTickers(TypeOfList.ALL, null));
+        Set<Ticker> allTickers = model.getTickers();
         allTickers.removeAll(model.getTickersInFilter());
 
         List<Ticker> tickers = new ArrayList<>(allTickers);

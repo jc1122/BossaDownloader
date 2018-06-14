@@ -1,6 +1,6 @@
 package app.gui.tickerSelector;
 
-import app.API.Ticker;
+import app.API.PublicAPI.Ticker;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;

@@ -3,7 +3,7 @@ package app.gui.dialog.statement;
 import app.API.JNAinterface.NolPosAPI;
 import app.API.JNAinterface.NolRecentInfoAPI;
 import app.API.JNAinterface.NolStatementAPI;
-import app.API.Ticker;
+import app.API.PublicAPI.Ticker;
 import app.gui.Controller;
 import app.gui.dialog.GUIView;
 

@@ -1,7 +1,7 @@
 package app.API.JNAinterface;
 
 //import app.API.JNAinterface.BossaAPI;
-import app.API.Ticker;
+import app.API.PublicAPI.Ticker;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

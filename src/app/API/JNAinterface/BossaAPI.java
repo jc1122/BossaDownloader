@@ -1,8 +1,8 @@
 package app.API.JNAinterface;
 
-import app.API.*;
 import app.API.JNAenums.OrderType;
-import app.API.Properties;
+import app.API.PublicAPI.*;
+import app.API.PublicAPI.Properties;
 
 import java.beans.PropertyChangeListener;
 import java.util.*;
@@ -41,7 +41,7 @@ public enum BossaAPI implements FilterOperations<Ticker>, OrderOperations, Prope
         propertyMap.put(Order.getInstance().getName(), Order.getInstance());
         propertyMap.put(Outlook.getInstance().getName(), Outlook.getInstance());
         propertyMap.put(TickersInFilter.getInstance().getName(), TickersInFilter.getInstance());
-
+        propertyMap.put(Tickers.getInstance().getName(), Tickers.getInstance());
         logger.finest("Finished initializing static");
     }
 

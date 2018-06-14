@@ -1,4 +1,4 @@
-package app.API;
+package app.API.PublicAPI;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -38,8 +38,8 @@ public abstract class PropertyAPI<T, K> {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
-    public T getProperty() {
-        logger.exiting(this.getClass().getName(), "getProperty");
+    public T getValue() {
+        logger.exiting(this.getClass().getName(), "getValue");
         if (property == null) {
             throw new NullPointerException(
                     "property "

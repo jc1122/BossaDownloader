@@ -1,6 +1,6 @@
 package app.API.JNAinterface;
 
-import app.API.PropertyAPI;
+import app.API.PublicAPI.PropertyAPI;
 
 import java.util.Collections;
 import java.util.List;

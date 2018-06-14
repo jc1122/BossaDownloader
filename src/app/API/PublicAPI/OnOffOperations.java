@@ -1,4 +1,4 @@
-package app.API;
+package app.API.PublicAPI;
 
 public interface OnOffOperations {
     String initialize() throws IllegalStateException;

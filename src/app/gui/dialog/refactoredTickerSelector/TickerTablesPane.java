@@ -1,6 +1,6 @@
 package app.gui.dialog.refactoredTickerSelector;
 
-import app.API.Ticker;
+import app.API.PublicAPI.Ticker;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

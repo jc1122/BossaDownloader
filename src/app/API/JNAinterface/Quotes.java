@@ -1,6 +1,6 @@
 package app.API.JNAinterface;
 
-import app.API.PropertyAPI;
+import app.API.PublicAPI.PropertyAPI;
 
 /**
  * Updates information about quotes. This class handles listeners for {@link NolRecentInfoAPI}

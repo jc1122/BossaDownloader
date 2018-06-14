@@ -27,7 +27,7 @@ final class NolAggrStatementAPI extends BossaAPIClassWrapper<NolAggrStatementAPI
      */
     @Contract(pure = true)
     List<NolStatementAPI> getStatements() {
-        logger.exiting(NolAggrStatementAPI.class.getName(), "getProperty", statementList);
+        logger.exiting(NolAggrStatementAPI.class.getName(), "getValue", statementList);
         return statementList;
     }
 

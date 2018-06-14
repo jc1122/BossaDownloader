@@ -1,12 +1,8 @@
 package app.gui;
 
-import app.API.*;
-import app.API.JNAenums.TypeOfList;
-import app.API.JNAinterface.NolTickerAPI;
-import app.API.JNAinterface.NolTickersAPI;
+import app.API.PublicAPI.*;
 
 import java.beans.PropertyChangeListener;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -138,13 +134,9 @@ public class Model implements FilterOperations<Ticker>, Properties<String, Prope
     }
 
     /**
-     * {@link NolTickersAPI#getTickers(TypeOfList, Ticker)}
      *
-     * @param typeOfList {@link TypeOfList}
-     * @param in_ticker  {@link NolTickersAPI#getTickers(TypeOfList, Ticker)}
-     * @return {@link NolTickersAPI#getTickers(TypeOfList, Ticker)}
      */
-    public List<Ticker> getTickers(TypeOfList typeOfList, NolTickerAPI in_ticker) {
-        return NolTickersAPI.getTickers(typeOfList, in_ticker);
+    public Set<Ticker> getTickers() {
+        return (Set<Ticker>) getProperty("Tickers").getValue();
     }
 }

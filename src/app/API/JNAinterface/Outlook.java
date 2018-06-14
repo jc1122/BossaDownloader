@@ -1,6 +1,6 @@
 package app.API.JNAinterface;
 
-import app.API.PropertyAPI;
+import app.API.PublicAPI.PropertyAPI;
 
 /**
  * Updates diagnostic data from NOL3. This class handles listeners for {@link Outlook}

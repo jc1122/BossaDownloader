@@ -3,7 +3,7 @@ package app.API.JNAinterface;
 //import app.API.JNAinterface.BossaAPI;
 
 import app.API.JNAenums.TypeOfList;
-import app.API.Ticker;
+import app.API.PublicAPI.Ticker;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -70,6 +70,7 @@ public final class NolTickersAPI
         logger.exiting(NolTickersAPI.class.getName(), "getTickers");
         return nolTickersAPI.getTickersList();
     }
+
 
     //do not refactor this to constant specific enum method, it is made this way to decouple TypeOfList and NolTickerAPI
     private boolean isTickerFieldEmpty(TypeOfList typeOfList, Ticker in_ticker) {

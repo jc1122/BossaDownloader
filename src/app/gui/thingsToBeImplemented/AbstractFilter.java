@@ -1,6 +1,6 @@
 package app.gui.thingsToBeImplemented;
 
-import app.API.FilterOperations;
+import app.API.PublicAPI.FilterOperations;
 
 import java.util.Collections;
 import java.util.HashMap;

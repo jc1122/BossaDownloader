@@ -1,13 +1,11 @@
 package app.gui.dialog.refactoredTickerSelector;
 
-import app.API.JNAenums.TypeOfList;
-import app.API.Ticker;
+import app.API.PublicAPI.Ticker;
 import app.gui.Model;
 import app.gui.dialog.GUIModel;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +15,7 @@ public class SelectTickersModel extends GUIModel {
         super(mainModel);
 
         //TODO refactor this, possibly in BossaAPI, too many unnecessary conversions
-        Set<Ticker> allTickers = new HashSet<>(mainModel.getTickers(TypeOfList.ALL, null));
+        Set<Ticker> allTickers = mainModel.getTickers();
         allTickers.removeAll(mainModel.getTickersInFilter());
 
         List<Ticker> tickers = new ArrayList<>(allTickers);
@@ -41,6 +39,6 @@ public class SelectTickersModel extends GUIModel {
         return new ArrayList<>(mainModel.getTickersInFilter());
     }
     public List<Ticker> getTickers() {
-        return mainModel.getTickers(TypeOfList.ALL, null);
+        return new ArrayList<>(mainModel.getTickers());
     }
 }

@@ -1,4 +1,4 @@
-package app.API;
+package app.API.PublicAPI;
 
 import app.API.JNAinterface.NolTickerAPI;
 

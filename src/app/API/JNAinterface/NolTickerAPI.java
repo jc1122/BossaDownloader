@@ -1,12 +1,12 @@
 package app.API.JNAinterface;
 
-import app.API.Ticker;
+import app.API.PublicAPI.Ticker;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Stores data of single ticker. Each field is a {@link String}.
  */
-public final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, BossaAPIInterface.NolTicker> implements app.API.Ticker {
+public final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, BossaAPIInterface.NolTicker> implements Ticker {
     private final String isin;
     private final String name;
     private final String marketCode;
