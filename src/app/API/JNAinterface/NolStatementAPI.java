@@ -14,7 +14,7 @@ import java.util.Map;
 public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI, BossaAPIInterface.NolStatement> {
     //private List<NolFundAPI> fundList;
     private final Map<String, Double> fundMap;
-    private final List<NolPosAPI> positionList;
+    private final List<Position> positionList;
 
     private final String name;
     private final String type;
@@ -30,7 +30,7 @@ public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI,
         type = new String(wrappee.type).trim();
 
         List<NolFundAPI> fundList = BossaAPIClassWrapper.convertPointerToListHelper(wrappee.sizefund, wrappee.ptrfund, NolFundAPI.class);
-        positionList = BossaAPIClassWrapper.convertPointerToListHelper(wrappee.sizepos, wrappee.ptrpos, NolPosAPI.class);
+        positionList = (List<Position>)(List<?>)BossaAPIClassWrapper.convertPointerToListHelper(wrappee.sizepos, wrappee.ptrpos, NolPosAPI.class);
 
         fundMap = new HashMap<>();
         for (NolFundAPI fund : fundList) {
@@ -92,9 +92,9 @@ public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI,
      * @return positions
      */
     @Contract(pure = true)
-    public List<NolPosAPI> getPositions() {
+    public List<Position> getPositions() {
         logger.exiting(NolStatementAPI.class.getName(), "getPositions", fundMap);
-        return positionList;
+        return (List<Position>)(List<?>)positionList;
     }
 
     @Override

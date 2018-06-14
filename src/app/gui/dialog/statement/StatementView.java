@@ -1,8 +1,9 @@
 package app.gui.dialog.statement;
 
-import app.API.JNAinterface.NolPosAPI;
+//import app.API.JNAinterface.Position;
 import app.API.JNAinterface.NolRecentInfoAPI;
 import app.API.JNAinterface.NolStatementAPI;
+import app.API.JNAinterface.Position;
 import app.API.PublicAPI.Ticker;
 import app.gui.Controller;
 import app.gui.dialog.GUIView;
@@ -334,16 +335,16 @@ public class StatementView<K extends StatementModel,
             positionTickersCount.clear();
 
             //TODO refactor to a set of isins
-            List<NolPosAPI> positions = currentAccount.getPositions();
+            List<Position> positions = currentAccount.getPositions();
             if (!positions.isEmpty()) {
-                for (NolPosAPI position : positions) {
+                for (Position position : positions) {
                     Ticker ticker = position.getTicker();
                     positionTickersPrices.put(ticker, -1.);
                     positionTickersLabels.put(ticker, new JLabel());
                     positionTickersCount.put(ticker, -10);
                 }
 
-                for (NolPosAPI position : positions) {
+                for (Position position : positions) {
                     Ticker ticker = position.getTicker();
                     positionsPanel.add(new JLabel(position.getTicker().getName()));
                     positionsPanel.add(new JLabel(Integer.toString(position.getAcc110())));

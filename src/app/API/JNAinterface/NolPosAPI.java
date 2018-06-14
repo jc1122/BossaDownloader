@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Contains information about position in portfolio.
  */
-public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInterface.NolPos> {
+public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInterface.NolPos> implements Position {
     private final Ticker ticker;
 
     //constructor accessed by reflection
@@ -20,6 +20,7 @@ public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInt
      *
      * @return ticker
      */
+    @Override
     @NotNull
     public Ticker getTicker() {
         logger.exiting(NolPosAPI.class.getName(), "getTicker");
@@ -31,6 +32,7 @@ public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInt
      *
      * @return amount
      */
+    @Override
     public int getAcc110() {
         logger.exiting(NolPosAPI.class.getName(), "getAcc110", wrappee.acc110);
         return wrappee.acc110;
@@ -41,9 +43,15 @@ public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInt
      *
      * @return amount
      */
+    @Override
     public int getAcc120() {
         logger.exiting(NolPosAPI.class.getName(), "getAcc120", wrappee.acc120);
         return wrappee.acc120;
+    }
+
+    @Override
+    public double getValue() {
+        return 0;
     }
 
     @Override

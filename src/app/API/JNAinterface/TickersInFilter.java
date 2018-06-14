@@ -25,4 +25,5 @@ final class TickersInFilter extends PropertyAPI<Set<Ticker>, String> {
         this.propertyChangeSupport.firePropertyChange("TickersInFilter", oldValue, this.property);
     }
 
+    
 }
