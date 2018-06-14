@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
  * <p> ALL methods of this class are <i>static</i></p>
  */
 @SuppressWarnings({"unused", "Convert2MethodRef", "Convert2Lambda", "WeakerAccess"})
-public enum BossaAPI implements FilterOperations<NolTickerAPI>, OrderOperations, Properties, OnOffOperations {
+public enum BossaAPI implements FilterOperations<Ticker>, OrderOperations, Properties<String, PropertyAPI<?, String>>, OnOffOperations {
     API;
 
     private static final BossaAPIInterface INSTANCE; //TODO make private
-    private static final Map<String, PropertyAPI> propertyMap = new HashMap<>();
-    private static Set<NolTickerAPI> tickersInFilter = new HashSet<>();
+    private static final Map<String, PropertyAPI<?, String>> propertyMap = new HashMap<>();
+    private static Set<Ticker> tickersInFilter = new HashSet<>();
 
     private static final Logger logger =
             Logger.getLogger(BossaAPI.class.getName());
@@ -34,13 +34,13 @@ public enum BossaAPI implements FilterOperations<NolTickerAPI>, OrderOperations,
         logger.finest("Initializing static");
         INSTANCE = BossaAPIInstance.INSTANCE;
         //add propertyMap to map
-        propertyMap.put("Quotes", Quotes.getInstance());
-        propertyMap.put("Status", Status.getInstance());
-        propertyMap.put("Accounts", Accounts.getInstance());
-        propertyMap.put("Delay", Delay.getInstance());
-        propertyMap.put("Order", Order.getInstance());
-        propertyMap.put("Outlook", Outlook.getInstance());
-        propertyMap.put("TickersInFilter", TickersInFilter.getInstance());
+        propertyMap.put(Quotes.getInstance().getName(), Quotes.getInstance());
+        propertyMap.put(Status.getInstance().getName(), Status.getInstance());
+        propertyMap.put(Accounts.getInstance().getName(), Accounts.getInstance());
+        propertyMap.put(Delay.getInstance().getName(), Delay.getInstance());
+        propertyMap.put(Order.getInstance().getName(), Order.getInstance());
+        propertyMap.put(Outlook.getInstance().getName(), Outlook.getInstance());
+        propertyMap.put(TickersInFilter.getInstance().getName(), TickersInFilter.getInstance());
 
         logger.finest("Finished initializing static");
     }
@@ -95,11 +95,11 @@ public enum BossaAPI implements FilterOperations<NolTickerAPI>, OrderOperations,
      */
 
     @Override
-    public String addTickersToFilter(Set<NolTickerAPI> tickers) {
+    public String addTickersToFilter(Set<Ticker> tickers) {
         tickers.remove(null);
         Set<String> isins = tickers
                 .stream()
-                .map(NolTickerAPI::getIsin)
+                .map(Ticker::getIsin)
                 .collect(Collectors.toSet());
         Object[] params = {isins};
         logger.entering(BossaAPI.class.getName(), "addToFilter", params);
@@ -107,10 +107,10 @@ public enum BossaAPI implements FilterOperations<NolTickerAPI>, OrderOperations,
         //need to be saved, or will be cleared by clearFilter
         Set<String> saveTickerISINSInFilter = tickersInFilter
                 .stream()
-                .map(NolTickerAPI::getIsin)
+                .map(Ticker::getIsin)
                 .distinct()
                 .collect(Collectors.toSet()); //get a new hashset
-        Set<NolTickerAPI> saveTickersInFilter = new HashSet<>(tickersInFilter);
+        Set<Ticker> saveTickersInFilter = new HashSet<>(tickersInFilter);
 
         clearFilter();
 
@@ -136,7 +136,7 @@ public enum BossaAPI implements FilterOperations<NolTickerAPI>, OrderOperations,
     }
 
     @Override
-    public String removeTickersFromFilter(Set<NolTickerAPI> tickers) throws IllegalStateException {
+    public String removeTickersFromFilter(Set<Ticker> tickers) throws IllegalStateException {
         logger.entering(BossaAPI.class.getName(), "removeTickersFromFilter", tickers);
         if (!tickersInFilter.containsAll(tickers)) {
             throw new IllegalArgumentException(tickers.removeAll(tickersInFilter) + " not in filter");
@@ -270,8 +270,43 @@ public enum BossaAPI implements FilterOperations<NolTickerAPI>, OrderOperations,
      * @see PropertyAPI
      */
     @Override
-    public Map<String, PropertyAPI> getPropertyMap() {
+    public Map<String, PropertyAPI<?,String>> getProperties() {
         return Collections.unmodifiableMap(propertyMap);
+    }
+
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        getProperties().values().forEach(property -> property.addPropertyChangeListener(listener));
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        getProperties().values().forEach(property -> property.removePropertyChangeListener(listener));
+    }
+
+    @Override
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        if(getProperties().containsKey(propertyName)) {
+            getProperties().get(propertyName).addPropertyChangeListener(listener);
+        }
+        else {
+            throw new IllegalArgumentException(propertyName + " is not a valid property name");
+        }
+    }
+
+    @Override
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        if(getProperties().containsKey(propertyName)) {
+            getProperties().get(propertyName).removePropertyChangeListener(listener);
+        }
+        else {
+            throw new IllegalArgumentException(propertyName + " is not a valid property name");
+        }
+    }
+
+    @Override
+    public PropertyAPI<?, String> getProperty(String name) {
+        return null;
     }
 
     /**
@@ -280,13 +315,13 @@ public enum BossaAPI implements FilterOperations<NolTickerAPI>, OrderOperations,
      * @return set of refactoredTickerSelector currently in filter
      */
     @Override
-    public Set<NolTickerAPI> getTickersInFilter() {
+    public Set<Ticker> getTickersInFilter() {
         return new HashSet<>(tickersInFilter); //this should be immutable
     }
 
     //makes a semicolon separated string from given set of strings
-    private static String tickerSetToString(Set<NolTickerAPI> tickers) {
-        Set<String> isins = tickers.stream().map(NolTickerAPI::getIsin).collect(Collectors.toSet());
+    private static String tickerSetToString(Set<Ticker> tickers) {
+        Set<String> isins = tickers.stream().map(Ticker::getIsin).collect(Collectors.toSet());
 
         StringBuilder filterFormat = new StringBuilder();
         for (String isin : isins) {

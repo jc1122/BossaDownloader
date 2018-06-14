@@ -10,11 +10,12 @@ import java.util.List;
  *
  * @see NolStatementAPI
  */
-final class Accounts extends PropertyAPI<List<NolStatementAPI>> {
+final class Accounts extends PropertyAPI<List<NolStatementAPI>, String> {
     //private NolAggrStatementAPI nolAggrStatementAPI;
     private static final Accounts INSTANCE = new Accounts();
     private static final AccountsCallbackHelper CALLBACK_HELPER = INSTANCE.new AccountsCallbackHelper();
     private Accounts() {
+        super("Accounts");
     }
 
     static Accounts getInstance() {

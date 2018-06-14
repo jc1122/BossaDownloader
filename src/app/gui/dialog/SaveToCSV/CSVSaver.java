@@ -1,7 +1,7 @@
 package app.gui.dialog.SaveToCSV;
 
 import app.API.JNAinterface.NolRecentInfoAPI;
-import app.API.JNAinterface.NolTickerAPI;
+import app.API.Ticker;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -31,8 +31,8 @@ public class CSVSaver implements PropertyChangeListener {
         }
     }
 
-    public void startSaving(Set<NolTickerAPI> tickers) {
-        this.tickerISINSToSave = tickers.stream().map(NolTickerAPI::getIsin).collect(Collectors.toSet());
+    public void startSaving(Set<Ticker> tickers) {
+        this.tickerISINSToSave = tickers.stream().map(Ticker::getIsin).collect(Collectors.toSet());
         saveToFile = true;
     }
 

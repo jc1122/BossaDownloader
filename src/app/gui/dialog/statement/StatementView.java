@@ -3,7 +3,7 @@ package app.gui.dialog.statement;
 import app.API.JNAinterface.NolPosAPI;
 import app.API.JNAinterface.NolRecentInfoAPI;
 import app.API.JNAinterface.NolStatementAPI;
-import app.API.JNAinterface.NolTickerAPI;
+import app.API.Ticker;
 import app.gui.Controller;
 import app.gui.dialog.GUIView;
 
@@ -283,10 +283,10 @@ public class StatementView<K extends StatementModel,
         private final K model;
         private int selectedAccount;
         private List<NolStatementAPI> accountList;
-        private Map<NolTickerAPI, Double> positionTickersPrices;
-        private Map<NolTickerAPI, JLabel> positionTickersLabels;
-        private Map<NolTickerAPI, Integer> positionTickersCount;
-        private Set<NolTickerAPI> tickersInModelFilter;
+        private Map<Ticker, Double> positionTickersPrices;
+        private Map<Ticker, JLabel> positionTickersLabels;
+        private Map<Ticker, Integer> positionTickersCount;
+        private Set<Ticker> tickersInModelFilter;
 
         private final JDialog dialog;
 
@@ -337,14 +337,14 @@ public class StatementView<K extends StatementModel,
             List<NolPosAPI> positions = currentAccount.getPositions();
             if (!positions.isEmpty()) {
                 for (NolPosAPI position : positions) {
-                    NolTickerAPI ticker = position.getTicker();
+                    Ticker ticker = position.getTicker();
                     positionTickersPrices.put(ticker, -1.);
                     positionTickersLabels.put(ticker, new JLabel());
                     positionTickersCount.put(ticker, -10);
                 }
 
                 for (NolPosAPI position : positions) {
-                    NolTickerAPI ticker = position.getTicker();
+                    Ticker ticker = position.getTicker();
                     positionsPanel.add(new JLabel(position.getTicker().getName()));
                     positionsPanel.add(new JLabel(Integer.toString(position.getAcc110())));
                     positionsPanel.add(new JLabel(Integer.toString(position.getAcc120())));
@@ -372,7 +372,7 @@ public class StatementView<K extends StatementModel,
             logger.exiting(this.getClass().getName(), "actionPerformed");
         }
 
-        private void updateValues(NolTickerAPI ticker) {
+        private void updateValues(Ticker ticker) {
             logger.entering(this.getClass().getName(), "updateValues", ticker);
             double price = positionTickersPrices.get(ticker);
             positionTickersLabels.get(ticker).setText(Double.toString(price));
@@ -391,7 +391,7 @@ public class StatementView<K extends StatementModel,
                     break;
                 case "Quotes":
                     NolRecentInfoAPI quote = (NolRecentInfoAPI) evt.getNewValue();
-                    NolTickerAPI ticker = quote.getTicker();
+                    Ticker ticker = quote.getTicker();
                     if (quote.getBitMask().get("ReferPrice")) {
                         this.positionTickersPrices.replace(ticker, quote.getReferPrice() * this.positionTickersCount.get(ticker));
                         updateValues(ticker);
@@ -401,11 +401,11 @@ public class StatementView<K extends StatementModel,
                             Set<String> tickerISINSinFilter = model
                                     .getTickersInFilter()
                                     .stream()
-                                    .map(NolTickerAPI::getIsin)
+                                    .map(Ticker::getIsin)
                                     .collect(Collectors.toSet());
 
                             if (tickerISINSinFilter.contains(ticker)) {
-                                Set<NolTickerAPI> tmp = new HashSet<>();
+                                Set<Ticker> tmp = new HashSet<>();
                                 tmp.add(ticker);
                                 model.removeTickersFromFilter(tmp);
                             }

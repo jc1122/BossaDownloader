@@ -1,6 +1,6 @@
 package app.gui.tickerSelector;
 
-import app.API.JNAinterface.NolTickerAPI;
+import app.API.Ticker;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -44,7 +44,7 @@ class TickerTablesPane {
         logger.exiting(this.getClass().getName(), "newFilter");
     }
 
-    TickerTablesPane(JTextField filterText, List<NolTickerAPI> tickers, List<NolTickerAPI> tickersInFilter) {
+    TickerTablesPane(JTextField filterText, List<Ticker> tickers, List<Ticker> tickersInFilter) {
         Object[] params = {filterText, tickers, tickersInFilter};
         logger.entering(this.getClass().getName(), "constructor", params);
 
@@ -85,7 +85,7 @@ class TickerTablesPane {
         return pane;
     }
 
-    public List<NolTickerAPI> getTickersInFilter() {
+    public List<Ticker> getTickersInFilter() {
         return right.getModel().getData();
     }
 }

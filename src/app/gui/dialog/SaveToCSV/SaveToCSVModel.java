@@ -1,6 +1,6 @@
 package app.gui.dialog.SaveToCSV;
 
-import app.API.JNAinterface.NolTickerAPI;
+import app.API.Ticker;
 import app.gui.dialog.GUIModel;
 
 import java.beans.PropertyChangeEvent;
@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class SaveToCSVModel extends GUIModel {
-    private Set<NolTickerAPI> tickersInFilter;
+    private Set<Ticker> tickersInFilter;
     private CSVSaver saver;
 
     @Override
@@ -17,7 +17,7 @@ public class SaveToCSVModel extends GUIModel {
         System.out.println("im here");
         if (Objects.equals(propertyChangeEvent.getPropertyName(), "TickersInFilter")) {
             //noinspection unchecked
-            this.tickersInFilter = (Set<NolTickerAPI>) propertyChangeEvent.getNewValue();
+            this.tickersInFilter = (Set<Ticker>) propertyChangeEvent.getNewValue();
             this.propertyChangeSupport.firePropertyChange("TickersInFilter", propertyChangeEvent.getOldValue(), tickersInFilter);
         }
         if(Objects.equals(propertyChangeEvent.getPropertyName(), "Quotes")) {
@@ -32,7 +32,7 @@ public class SaveToCSVModel extends GUIModel {
         this.addPropertyChangeListener(saver);
     }
 
-    public Set<NolTickerAPI> getTickersInFilter() {
+    public Set<Ticker> getTickersInFilter() {
         return tickersInFilter;
     }
 

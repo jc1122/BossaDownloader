@@ -1,6 +1,6 @@
 package app.gui.dialog.SaveToCSV;
 
-import app.API.JNAinterface.NolTickerAPI;
+import app.API.Ticker;
 import app.gui.dialog.GUIView;
 import app.gui.tickerSelector.TickerTable;
 
@@ -17,7 +17,7 @@ public class SaveToCSVView<K extends SaveToCSVModel, L extends SaveToCSVView<K, 
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
         if (Objects.equals(propertyChangeEvent.getPropertyName(), "TickersInFilter")) {
             //noinspection unchecked
-            Set<NolTickerAPI> tickers = (Set<NolTickerAPI>) propertyChangeEvent.getNewValue();
+            Set<Ticker> tickers = (Set<Ticker>) propertyChangeEvent.getNewValue();
             tickerTable = new TickerTable(new ArrayList<>(tickers), "Tickers to collect");
             //tickerTable.getModel().fireTableDataChanged();
             //TODO fix bug in TickerTable - the line above does not update the mainModel and the parent view is not updated

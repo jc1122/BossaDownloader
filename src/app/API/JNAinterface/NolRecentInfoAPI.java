@@ -1,6 +1,7 @@
 package app.API.JNAinterface;
 
 //import app.API.JNAinterface.BossaAPI;
+import app.API.Ticker;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +43,7 @@ import java.util.Map;
 public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAPI, BossaAPIInterface.NolRecentInfo> {
 
     private final NolBidAskStrAPI offers;
-    private final NolTickerAPI ticker;
+    private final Ticker ticker;
     private final String bitMask;
     private final String toLT;
     private final String phase;
@@ -117,7 +118,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
     }
 
     @NotNull
-    public NolTickerAPI getTicker() {
+    public Ticker getTicker() {
         logger.exiting(NolTickerAPI.class.getName(), "getTicker");
         return ticker;
     }

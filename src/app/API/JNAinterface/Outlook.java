@@ -7,12 +7,13 @@ import app.API.PropertyAPI;
  *
  * @see Outlook
  */
-final class Outlook extends PropertyAPI<String> {
+final class Outlook extends PropertyAPI<String, String> {
     //private String outlook;
     private static final Outlook INSTANCE = new Outlook();
     private static final OutlookCallbackHelper CALLBACK_HELPER = INSTANCE.new OutlookCallbackHelper();
 
     private Outlook() {
+        super("Outlook");
     }
 
     public static Outlook getInstance() {

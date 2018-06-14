@@ -1,5 +1,6 @@
 package app.API.JNAinterface;
 
+import app.API.Ticker;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,7 +24,7 @@ public final class NolOrderReportAPI extends BossaAPIClassWrapper<NolOrderReport
     private final String getBizRejRsn;
     private final String txt;
     private final String expireTm;
-    private final NolTickerAPI ticker;
+    private final Ticker ticker;
 
     public NolOrderReportAPI(BossaAPIInterface.NolOrderReport nolOrderReport) {
         super(nolOrderReport);
@@ -105,7 +106,7 @@ public final class NolOrderReportAPI extends BossaAPIClassWrapper<NolOrderReport
     }
 
     @NotNull
-    NolTickerAPI getTicker() {
+    Ticker getTicker() {
         logger.exiting(NolOrderReportAPI.class.getName(), "getTicker");
         return ticker;
     }

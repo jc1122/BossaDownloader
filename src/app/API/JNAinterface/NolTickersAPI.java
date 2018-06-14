@@ -3,6 +3,7 @@ package app.API.JNAinterface;
 //import app.API.JNAinterface.BossaAPI;
 
 import app.API.JNAenums.TypeOfList;
+import app.API.Ticker;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -62,7 +63,7 @@ public final class NolTickersAPI
      * @return refactoredTickerSelector
      */
     @NotNull
-    public static List<NolTickerAPI> getTickers(TypeOfList typeOfList, NolTickerAPI in_ticker) {
+    public static List<Ticker> getTickers(TypeOfList typeOfList, NolTickerAPI in_ticker) {
         Object[] params = {typeOfList, in_ticker};
         logger.entering(NolTickersAPI.class.getName(), "getTickers", params);
         NolTickersAPI nolTickersAPI = new NolTickersAPI(typeOfList, in_ticker);
@@ -71,7 +72,7 @@ public final class NolTickersAPI
     }
 
     //do not refactor this to constant specific enum method, it is made this way to decouple TypeOfList and NolTickerAPI
-    private boolean isTickerFieldEmpty(TypeOfList typeOfList, NolTickerAPI in_ticker) {
+    private boolean isTickerFieldEmpty(TypeOfList typeOfList, Ticker in_ticker) {
         switch (typeOfList) {
             case ALL:
                 return false;
@@ -110,7 +111,7 @@ public final class NolTickersAPI
      *
      * @return list of refactoredTickerSelector
      */
-    private List<NolTickerAPI> getTickersList() throws NullPointerException {
+    private List<Ticker> getTickersList() throws NullPointerException {
         if (wrappee == null) throw new NullPointerException("Tickers already closed!");
         return Collections.unmodifiableList(tickerListCache);
     }

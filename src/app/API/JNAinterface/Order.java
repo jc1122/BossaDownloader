@@ -7,12 +7,13 @@ import app.API.PropertyAPI;
  *
  * @see NolOrderReportAPI
  */
-final class Order extends PropertyAPI<NolOrderReportAPI> {
+final class Order extends PropertyAPI<NolOrderReportAPI, String> {
     //private NolOrderReportAPI nolOrderReportAPI;
     private static final Order INSTANCE = new Order();
     private static final OrderCallbackHelper CALLBACK_HELPER = INSTANCE.new OrderCallbackHelper();
 
     private Order() {
+        super("Order");
     }
 
     public static Order getInstance() {

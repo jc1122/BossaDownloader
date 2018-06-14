@@ -1,11 +1,12 @@
 package app.API.JNAinterface;
 
+import app.API.Ticker;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Stores data of single ticker. Each field is a {@link String}.
  */
-public final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, BossaAPIInterface.NolTicker> {
+public final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, BossaAPIInterface.NolTicker> implements app.API.Ticker {
     private final String isin;
     private final String name;
     private final String marketCode;
@@ -26,6 +27,7 @@ public final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, Bossa
      *
      * @return ISIN - international securities identification number
      */
+    @Override
     @NotNull
     public String getIsin() {
         logger.exiting(NolTickerAPI.class.getName(), "getIsin");
@@ -37,6 +39,7 @@ public final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, Bossa
      *
      * @return ticker name
      */
+    @Override
     @NotNull
     public String getName() {
         logger.exiting(NolTickerAPI.class.getName(), "getName");
@@ -55,6 +58,7 @@ public final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, Bossa
      *
      * @return success or error message
      */
+    @Override
     @NotNull
     public String getMarketCode() {
         logger.exiting(NolTickerAPI.class.getName(), "getMarketCode");
@@ -67,6 +71,7 @@ public final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, Bossa
      *
      * @return CFI
      */
+    @Override
     @NotNull
     public String getCFI() {
         logger.exiting(NolTickerAPI.class.getName(), "getCFI");
@@ -108,6 +113,7 @@ public final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, Bossa
      *
      * @return group
      */
+    @Override
     @NotNull
     public String getGroup() {
         logger.exiting(NolTickerAPI.class.getName(), "getGroup");

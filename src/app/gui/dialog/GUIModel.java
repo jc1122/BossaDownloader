@@ -31,7 +31,7 @@ public abstract class GUIModel implements PropertyChangeListener {
 
     protected GUIModel(Model mainModel) {
         this.mainModel = mainModel;
-        mainModel.addPropertyListener(this);
+        mainModel.addPropertyChangeListener(this);
     }
 
     @Override

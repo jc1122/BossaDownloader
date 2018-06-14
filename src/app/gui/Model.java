@@ -1,12 +1,9 @@
 package app.gui;
 
-import app.API.FilterOperations;
+import app.API.*;
 import app.API.JNAenums.TypeOfList;
 import app.API.JNAinterface.NolTickerAPI;
 import app.API.JNAinterface.NolTickersAPI;
-import app.API.OnOffOperations;
-import app.API.Properties;
-import app.API.PropertyAPI;
 
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -16,15 +13,15 @@ import java.util.Set;
 /**
  * Communicates with NOL3.
  */
-public class Model {
-    private final Map<String, PropertyAPI> propertyMap;// = Properties.getPropertyMap();
+public class Model implements FilterOperations<Ticker>, Properties<String, PropertyAPI<?,String>>, OnOffOperations {
+    private final Properties<String, PropertyAPI<?,String>> properties;// = Properties.getProperties();
 
-    private final FilterOperations filterOperations;
+    private final FilterOperations<Ticker> filterOperations;
     private final OnOffOperations onOff;
 
-    public Model(FilterOperations filterOperations, Properties properties, OnOffOperations onOff) {
+    public Model(FilterOperations<Ticker> filterOperations, Properties<String, PropertyAPI<?,String>> properties, OnOffOperations onOff) {
         this.filterOperations = filterOperations;
-        this.propertyMap = properties.getPropertyMap();
+        this.properties = properties;
         this.onOff = onOff;
     }
 
@@ -33,7 +30,8 @@ public class Model {
      *
      * @param tickers to be tracked
      */
-    public String addTickersToFilter(Set<NolTickerAPI> tickers) {
+    @Override
+    public String addTickersToFilter(Set<Ticker> tickers) {
         return filterOperations.addTickersToFilter(tickers);
     }
 
@@ -41,7 +39,8 @@ public class Model {
      *
      * @return currently tracked refactoredTickerSelector
      */
-    public Set<NolTickerAPI> getTickersInFilter() {
+    @Override
+    public Set<Ticker> getTickersInFilter() {
         return filterOperations.getTickersInFilter();
     }
 
@@ -49,6 +48,7 @@ public class Model {
      *
      * @return message of success or failure
      */
+    @Override
     public String clearFilter() {
         return filterOperations.clearFilter();
     }
@@ -58,7 +58,8 @@ public class Model {
      *
      * @param tickers stop tracking the refactoredTickerSelector with given tickers
      */
-    public String removeTickersFromFilter(Set<NolTickerAPI> tickers) {
+    @Override
+    public String removeTickersFromFilter(Set<Ticker> tickers) {
         return filterOperations.removeTickersFromFilter(tickers);
     }
 
@@ -67,6 +68,7 @@ public class Model {
      *
      * @return success or error message
      */
+    @Override
     public String initialize() {
         return onOff.initialize();
     }
@@ -75,6 +77,7 @@ public class Model {
      *
      * @return success or error message
      */
+    @Override
     public String shutdown() {
         return onOff.shutdown();
     }
@@ -83,8 +86,14 @@ public class Model {
      *
      * @return success or error message
      */
+    @Override
     public String getVersion() {
         return onOff.getVersion();
+    }
+
+    @Override
+    public Map<String, PropertyAPI<?, String>> getProperties() {
+        return null;
     }
 
     /**
@@ -93,10 +102,9 @@ public class Model {
      *
      * @param listener callback for property
      */
-    public void addPropertyListener(PropertyChangeListener listener) {
-        for (String property : propertyMap.keySet()) {
-            propertyMap.get(property).addPropertyChangeListener(listener);
-        }
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        properties.addPropertyChangeListener(listener);
     }
 
     /**
@@ -105,10 +113,19 @@ public class Model {
      *
      * @param listener callback for property
      */
-    public void removePropertyListener(PropertyChangeListener listener) {
-        for (String property : propertyMap.keySet()) {
-            propertyMap.get(property).removePropertyChangeListener(listener);
-        }
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        properties.removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        properties.addPropertyChangeListener(propertyName, listener);
+    }
+
+    @Override
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        properties.removePropertyChangeListener(propertyName, listener);
     }
 
     /**
@@ -116,18 +133,18 @@ public class Model {
      * @param property any property of {@link PropertyAPI}
      * @return property, will need to be cast to appropriate class (class name should be the same as property name)
      */
-    public Object getProperty(String property) {
-        return propertyMap.get(property).getProperty();
+    public PropertyAPI<?,String> getProperty(String property) {
+        return properties.getProperty(property);
     }
 
     /**
-     * {@link NolTickersAPI#getTickers(TypeOfList, NolTickerAPI)}
+     * {@link NolTickersAPI#getTickers(TypeOfList, Ticker)}
      *
      * @param typeOfList {@link TypeOfList}
-     * @param in_ticker  {@link NolTickersAPI#getTickers(TypeOfList, NolTickerAPI)}
-     * @return {@link NolTickersAPI#getTickers(TypeOfList, NolTickerAPI)}
+     * @param in_ticker  {@link NolTickersAPI#getTickers(TypeOfList, Ticker)}
+     * @return {@link NolTickersAPI#getTickers(TypeOfList, Ticker)}
      */
-    public List<NolTickerAPI> getTickers(TypeOfList typeOfList, NolTickerAPI in_ticker) {
+    public List<Ticker> getTickers(TypeOfList typeOfList, NolTickerAPI in_ticker) {
         return NolTickersAPI.getTickers(typeOfList, in_ticker);
     }
 }

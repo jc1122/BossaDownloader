@@ -1,6 +1,6 @@
 package app.gui.dialog.refactoredTickerSelector;
 
-import app.API.JNAinterface.NolTickerAPI;
+import app.API.Ticker;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
@@ -9,19 +9,19 @@ import java.util.logging.Logger;
 public class TickerTableModel extends AbstractTableModel {
     private static final Logger logger =
             Logger.getLogger(TickerTableModel.class.getName());
-    private List<NolTickerAPI> tickers;
+    private List<Ticker> tickers;
 
-    public void setData(List<NolTickerAPI> tickers) {
+    public void setData(List<Ticker> tickers) {
         logger.entering(this.getClass().getName(), "setData", tickers);
         this.tickers = tickers;
         logger.exiting(this.getClass().getName(), "setData");
     }
 
-    public List<NolTickerAPI> getData() {
+    public List<Ticker> getData() {
         return tickers;
     }
 
-    public TickerTableModel(List<NolTickerAPI> tickers) {
+    public TickerTableModel(List<Ticker> tickers) {
         logger.entering(this.getClass().getName(), "constructor", tickers);
         this.tickers = tickers;
         logger.exiting(this.getClass().getName(), "constructor");
@@ -76,23 +76,23 @@ public class TickerTableModel extends AbstractTableModel {
         return null;
     }
 
-    void addRow(NolTickerAPI ticker) {
+    void addRow(Ticker ticker) {
         logger.entering(this.getClass().getName(), "addRow", ticker);
         tickers.add(ticker);
         this.fireTableDataChanged();
         logger.exiting(this.getClass().getName(), "addRow");
     }
 
-    NolTickerAPI removeRow(int row) {
+    Ticker removeRow(int row) {
         logger.entering(this.getClass().getName(), "removeRow", row);
-        NolTickerAPI ticker = tickers.remove(row);
+        Ticker ticker = tickers.remove(row);
         this.fireTableDataChanged();
         logger.exiting(this.getClass().getName(), "removeRow", ticker);
         return ticker;
     }
 
     @SuppressWarnings("unused")
-    NolTickerAPI getRow(int row) {
+    Ticker getRow(int row) {
         return tickers.get(row);
     }
 

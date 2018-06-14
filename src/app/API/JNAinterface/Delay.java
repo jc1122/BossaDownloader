@@ -5,12 +5,13 @@ import app.API.PropertyAPI;
 /**
  * Updates delay time to server. This class handles listeners for delay to NOL server.
  */
-final class Delay extends PropertyAPI<Float> {
+final class Delay extends PropertyAPI<Float, String> {
 
     private static final Delay INSTANCE = new Delay();
     private static final DelayCallbackHelper CALLBACK_HELPER = INSTANCE.new DelayCallbackHelper();
 
     private Delay() {
+        super("Delay");
     }
 
     static Delay getInstance() {

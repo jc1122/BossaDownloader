@@ -8,12 +8,13 @@ import app.API.PropertyAPI;
  *
  * @see Nol3State
  */
-final class Status extends PropertyAPI<Nol3State> {
+final class Status extends PropertyAPI<Nol3State, String> {
 
     private static final Status INSTANCE = new Status();
     private static final Status.StatusCallbackHelper CALLBACK_HELPER = INSTANCE.new StatusCallbackHelper();
 
     private Status() {
+        super("Status");
     }
 
     static Status getInstance() {

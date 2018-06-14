@@ -1,5 +1,6 @@
 package app.API.JNAinterface;
 
+import app.API.Ticker;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -16,7 +17,7 @@ public final class NolOrderRequestAPI extends BossaAPIClassWrapper<NolOrderReque
     private final String defPayTyp;
     private final String sessionDt;
     private final String expireTm;
-    private final NolTickerAPI ticker;
+    private final Ticker ticker;
 
     private NolOrderRequestAPI(BossaAPIInterface.NolOrderRequest nolOrderRequest) {
         super(nolOrderRequest);
@@ -75,7 +76,7 @@ public final class NolOrderRequestAPI extends BossaAPIClassWrapper<NolOrderReque
     }
 
     @NotNull
-    NolTickerAPI getTicker() {
+    Ticker getTicker() {
         logger.exiting(NolOrderRequestAPI.class.getName(), "getTicker");
         return ticker;
     }

@@ -1,7 +1,7 @@
 package app.gui.dialog.refactoredTickerSelector;
 
 import app.API.JNAenums.TypeOfList;
-import app.API.JNAinterface.NolTickerAPI;
+import app.API.Ticker;
 import app.gui.Model;
 import app.gui.dialog.GUIModel;
 
@@ -17,11 +17,11 @@ public class SelectTickersModel extends GUIModel {
         super(mainModel);
 
         //TODO refactor this, possibly in BossaAPI, too many unnecessary conversions
-        Set<NolTickerAPI> allTickers = new HashSet<>(mainModel.getTickers(TypeOfList.ALL, null));
+        Set<Ticker> allTickers = new HashSet<>(mainModel.getTickers(TypeOfList.ALL, null));
         allTickers.removeAll(mainModel.getTickersInFilter());
 
-        List<NolTickerAPI> tickers = new ArrayList<>(allTickers);
-        List<NolTickerAPI> tickersInFilter = new ArrayList<>(mainModel.getTickersInFilter());
+        List<Ticker> tickers = new ArrayList<>(allTickers);
+        List<Ticker> tickersInFilter = new ArrayList<>(mainModel.getTickersInFilter());
 
     }
     @Override
@@ -33,14 +33,14 @@ public class SelectTickersModel extends GUIModel {
         mainModel.clearFilter();
     }
 
-    public void addTickersToFilter(Set<NolTickerAPI> isins) {
+    public void addTickersToFilter(Set<Ticker> isins) {
         mainModel.addTickersToFilter(isins);
     }
 
-    public List<NolTickerAPI> getTickersInFilter() {
+    public List<Ticker> getTickersInFilter() {
         return new ArrayList<>(mainModel.getTickersInFilter());
     }
-    public List<NolTickerAPI> getTickers() {
+    public List<Ticker> getTickers() {
         return mainModel.getTickers(TypeOfList.ALL, null);
     }
 }

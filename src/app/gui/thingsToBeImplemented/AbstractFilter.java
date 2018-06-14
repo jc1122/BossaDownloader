@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-//TODO implement this class, this should be fun as it is recurrence
 public abstract class AbstractFilter<T> implements FilterOperations<T> {
     /**
      * parent of this component, valid only for non-master nodes, top node should be a different implementation of

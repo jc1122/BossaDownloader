@@ -1,12 +1,13 @@
 package app.API.JNAinterface;
 
+import app.API.Ticker;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Contains information about position in portfolio.
  */
 public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInterface.NolPos> {
-    private final NolTickerAPI ticker;
+    private final Ticker ticker;
 
     //constructor accessed by reflection
     private NolPosAPI(BossaAPIInterface.NolPos nolPos) {
@@ -20,7 +21,7 @@ public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInt
      * @return ticker
      */
     @NotNull
-    public NolTickerAPI getTicker() {
+    public Ticker getTicker() {
         logger.exiting(NolPosAPI.class.getName(), "getTicker");
         return ticker;
     }

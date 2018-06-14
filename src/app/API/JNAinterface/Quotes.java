@@ -7,7 +7,7 @@ import app.API.PropertyAPI;
  *
  * @see NolRecentInfoAPI
  */
-final class Quotes extends PropertyAPI<NolRecentInfoAPI> {
+final class Quotes extends PropertyAPI<NolRecentInfoAPI, String> {
 
     private static final Quotes INSTANCE = new Quotes();
     private static final QuotesCallbackHelper CALLBACK_HELPER = INSTANCE.new QuotesCallbackHelper();
@@ -15,6 +15,7 @@ final class Quotes extends PropertyAPI<NolRecentInfoAPI> {
     //private NolRecentInfoAPI nolRecentInfoAPI;
 
     private Quotes() {
+        super("Quotes");
     }
 
     static Quotes getInstance() {

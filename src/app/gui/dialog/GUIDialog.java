@@ -50,7 +50,7 @@ public class GUIDialog<K extends GUIModel, L extends GUIView, M extends GUIContr
             this.view.getDialog().addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    model.removePropertyListener(GUIDialog.this.model);
+                    model.removePropertyChangeListener(GUIDialog.this.model);
                     super.windowClosing(e);
                 }
             });
