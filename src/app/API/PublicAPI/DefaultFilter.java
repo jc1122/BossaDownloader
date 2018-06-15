@@ -132,7 +132,7 @@ public class DefaultFilter<T extends Ticker> implements FilterOperations<T>, Pro
     }
     @Override
     public String clearFilter() {
-        removeTickersFromFilter(this.tickerWatchers.keySet());
+        removeTickersFromFilter(new HashSet<>(this.tickerWatchers.keySet()));
         return null;
     }
 

@@ -2,7 +2,7 @@ package app.gui.dialog.SaveToCSV;
 
 import app.API.PublicAPI.Ticker;
 import app.gui.dialog.GUIView;
-import app.gui.tickerSelector.TickerTable;
+import app.gui.dialog.TickerSelector.TickerTable;
 
 import javax.swing.*;
 import java.awt.*;

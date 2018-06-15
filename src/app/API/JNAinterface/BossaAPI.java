@@ -130,7 +130,9 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
     private String removeTickersFromFilter(Set<Ticker> tickers) throws IllegalStateException {
         logger.entering(BossaAPI.class.getName(), "removeTickersFromFilter", tickers);
         if (!tickersInFilter.containsAll(tickers)) {
-            throw new IllegalArgumentException(tickers.removeAll(tickersInFilter) + " not in filter");
+            Set<Ticker> tmp = new HashSet<>(tickers);
+            tmp.removeAll(tickersInFilter);
+            throw new IllegalArgumentException(tmp + " not in filter");
         }
         tickersInFilter.removeAll(tickers);
 
@@ -326,7 +328,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
             return INSTANCE;
         }
 
-        private MasterFilter() {
+        public MasterFilter() {
             BossaAPI.API.getProperty("Quotes").addPropertyChangeListener(this);
         }
         @Override
@@ -345,9 +347,9 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
 
         @Override
         public String clearFilter() {
-            String result = BossaAPI.API.clearFilter();
+            //String result = BossaAPI.API.clearFilter();
             super.clearFilter();
-            return result;
+            return null;
         }
 
         @Override
