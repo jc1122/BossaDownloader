@@ -78,6 +78,15 @@ public class StatementView<K extends StatementModel,
             accountPanel.add(new JLabel("Account: "));
             accountPanel.add(accountNameComboBox);
 
+            try {
+                model.addPropertyChangeListener(this);
+            } catch (NullPointerException e) {
+                NullPointerException exc = new NullPointerException("Unable to get accounts! Is API initialized?");
+                logger.finer(exc.getMessage());
+                throw exc;
+            }
+
+            this.accountList = model.getAccounts(); //TODO will cause error when api is in investor offline status
             this.accountList = model.getAccounts();
 
             addAccountsToComboBox(accountList);
@@ -90,6 +99,33 @@ public class StatementView<K extends StatementModel,
         @Override
         @SuppressWarnings("unchecked")
         public void propertyChange(PropertyChangeEvent evt) {
+            logger.entering(this.getClass().getName(), "propertyChange", evt);
+
+            if (!evt.getPropertyName().equals("Accounts")) {
+                logger.exiting(this.getClass().getName(), "propertyChange", evt);
+                return;
+            }
+
+            int index = accountNameComboBox.getSelectedIndex();
+
+            this.accountList = (List<Statement>) evt.getNewValue();
+            synchronized (this) {
+                logger.finest("entering synchronized block");
+                //need to remove listeners before calling removeAllItems, or listeners will be notified of that
+                ActionListener[] listeners = accountNameComboBox.getActionListeners();
+                for (ActionListener listener : listeners) {
+                    accountNameComboBox.removeActionListener(listener);
+                }
+                accountNameComboBox.removeAllItems();
+                addAccountsToComboBox(accountList);
+
+                for (ActionListener listener : listeners) {
+                    accountNameComboBox.addActionListener(listener);
+                }
+                accountNameComboBox.setMaximumSize(accountNameComboBox.getPreferredSize());
+                accountNameComboBox.setSelectedIndex(index);
+            }
+            logger.exiting(this.getClass().getName(), "propertyChange", evt);
         }
 
         void addAccountSelectionListener(ActionListener listener) {
