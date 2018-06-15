@@ -1,6 +1,6 @@
 package app.API.JNAinterface;
 
-import app.API.PublicAPI.AbstractFilter;
+import app.API.PublicAPI.DefaultFilter;
 import app.API.PublicAPI.Filter;
 import app.API.PublicAPI.Position;
 import app.API.PublicAPI.Ticker;
@@ -20,12 +20,12 @@ public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInt
     private final Ticker ticker;
 
     @SuppressWarnings("FieldCanBeLocal") //will fall out of scope and not update property when collected by gc
-    private final AbstractFilter<Ticker> filter;
+    private final DefaultFilter<Ticker> filter;
 
     private final PropertyChangeSupport pcs;
     private double price = 0;
 
-    private class TickerFilter extends AbstractFilter<Ticker> {
+    private class TickerFilter extends DefaultFilter<Ticker> {
 
         TickerFilter() {
             super(Filter.getMasterFilter());
@@ -41,6 +41,7 @@ public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInt
                     filter.removeTickersFromFilter(Collections.singleton(getTicker()));
                 }
             }
+            super.propertyChange(evt);
         }
     }
     //constructor accessed by reflection

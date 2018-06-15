@@ -1,9 +1,10 @@
-package app.gui.tickerSelector;
+package app.gui.dialog.TickerSelector;
 
 import app.API.PublicAPI.Ticker;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -15,7 +16,7 @@ public class TickerTable {
 
     private JScrollPane createTable(List<Ticker> tickers) {
         logger.entering(this.getClass().getName(), "createTable", tickers);
-        TickerTableModel model = new TickerTableModel(tickers);
+        TickerTableModel model = new TickerTableModel(new ArrayList<>(tickers));
 
         table = new JTable(model);
 

@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Stores list of refactoredTickerSelector.
+ * Stores list of TickerSelector.
  * Needs to be closed manually using {@link NolTickersAPI#close()} after finished working with object to release
  * resources.
  *
@@ -50,17 +50,17 @@ public final class NolTickersAPI
     }
 
     /**
-     * Returns the requested refactoredTickerSelector.
+     * Returns the requested TickerSelector.
      * <br>
      * Usage: <br>
      * {@code typeOfList.ALL} or {@code typeOfList.UNDEF_LIST} with any {@code in_ticker}
-     * to get all refactoredTickerSelector from server. <br>
+     * to get all TickerSelector from server. <br>
      * {@code typeOfList.ISIN}, {@code typeOfList.CFI}, {@code typeOfList.MARKET_CODE}, {@code typeOfList.SYMBOL} with
      * non null {@code in_ticker} to get a list filtered by given field.
      *
      * @param typeOfList group filter
      * @param in_ticker  null or valid ticker
-     * @return refactoredTickerSelector
+     * @return TickerSelector
      */
     @NotNull
     public static List<Ticker> getTickers(TypeOfList typeOfList, NolTickerAPI in_ticker) {
@@ -107,10 +107,10 @@ public final class NolTickersAPI
     }
 
     /**
-     * Returns list of refactoredTickerSelector. Throws exception if trying to access if resources are released. <br>
+     * Returns list of TickerSelector. Throws exception if trying to access if resources are released. <br>
      * See {@link NolTickersAPI#close()}.
      *
-     * @return list of refactoredTickerSelector
+     * @return list of TickerSelector
      */
     private List<Ticker> getTickersList() throws NullPointerException {
         if (wrappee == null) throw new NullPointerException("Tickers already closed!");

@@ -1,4 +1,4 @@
-package app.gui.dialog.refactoredTickerSelector;
+package app.gui.dialog.TickerSelector;
 
 import app.gui.Model;
 import app.gui.dialog.GUIDialog;

@@ -14,7 +14,7 @@ public class Model implements FilterOperations<Ticker>, Properties<String, Prope
 
     private final FilterOperations<Ticker> filterOperations;
     private final OnOffOperations onOff;
-    private final AbstractFilter<Ticker> modelFilter;
+    private final DefaultFilter<Ticker> modelFilter;
 
     public Model(Properties<String, PropertyAPI<?, String>> properties, OnOffOperations onOff) {
 
@@ -37,7 +37,7 @@ public class Model implements FilterOperations<Ticker>, Properties<String, Prope
 
     /**
      *
-     * @return currently tracked refactoredTickerSelector
+     * @return currently tracked TickerSelector
      */
     @Override
     public Set<Ticker> getTickersInFilter() {
@@ -56,7 +56,7 @@ public class Model implements FilterOperations<Ticker>, Properties<String, Prope
     /**
      *
      *
-     * @param tickers stop tracking the refactoredTickerSelector with given tickers
+     * @param tickers stop tracking the TickerSelector with given tickers
      */
     @Override
     public String removeTickersFromFilter(Set<Ticker> tickers) {

@@ -1,6 +1,4 @@
-package app.gui.dialog.refactoredTickerSelector;
-
-import app.gui.Model;
+package app.gui.dialog.TickerSelector;
 
 import javax.swing.*;
 import java.util.HashSet;

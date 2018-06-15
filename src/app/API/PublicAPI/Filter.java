@@ -9,11 +9,11 @@ import java.util.Set;
 public final class Filter extends PropertyAPI<Set<Ticker>, String> {
     private static final Filter INSTANCE = new Filter();
 
-    public static AbstractFilter<Ticker> getMasterFilter() {
+    public static DefaultFilter<Ticker> getMasterFilter() {
         return MASTER_FILTER;
     }
 
-    private static final AbstractFilter<Ticker> MASTER_FILTER = new BossaAPI.MasterFilter();
+    private static final DefaultFilter<Ticker> MASTER_FILTER = new BossaAPI.MasterFilter();
 
     private Filter() {
         super("Filter");
@@ -31,11 +31,11 @@ public final class Filter extends PropertyAPI<Set<Ticker>, String> {
     }
 
 
-    public static void addChild(AbstractFilter<Ticker> filter) {
+    public static void addChild(DefaultFilter<Ticker> filter) {
         MASTER_FILTER.addChild(filter);
     }
 
-    public static Set<AbstractFilter<Ticker>> getWatchers(Ticker ticker) {
+    public static Set<DefaultFilter<Ticker>> getWatchers(Ticker ticker) {
         return MASTER_FILTER.getWatchers(ticker);
     }
 }

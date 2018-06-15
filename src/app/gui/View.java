@@ -6,7 +6,7 @@ import app.gui.dialog.SaveToCSV.SaveToCSVDialog;
 import app.gui.dialog.SaveToCSV.SaveToCSVModel;
 import app.gui.dialog.SaveToCSV.SaveToCSVView;
 import app.gui.menu.MainMenuBarFactory;
-import app.gui.tickerSelector.SelectTickersDialog;
+import app.gui.dialog.TickerSelector.SelectTickersDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -110,7 +110,7 @@ class View {
                 return;
             }
         }
-        selectTickersDialog = new SelectTickersDialog(model);
+        selectTickersDialog = GUIDialogFactory.getSelectTickersDialog(model);
         selectTickersDialog.getDialog().setVisible(true);
         selectTickersDialog.getDialog().requestFocus();
         logger.exiting(this.getClass().getName(), "showSelectTickersDialog", "created a new dialog");

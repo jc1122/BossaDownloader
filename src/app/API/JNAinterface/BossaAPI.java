@@ -91,7 +91,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
     }
 
     /**
-     * @param tickers a set of refactoredTickerSelector to be appended to filter
+     * @param tickers a set of TickerSelector to be appended to filter
      */
     private String addTickersToFilter(Set<Ticker> tickers) {
         tickers.remove(null);
@@ -217,8 +217,8 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
     }
 
     /**
-     * Stops tracking quotes of all refactoredTickerSelector.
-     * Removes all refactoredTickerSelector from tracking filter.
+     * Stops tracking quotes of all TickerSelector.
+     * Removes all TickerSelector from tracking filter.
      *
      * @return success or error message
      */
@@ -299,9 +299,9 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
     }
 
     /**
-     * Returns a set of refactoredTickerSelector which are currently in filter. Modyfing the returned set will not affect the filter.
+     * Returns a set of TickerSelector which are currently in filter. Modyfing the returned set will not affect the filter.
      *
-     * @return set of refactoredTickerSelector currently in filter
+     * @return set of TickerSelector currently in filter
      */
     Set<Ticker> getTickersInFilter() {
         return new HashSet<>(tickersInFilter); //this should be immutable
@@ -319,13 +319,16 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
         return filterFormat.toString();
     }
 
-    public static class MasterFilter extends DefaultFilter {
+    public static class MasterFilter extends DefaultFilter<Ticker> {
         public static final MasterFilter INSTANCE = new MasterFilter();
 
         public MasterFilter getInstance() {
             return INSTANCE;
         }
 
+        private MasterFilter() {
+            BossaAPI.API.getProperty("Quotes").addPropertyChangeListener(this);
+        }
         @Override
         public String addTickersToFilter(Set<Ticker> tickers) {
             String result = BossaAPI.API.addTickersToFilter(tickers);
@@ -348,15 +351,20 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
         }
 
         @Override
-        protected void addToWatchers(Set<Ticker> tickers, AbstractFilter<Ticker> watcher) {
+        protected void addToWatchers(Set<Ticker> tickers, DefaultFilter<Ticker> watcher) {
             BossaAPI.API.addTickersToFilter(tickers);
             super.addToWatchers(tickers, watcher);
         }
 
         @Override
-        protected void removeFromParent(Set<Ticker> tickers, AbstractFilter<Ticker> filter) {
+        protected void removeFromParent(Set<Ticker> tickers, DefaultFilter<Ticker> filter) {
             BossaAPI.API.removeTickersFromFilter(tickers);
             super.removeFromParent(tickers, filter);
+        }
+        @Override
+        public void finalize() {
+            BossaAPI.API.getProperty("Quotes").removePropertyChangeListener(this);
+            super.finalize();
         }
     }
 }

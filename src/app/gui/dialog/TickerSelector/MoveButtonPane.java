@@ -1,4 +1,4 @@
-package app.gui.dialog.refactoredTickerSelector;
+package app.gui.dialog.TickerSelector;
 
 import javax.swing.*;
 import java.awt.*;

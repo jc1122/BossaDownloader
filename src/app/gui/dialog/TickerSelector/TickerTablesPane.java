@@ -1,4 +1,4 @@
-package app.gui.tickerSelector;
+package app.gui.dialog.TickerSelector;
 
 import app.API.PublicAPI.Ticker;
 

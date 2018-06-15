@@ -9,32 +9,32 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public enum TypeOfList implements JnaEnum<TypeOfList> {
     /**
-     * Get all refactoredTickerSelector
+     * Get all TickerSelector
      */
     UNDEF_LIST {
     },// = -1;
     /**
-     * Get all refactoredTickerSelector
+     * Get all TickerSelector
      */
     ALL {
     }, //= 0;
     /**
-     * Get refactoredTickerSelector which match name of given ticker
+     * Get TickerSelector which match name of given ticker
      */
     SYMBOL {
     }, //= 1;
     /**
-     * Get refactoredTickerSelector which match the ISIN of given ticker
+     * Get TickerSelector which match the ISIN of given ticker
      */
     ISIN {
     }, //= 2;
     /**
-     * Get refactoredTickerSelector which match the CFI of given ticker
+     * Get TickerSelector which match the CFI of given ticker
      */
     CFI {
     }, //= 3;
     /**
-     * Get refactoredTickerSelector which match the market code of given ticker
+     * Get TickerSelector which match the market code of given ticker
      */
     MARKET_CODE {
     }; //= 4;

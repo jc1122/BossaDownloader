@@ -112,9 +112,9 @@ interface BossaAPIInterface extends Library {
         }
 
         /**
-         * Pointer to array of refactoredTickerSelector
+         * Pointer to array of TickerSelector
          */
-        public NolTicker.ByReference ptrtickerslist;    // pointer to list of refactoredTickerSelector
+        public NolTicker.ByReference ptrtickerslist;    // pointer to list of TickerSelector
         /**
          * Size of ticker array
          */
@@ -397,20 +397,20 @@ interface BossaAPIInterface extends Library {
     int Initialize(String AppId);
 
     /**
-     * Starts tracking quotes of given refactoredTickerSelector. Quotes will be sent to the function set by
+     * Starts tracking quotes of given TickerSelector. Quotes will be sent to the function set by
      * {@link BossaAPIInterface#SetCallback}. If the filter is not empty, then API will crash.
      * Use {@link BossaAPIInterface#ClearFilter()} to clear filter.
      *
-     * @param TickersToAdd isins or names of refactoredTickerSelector separated by semicolon
+     * @param TickersToAdd isins or names of TickerSelector separated by semicolon
      * @param Flush        {@code True} for names, {@code False} for ISINs
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      */
     int AddToFilter(String TickersToAdd, boolean Flush);
 
     /**
-     * Replaces refactoredTickerSelector currently in filter with given refactoredTickerSelector and starts tracking quotes.
+     * Replaces TickerSelector currently in filter with given TickerSelector and starts tracking quotes.
      *
-     * @param TickersToRem these refactoredTickerSelector will no longer be tracked
+     * @param TickersToRem these TickerSelector will no longer be tracked
      * @param Flush {@code true} for names, {@code false} for isins
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
      * @see BossaAPIInterface#ClearFilter()
@@ -440,7 +440,7 @@ interface BossaAPIInterface extends Library {
     int SetCallback(SetCallbackDummy dummy);
 
     /**
-     * Stop tracking quotes of previously selected refactoredTickerSelector. Only refactoredTickerSelector which are in filter will receive quotes updates.
+     * Stop tracking quotes of previously selected TickerSelector. Only TickerSelector which are in filter will receive quotes updates.
      * Clearing filter effectively stops updates of all quotes.
      *
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
@@ -545,7 +545,7 @@ interface BossaAPIInterface extends Library {
     int APIOrderRequest(NolOrderRequest nolorderrequest, NolOrderReport nolorderreport, OrderType Typ);
 
     /**
-     * Enables request for update of trading session status and phase. Should be called before refactoredTickerSelector are added to filter.
+     * Enables request for update of trading session status and phase. Should be called before TickerSelector are added to filter.
      * Additional {@link BossaAPIInterface.NolRecentInfo} message will be sent to function set by
      * {@link BossaAPIInterface#SetCallback(SetCallbackDummy)} before sending message with quotes.
      * The message will contain only info about the phase and session status.
@@ -576,13 +576,13 @@ interface BossaAPIInterface extends Library {
     int SetCallbackDelay(SetCallbackDelayDummy dummy);
 
     /**
-     * Returns a list of refactoredTickerSelector of given type. Use any {@code in_ticker} with {@link TypeOfList#UNDEF_LIST} or
-     * {@link TypeOfList#ALL} to get all refactoredTickerSelector. Use a valid ticker with other possible {@link TypeOfList} values to
-     * get refactoredTickerSelector matching given property. If the selected property of {@code in_ticker} is null or empty string, then
-     * NOL will crash! After finished work with list of refactoredTickerSelector use {@link BossaAPIInterface#ReleaseTickersList(NolTickers)}
+     * Returns a list of TickerSelector of given type. Use any {@code in_ticker} with {@link TypeOfList#UNDEF_LIST} or
+     * {@link TypeOfList#ALL} to get all TickerSelector. Use a valid ticker with other possible {@link TypeOfList} values to
+     * get TickerSelector matching given property. If the selected property of {@code in_ticker} is null or empty string, then
+     * NOL will crash! After finished work with list of TickerSelector use {@link BossaAPIInterface#ReleaseTickersList(NolTickers)}
      * to release memory.
      *
-     * @param ptrtickers pointer to list of refactoredTickerSelector, see: {@link BossaAPIInterface#InitListTickers()}
+     * @param ptrtickers pointer to list of TickerSelector, see: {@link BossaAPIInterface#InitListTickers()}
      * @param typeOfList see: {@link TypeOfList}
      * @param in_ticker  null or a valid ticker
      * @return error code, see {@link BossaAPIInterface#GetResultCodeDesc(int)}
@@ -590,15 +590,15 @@ interface BossaAPIInterface extends Library {
     int GetTickers(NolTickers ptrtickers, TypeOfList typeOfList, NolTicker in_ticker);
 
     /**
-     * Allocates memory for refactoredTickerSelector.
+     * Allocates memory for TickerSelector.
      *
-     * @return instantiated refactoredTickerSelector list
+     * @return instantiated TickerSelector list
      * @see BossaAPIInterface#GetTickers(NolTickers, TypeOfList, NolTicker)
      */
     NolTickers InitListTickers();
 
     /**
-     * Releases memory of pointer to refactoredTickerSelector.
+     * Releases memory of pointer to TickerSelector.
      *
      * @param ptrtickers the pointer whose momory you wish to release
      * @return error code, see: {@link BossaAPIInterface#GetResultCodeDesc(int)}
