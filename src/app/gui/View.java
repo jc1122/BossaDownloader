@@ -138,7 +138,9 @@ class View {
                 return;
             }
         }
-        saveToCSVDialog = GUIDialogFactory.getSaveToCSVDialog(model);
+        if(saveToCSVDialog == null) {
+            saveToCSVDialog = GUIDialogFactory.getSaveToCSVDialog(model);
+        }
         saveToCSVDialog.getDialog().setVisible(true);
         saveToCSVDialog.getDialog().requestFocus();
         logger.exiting(this.getClass().getName(), "showSelectTickersDialog", "created a new dialog");

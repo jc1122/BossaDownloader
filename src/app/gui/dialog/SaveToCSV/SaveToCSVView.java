@@ -3,11 +3,13 @@ package app.gui.dialog.SaveToCSV;
 import app.API.PublicAPI.Ticker;
 import app.gui.dialog.GUIView;
 import app.gui.dialog.TickerSelector.TickerTable;
+import app.gui.dialog.TickerSelector.TickerTableModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,11 +17,13 @@ public class SaveToCSVView<K extends SaveToCSVModel, L extends SaveToCSVView<K, 
         extends GUIView<K, L, M> {
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        if (Objects.equals(propertyChangeEvent.getPropertyName(), "TickersInFilter")) {
+        if (Objects.equals(propertyChangeEvent.getPropertyName(), "Filter")) {
+            System.out.println("test test test");
             //noinspection unchecked
             Set<Ticker> tickers = (Set<Ticker>) propertyChangeEvent.getNewValue();
-            tickerTable = new TickerTable(new ArrayList<>(tickers), "Tickers to collect");
-            //tickerTable.getModel().fireTableDataChanged();
+            TickerTableModel tableModel = new TickerTableModel(new ArrayList<>(tickers));
+            //tickerTable = new TickerTable(new ArrayList<>(tickers), "Tickers to collect");
+            tickerTable.setModel(tableModel);
             //TODO fix bug in TickerTable - the line above does not update the mainModel and the parent view is not updated
         }
     }

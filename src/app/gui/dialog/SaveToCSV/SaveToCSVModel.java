@@ -1,5 +1,6 @@
 package app.gui.dialog.SaveToCSV;
 
+import app.API.PublicAPI.DefaultFilter;
 import app.API.PublicAPI.Ticker;
 import app.gui.dialog.GUIModel;
 
@@ -15,10 +16,10 @@ public class SaveToCSVModel extends GUIModel {
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
         System.out.println("im here");
-        if (Objects.equals(propertyChangeEvent.getPropertyName(), "TickersInFilter")) {
+        if (Objects.equals(propertyChangeEvent.getPropertyName(), "Filter")) {
             //noinspection unchecked
             this.tickersInFilter = (Set<Ticker>) propertyChangeEvent.getNewValue();
-            this.propertyChangeSupport.firePropertyChange("TickersInFilter", propertyChangeEvent.getOldValue(), tickersInFilter);
+            this.propertyChangeSupport.firePropertyChange("Filter", propertyChangeEvent.getOldValue(), tickersInFilter);
         }
         if(Objects.equals(propertyChangeEvent.getPropertyName(), "Quotes")) {
             this.propertyChangeSupport.firePropertyChange("Quotes", propertyChangeEvent.getOldValue(), propertyChangeEvent.getNewValue());

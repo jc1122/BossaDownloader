@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Communicates with NOL3.
  */
-public class Model implements FilterOperations<Ticker>, Properties<String, PropertyAPI<?,String>>, OnOffOperations {
+public class Model implements Properties<String, PropertyAPI<?,String>>, OnOffOperations {
     private final Properties<String, PropertyAPI<?,String>> properties;// = Properties.getProperties();
 
     private final FilterOperations<Ticker> filterOperations;
@@ -28,44 +28,6 @@ public class Model implements FilterOperations<Ticker>, Properties<String, Prope
 
         modelFilter = Filter.getMasterFilter();
         this.filterOperations = modelFilter;
-    }
-
-
-    /**
-     *
-     * @param tickers to be tracked
-     */
-    @Override
-    public String addTickersToFilter(Set<Ticker> tickers) {
-        return filterOperations.addTickersToFilter(tickers);
-    }
-
-    /**
-     *
-     * @return currently tracked TickerSelector
-     */
-    @Override
-    public Set<Ticker> getTickersInFilter() {
-        return filterOperations.getTickersInFilter();
-    }
-
-    /**
-     *
-     * @return message of success or failure
-     */
-    @Override
-    public String clearFilter() {
-        return filterOperations.clearFilter();
-    }
-
-    /**
-     *
-     *
-     * @param tickers stop tracking the TickerSelector with given tickers
-     */
-    @Override
-    public String removeTickersFromFilter(Set<Ticker> tickers) {
-        return filterOperations.removeTickersFromFilter(tickers);
     }
 
     /**

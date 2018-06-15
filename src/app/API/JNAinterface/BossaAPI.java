@@ -236,6 +236,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
             throw e;
         }
         logger.exiting(BossaAPI.class.getName(), "clearFilter", message);
+        Filter.getInstance().update(tickersInFilter);
         return message;
     }
 

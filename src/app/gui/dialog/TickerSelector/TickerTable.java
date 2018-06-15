@@ -53,5 +53,7 @@ public class TickerTable {
     public TickerTableModel getModel() {
         return (TickerTableModel) table.getModel();
     }
-
+    public void setModel(TickerTableModel tableModel) {
+        table.setModel(tableModel);
+    }
 }
