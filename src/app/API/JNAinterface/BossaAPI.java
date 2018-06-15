@@ -93,7 +93,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
     /**
      * @param tickers a set of refactoredTickerSelector to be appended to filter
      */
-    String addTickersToFilter(Set<Ticker> tickers) {
+    private String addTickersToFilter(Set<Ticker> tickers) {
         tickers.remove(null);
         Set<String> isins = tickers
                 .stream()
@@ -127,7 +127,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
         return output;
     }
 
-    String removeTickersFromFilter(Set<Ticker> tickers) throws IllegalStateException {
+    private String removeTickersFromFilter(Set<Ticker> tickers) throws IllegalStateException {
         logger.entering(BossaAPI.class.getName(), "removeTickersFromFilter", tickers);
         if (!tickersInFilter.containsAll(tickers)) {
             throw new IllegalArgumentException(tickers.removeAll(tickersInFilter) + " not in filter");
@@ -317,5 +317,34 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
             filterFormat.append(";");
         }
         return filterFormat.toString();
+    }
+
+    public static class MasterFilter extends DefaultFilter {
+        public static final MasterFilter INSTANCE = new MasterFilter();
+
+        public MasterFilter getInstance() {
+            return INSTANCE;
+        }
+
+        @Override
+        public String addTickersToFilter(Set<Ticker> tickers) {
+            String result = BossaAPI.API.addTickersToFilter(tickers);
+            super.addTickersToFilter(tickers);
+            return result;
+        }
+
+        @Override
+        public String removeTickersFromFilter(Set<Ticker> tickers) throws IllegalStateException {
+            String result = BossaAPI.API.removeTickersFromFilter(tickers);
+            super.removeTickersFromFilter(tickers);
+            return result;
+        }
+
+        @Override
+        public String clearFilter() {
+            String result = BossaAPI.API.clearFilter();
+            super.clearFilter();
+            return result;
+        }
     }
 }

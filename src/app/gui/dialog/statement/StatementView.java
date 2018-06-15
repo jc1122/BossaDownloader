@@ -355,7 +355,7 @@ public class StatementView<K extends StatementModel,
 
                 //add to filter forces callback, it must be called last, otherwise there may be race condition with code above
                 logger.finest("adding isins to filter, callback execution expected");
-                model.addTickersToFilter(positionTickersPrices.keySet());
+                model.addTickersToFilter(positions.stream().map(Position::getTicker).collect(Collectors.toSet()));
             }
             int preferredHeight = positionsPanel.getPreferredSize().height;
             positionsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, preferredHeight));
@@ -394,6 +394,9 @@ public class StatementView<K extends StatementModel,
                     NolRecentInfoAPI quote = (NolRecentInfoAPI) evt.getNewValue();
                     Ticker ticker = quote.getTicker();
                     if (quote.getBitMask().get("ReferPrice")) {
+                        System.out.println(ticker);
+                        System.out.println(quote.getReferPrice());
+                        System.out.println(this.positionTickersCount.get(ticker));
                         this.positionTickersPrices.replace(ticker, quote.getReferPrice() * this.positionTickersCount.get(ticker));
                         updateValues(ticker);
                         //remove redundant isin after price updates

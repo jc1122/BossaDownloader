@@ -3,6 +3,8 @@ package app.API.JNAinterface;
 import app.API.PublicAPI.Ticker;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Stores data of single ticker. Each field is a {@link String}.
  */
@@ -128,5 +130,19 @@ public final class NolTickerAPI extends BossaAPIClassWrapper<NolTickerAPI, Bossa
                 "\nMarket code: " + getMarketCode() +
                 "\nCFI: " + getCFI() +
                 "\nGroup: " + getGroup() + "\n";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NolTickerAPI that = (NolTickerAPI) o;
+        return Objects.equals(isin, that.isin);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(isin);
     }
 }

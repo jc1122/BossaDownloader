@@ -21,7 +21,7 @@ public class Model implements FilterOperations<Ticker>, Properties<String, Prope
         this.properties = properties;
         this.onOff = onOff;
 
-        modelFilter = new DefaultFilter();
+        modelFilter = Filter.getMasterFilter();
         this.filterOperations = modelFilter;
     }
 

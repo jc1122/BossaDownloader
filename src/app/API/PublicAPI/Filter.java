@@ -1,5 +1,7 @@
 package app.API.PublicAPI;
 
+import app.API.JNAinterface.BossaAPI;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +13,7 @@ public final class Filter extends PropertyAPI<Set<Ticker>, String> {
         return MASTER_FILTER;
     }
 
-    private static final AbstractFilter<Ticker> MASTER_FILTER = new DefaultFilter();
+    private static final AbstractFilter<Ticker> MASTER_FILTER = new BossaAPI.MasterFilter();
 
     private Filter() {
         super("Filter");
