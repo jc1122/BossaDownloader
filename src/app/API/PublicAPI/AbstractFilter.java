@@ -67,7 +67,7 @@ public abstract class AbstractFilter<T> implements FilterOperations<T>, Property
      * @param tickers
      * @param watcher
      */
-    private void addToWatchers(Set<T> tickers, AbstractFilter<T> watcher) {
+    protected void addToWatchers(Set<T> tickers, AbstractFilter<T> watcher) {
         for (T ticker : tickers) {
             if (tickerWatchers.keySet().contains(ticker)) {
                 tickerWatchers.get(ticker).add(watcher);
@@ -97,10 +97,13 @@ public abstract class AbstractFilter<T> implements FilterOperations<T>, Property
         return null;
     }
 
-    private void removeFromParent(Set<T> tickers, AbstractFilter<T> filter) {
+    protected void removeFromParent(Set<T> tickers, AbstractFilter<T> filter) {
         for(T ticker : tickers) {
             if(this.tickerWatchers.get(ticker) != null) {
                 this.tickerWatchers.get(ticker).remove(filter);
+                if (tickerWatchers.get(ticker).isEmpty()) {
+                    tickerWatchers.remove(ticker);
+                }
             }
         }
         if(parent != null) {

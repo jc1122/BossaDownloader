@@ -1,10 +1,8 @@
 package app.gui.dialog.statement;
 
 
-import app.API.JNAinterface.NolRecentInfoAPI;
 import app.API.PublicAPI.Position;
 import app.API.PublicAPI.Statement;
-import app.API.PublicAPI.Ticker;
 import app.gui.Controller;
 import app.gui.dialog.GUIView;
 
@@ -14,19 +12,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+
 
 public class StatementView<K extends StatementModel,
         L extends StatementView<K, L, M>,
         M extends StatementController<K, L>>
         extends GUIView<K, L, M> {
 
-    protected PositionsPane positionsPane;
-    protected AccountPane accountPane;
-    protected StatementPane statementPane;
+    private PositionsPane positionsPane;
+    private AccountPane accountPane;
+    private StatementPane statementPane;
 
 
     StatementView(M controller, K model) {
@@ -35,7 +35,7 @@ public class StatementView<K extends StatementModel,
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        //TODO move all logic notifying the change of data in Pane classes here
+
     }
 
     @Override
@@ -78,15 +78,7 @@ public class StatementView<K extends StatementModel,
             accountPanel.add(new JLabel("Account: "));
             accountPanel.add(accountNameComboBox);
 
-            try {
-                model.addPropertyChangeListener(this);
-            } catch (NullPointerException e) {
-                NullPointerException exc = new NullPointerException("Unable to get accounts! Is API initialized?");
-                logger.finer(exc.getMessage());
-                throw exc;
-            }
-
-            this.accountList = model.getAccounts(); //TODO will cause error when api is in investor offline status
+            this.accountList = model.getAccounts();
 
             addAccountsToComboBox(accountList);
 
@@ -98,33 +90,6 @@ public class StatementView<K extends StatementModel,
         @Override
         @SuppressWarnings("unchecked")
         public void propertyChange(PropertyChangeEvent evt) {
-            logger.entering(this.getClass().getName(), "propertyChange", evt);
-
-            if (!evt.getPropertyName().equals("Accounts")) {
-                logger.exiting(this.getClass().getName(), "propertyChange", evt);
-                return;
-            }
-
-            int index = accountNameComboBox.getSelectedIndex();
-
-            this.accountList = (List<Statement>) evt.getNewValue();
-            synchronized (this) {
-                logger.finest("entering synchronized block");
-                //need to remove listeners before calling removeAllItems, or listeners will be notified of that
-                ActionListener[] listeners = accountNameComboBox.getActionListeners();
-                for (ActionListener listener : listeners) {
-                    accountNameComboBox.removeActionListener(listener);
-                }
-                accountNameComboBox.removeAllItems();
-                addAccountsToComboBox(accountList);
-
-                for (ActionListener listener : listeners) {
-                    accountNameComboBox.addActionListener(listener);
-                }
-                accountNameComboBox.setMaximumSize(accountNameComboBox.getPreferredSize());
-                accountNameComboBox.setSelectedIndex(index);
-            }
-            logger.exiting(this.getClass().getName(), "propertyChange", evt);
         }
 
         void addAccountSelectionListener(ActionListener listener) {
@@ -276,7 +241,6 @@ public class StatementView<K extends StatementModel,
         }
     }
 
-    //TODO check behavior in concurrency; remember to remove TickerSelector from filter on close!
     static class PositionsPane<K extends StatementModel> implements PropertyChangeListener, ActionListener {
         private static final Logger logger =
                 Logger.getLogger(Controller.class.getName());
@@ -284,10 +248,6 @@ public class StatementView<K extends StatementModel,
         private final K model;
         private int selectedAccount;
         private List<Statement> accountList;
-        private Map<Ticker, Double> positionTickersPrices;
-        private Map<Ticker, JLabel> positionTickersLabels;
-        private Map<Ticker, Integer> positionTickersCount;
-        private Set<Ticker> tickersInModelFilter;
 
         private final JDialog dialog;
 
@@ -309,13 +269,7 @@ public class StatementView<K extends StatementModel,
             //positionsPanel.setBackground(new Color(133, 133, 233));
             positionsPanel.setLayout(new GridLayout(0, 4));
 
-            positionTickersPrices = new HashMap<>();
-            positionTickersLabels = new HashMap<>();
-            positionTickersCount = new HashMap<>();
-
-            this.accountList = model.getAccounts(); //TODO will cause error when api is in investor offline status
-            tickersInModelFilter = model.getTickersInFilter();
-            //TODO this may be buggy
+            this.accountList = model.getAccounts();
             updatePanel(0);
             logger.exiting(this.getClass().getName(), "constructor");
         }
@@ -330,32 +284,14 @@ public class StatementView<K extends StatementModel,
             positionsPanel.add(new JLabel("Blocked for sale"));
             positionsPanel.add(new JLabel("Value"));
 
-            positionTickersPrices.clear();
-            positionTickersLabels.clear();
-            positionTickersCount.clear();
-
-            //TODO refactor to a set of isins
             List<Position> positions = currentAccount.getPositions();
             if (!positions.isEmpty()) {
                 for (Position position : positions) {
-                    Ticker ticker = position.getTicker();
-                    positionTickersPrices.put(ticker, -1.);
-                    positionTickersLabels.put(ticker, new JLabel());
-                    positionTickersCount.put(ticker, -10);
-                }
-
-                for (Position position : positions) {
-                    Ticker ticker = position.getTicker();
                     positionsPanel.add(new JLabel(position.getTicker().getName()));
                     positionsPanel.add(new JLabel(Integer.toString(position.getAcc110())));
                     positionsPanel.add(new JLabel(Integer.toString(position.getAcc120())));
-                    positionsPanel.add(positionTickersLabels.get(ticker));
-                    positionTickersCount.replace(ticker, position.getAcc110() + position.getAcc120());
+                    positionsPanel.add(new JLabel(Double.toString(position.getValue())));
                 }
-
-                //add to filter forces callback, it must be called last, otherwise there may be race condition with code above
-                logger.finest("adding isins to filter, callback execution expected");
-                model.addTickersToFilter(positions.stream().map(Position::getTicker).collect(Collectors.toSet()));
             }
             int preferredHeight = positionsPanel.getPreferredSize().height;
             positionsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, preferredHeight));
@@ -373,13 +309,6 @@ public class StatementView<K extends StatementModel,
             logger.exiting(this.getClass().getName(), "actionPerformed");
         }
 
-        private void updateValues(Ticker ticker) {
-            logger.entering(this.getClass().getName(), "updateValues", ticker);
-            double price = positionTickersPrices.get(ticker);
-            positionTickersLabels.get(ticker).setText(Double.toString(price));
-            logger.exiting(this.getClass().getName(), "updateValues");
-        }
-
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             logger.entering(this.getClass().getName(), "propertyChange", evt);
@@ -389,33 +318,6 @@ public class StatementView<K extends StatementModel,
                     this.accountList = (List<Statement>) evt.getNewValue();
                     updatePanel(this.selectedAccount);
                     logger.finest("updated account panel");
-                    break;
-                case "Quotes":
-                    NolRecentInfoAPI quote = (NolRecentInfoAPI) evt.getNewValue();
-                    Ticker ticker = quote.getTicker();
-                    if (quote.getBitMask().get("ReferPrice")) {
-                        System.out.println(ticker);
-                        System.out.println(quote.getReferPrice());
-                        System.out.println(this.positionTickersCount.get(ticker));
-                        this.positionTickersPrices.replace(ticker, quote.getReferPrice() * this.positionTickersCount.get(ticker));
-                        updateValues(ticker);
-                        //remove redundant isin after price updates
-                        if (!tickersInModelFilter.contains(ticker)) {
-
-                            Set<String> tickerISINSinFilter = model
-                                    .getTickersInFilter()
-                                    .stream()
-                                    .map(Ticker::getIsin)
-                                    .collect(Collectors.toSet());
-
-                            if (tickerISINSinFilter.contains(ticker)) {
-                                Set<Ticker> tmp = new HashSet<>();
-                                tmp.add(ticker);
-                                model.removeTickersFromFilter(tmp);
-                            }
-                        }
-                    }
-                    logger.finest("updated position values");
                     break;
             }
             logger.exiting(this.getClass().getName(), "propertyChange");

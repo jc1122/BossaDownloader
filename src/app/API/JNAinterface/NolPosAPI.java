@@ -1,7 +1,7 @@
 package app.API.JNAinterface;
 
 import app.API.PublicAPI.AbstractFilter;
-import app.API.PublicAPI.DefaultFilter;
+import app.API.PublicAPI.Filter;
 import app.API.PublicAPI.Position;
 import app.API.PublicAPI.Ticker;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,11 @@ public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInt
     private final PropertyChangeSupport pcs;
     private double price = 0;
 
-    private class TickerFilter extends DefaultFilter {
+    private class TickerFilter extends AbstractFilter<Ticker> {
+
+        TickerFilter() {
+            super(Filter.getMasterFilter());
+        }
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
@@ -34,6 +38,7 @@ public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInt
                 if (info.getTicker().equals(ticker) && price != info.getReferPrice()) {
                     pcs.firePropertyChange("Price", price, info.getReferPrice());
                     price = info.getReferPrice();
+                    filter.removeTickersFromFilter(Collections.singleton(getTicker()));
                 }
             }
         }
@@ -92,7 +97,7 @@ public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInt
 
     @Override
     public double getValue() {
-        return price;
+        return price * (getAcc110() + getAcc120());
     }
 
     @Override

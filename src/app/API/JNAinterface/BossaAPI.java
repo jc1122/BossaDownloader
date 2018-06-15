@@ -346,5 +346,17 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
             super.clearFilter();
             return result;
         }
+
+        @Override
+        protected void addToWatchers(Set<Ticker> tickers, AbstractFilter<Ticker> watcher) {
+            BossaAPI.API.addTickersToFilter(tickers);
+            super.addToWatchers(tickers, watcher);
+        }
+
+        @Override
+        protected void removeFromParent(Set<Ticker> tickers, AbstractFilter<Ticker> filter) {
+            BossaAPI.API.removeTickersFromFilter(tickers);
+            super.removeFromParent(tickers, filter);
+        }
     }
 }
