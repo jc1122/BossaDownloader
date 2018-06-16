@@ -15,11 +15,11 @@ public class Model implements Properties<String, PropertyAPI<?,String>>, OnOffOp
     private final FilterOperations<Ticker> filterOperations;
     private final OnOffOperations onOff;
 
-    public DefaultFilter<Ticker> getModelFilter() {
+    public BaseFilter<Ticker> getModelFilter() {
         return modelFilter;
     }
 
-    private final DefaultFilter<Ticker> modelFilter;
+    private final BaseFilter<Ticker> modelFilter;
 
     public Model(Properties<String, PropertyAPI<?, String>> properties, OnOffOperations onOff) {
 

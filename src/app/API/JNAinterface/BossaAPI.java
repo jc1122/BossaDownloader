@@ -320,7 +320,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
         return filterFormat.toString();
     }
 
-    public static class MasterFilter extends DefaultFilter<Ticker> {
+    public static class MasterFilter extends BaseFilter<Ticker> {
         private static final MasterFilter INSTANCE = new MasterFilter();
 
         public static MasterFilter getInstance() {
@@ -356,7 +356,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
         }
 
         @Override
-        protected void addToWatchers(Set<Ticker> tickers, DefaultFilter<Ticker> watcher) {
+        protected void addToWatchers(Set<Ticker> tickers, BaseFilter<Ticker> watcher) {
 
             super.addToWatchers(tickers, watcher);
             Filter.getInstance().update(INSTANCE.getTickersInFilter());
@@ -364,7 +364,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
         }
 
         @Override
-        protected void removeFromParent(Set<Ticker> tickers, DefaultFilter<Ticker> filter) {
+        protected void removeFromParent(Set<Ticker> tickers, BaseFilter<Ticker> filter) {
 
             super.removeFromParent(tickers, filter);
             Filter.getInstance().update(INSTANCE.getTickersInFilter());

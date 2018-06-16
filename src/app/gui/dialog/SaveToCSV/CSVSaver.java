@@ -16,23 +16,26 @@ import java.util.stream.Collectors;
 
 public class CSVSaver implements PropertyChangeListener {
 
-    Set<String> tickerISINSToSave = new HashSet<>();
-    boolean saveToFile = false;
+    private Set<Ticker> tickersToSave = new HashSet<>();
+    private boolean saveToFile = false;
 
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
         if(saveToFile) {
-            if (propertyChangeEvent.getPropertyName() == "Quotes") {
+            if (Objects.equals(propertyChangeEvent.getPropertyName(), "Quotes")) {
                 NolRecentInfoAPI quote = (NolRecentInfoAPI) propertyChangeEvent.getNewValue();
-                if (tickerISINSToSave.contains(quote.getTicker().getIsin())) {
+                if (tickersToSave.contains(quote.getTicker())) {
                     writeToCSV(quote);
                 }
+            }
+            if (Objects.equals(propertyChangeEvent.getPropertyName(), "Filter")) {
+                tickersToSave = (Set<Ticker>) propertyChangeEvent.getNewValue();
             }
         }
     }
 
     public void startSaving(Set<Ticker> tickers) {
-        this.tickerISINSToSave = tickers.stream().map(Ticker::getIsin).collect(Collectors.toSet());
+        this.tickersToSave = tickers;
         saveToFile = true;
     }
 
