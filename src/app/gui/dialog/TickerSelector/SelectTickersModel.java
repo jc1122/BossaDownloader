@@ -20,7 +20,7 @@ public class SelectTickersModel extends GUIModel {
     }
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-
+        System.out.println("in select tickers model");
     }
 
     public void clearFilter() {

@@ -13,7 +13,7 @@ public final class Filter extends PropertyAPI<Set<Ticker>, String> {
         return MASTER_FILTER;
     }
 
-    private static final DefaultFilter<Ticker> MASTER_FILTER = new BossaAPI.MasterFilter();
+    private static final DefaultFilter<Ticker> MASTER_FILTER = BossaAPI.MasterFilter.getInstance();
 
     private Filter() {
         super("Filter");
@@ -25,9 +25,9 @@ public final class Filter extends PropertyAPI<Set<Ticker>, String> {
     }
 
     public void update(Set<Ticker> tickersInFilter) {
-        Set<Ticker> oldValue = this.property;
-        this.property = Collections.unmodifiableSet(tickersInFilter);
-        this.propertyChangeSupport.firePropertyChange("Filter", oldValue, this.property);
+        this.propertyChangeSupport
+                .firePropertyChange("Filter", this.property, Collections.unmodifiableSet(tickersInFilter));
+        this.property = new HashSet<>(tickersInFilter);
     }
 
 

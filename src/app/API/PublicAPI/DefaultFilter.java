@@ -39,12 +39,13 @@ public class DefaultFilter<T extends Ticker> implements FilterOperations<T>, Pro
         tickerWatchers = new HashMap<>();
         childs = new HashSet<>();
 
-        if(parent != null) {
+        if (parent != null) {
             parent.addChild(this);
             parent.addPropertyChangeListener(this);
         }
 
     }
+
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
@@ -52,9 +53,11 @@ public class DefaultFilter<T extends Ticker> implements FilterOperations<T>, Pro
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
+
     public void addChild(DefaultFilter<T> filter) {
         this.childs.add(filter);
     }
+
     public DefaultFilter getParent() {
         return parent;
     }
@@ -108,28 +111,29 @@ public class DefaultFilter<T extends Ticker> implements FilterOperations<T>, Pro
     }
 
     protected void removeFromParent(Set<T> tickers, DefaultFilter<T> filter) {
-        for(T ticker : tickers) {
-            if(this.tickerWatchers.get(ticker) != null) {
+        for (T ticker : tickers) {
+            if (this.tickerWatchers.get(ticker) != null) {
                 this.tickerWatchers.get(ticker).remove(filter);
                 if (tickerWatchers.get(ticker).isEmpty()) {
                     tickerWatchers.remove(ticker);
                 }
             }
         }
-        if(parent != null) {
+        if (parent != null) {
             parent.removeFromParent(tickers, filter);
         }
     }
 
     private void removeFromChilds(Set<T> tickers) {
-        for(DefaultFilter<T> filter : childs) {
+        for (DefaultFilter<T> filter : childs) {
             filter.removeFromParent(tickers, filter);
             filter.removeFromChilds(tickers);
         }
-        for(T ticker : tickers) {
+        for (T ticker : tickers) {
             this.tickerWatchers.remove(ticker);
         }
     }
+
     @Override
     public String clearFilter() {
         removeTickersFromFilter(new HashSet<>(this.tickerWatchers.keySet()));
@@ -149,14 +153,14 @@ public class DefaultFilter<T extends Ticker> implements FilterOperations<T>, Pro
     public void finalize() {
         removeTickersFromFilter(getTickersInFilter());
 
-        if(parent != null) {
+        if (parent != null) {
             parent.removePropertyChangeListener(this);
         }
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if(evt.getPropertyName().equals("Quotes")) {
+        if (evt.getPropertyName().equals("Quotes")) {
             NolRecentInfoAPI info = (NolRecentInfoAPI) evt.getNewValue();
             if (tickerWatchers.keySet().contains(info.getTicker())) {
                 pcs.firePropertyChange("Quotes", evt.getOldValue(), evt.getNewValue());

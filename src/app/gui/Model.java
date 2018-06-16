@@ -111,4 +111,6 @@ public class Model implements Properties<String, PropertyAPI<?,String>>, OnOffOp
     public Set<Ticker> getTickers() {
         return (Set<Ticker>) getProperty("Tickers").getValue();
     }
+
+    public Set<Ticker> getTickersInFilter() {return filterOperations.getTickersInFilter();}
 }
