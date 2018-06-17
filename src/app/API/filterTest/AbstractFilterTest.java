@@ -1,9 +1,11 @@
-package app.API.PublicAPI;
+package app.API.filterTest;
 
+import app.API.PublicAPI.AbstractFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -37,23 +39,55 @@ class AbstractFilterTest {
         //      test111   test112
 
         test = new AbstractFilter<String>(null) {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+
+            }
         };
 
         test1 = new AbstractFilter<String>(test) {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+
+            }
         };
         test2 = new AbstractFilter<String>(test) {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+
+            }
         };
 
         test11 = new AbstractFilter<String>(test1) {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+
+            }
         };
         test12 = new AbstractFilter<String>(test1) {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+
+            }
         };
         test21 = new AbstractFilter<String>(test2) {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+
+            }
         };
 
         test111 = new AbstractFilter<String>(test11) {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+
+            }
         };
         test112 = new AbstractFilter<String>(test11) {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+
+            }
         };
     }
 

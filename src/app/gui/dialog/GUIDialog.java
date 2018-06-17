@@ -69,4 +69,8 @@ public class GUIDialog<K extends GUIModel, L extends GUIView, M extends GUIContr
     public JDialog getDialog() {
         return view.getDialog();
     }
+
+    public K getModel() {
+        return model;
+    }
 }

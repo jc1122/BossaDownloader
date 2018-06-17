@@ -1,6 +1,7 @@
 package app.gui.dialog.TickerSelector;
 
 import app.API.PublicAPI.BaseFilter;
+import app.API.PublicAPI.DefaultFilter;
 import app.API.PublicAPI.Ticker;
 import app.gui.Model;
 import app.gui.dialog.GUIModel;
@@ -15,11 +16,12 @@ public class SelectTickersModel extends GUIModel {
     private final BaseFilter<Ticker> filter;
     SelectTickersModel(Model mainModel) {
         super(mainModel);
-        filter = new BaseFilter<>(mainModel.getModelFilter());
+        filter = new DefaultFilter();
+        filter.addPropertyChangeListener(this);
     }
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        System.out.println("in select tickers model");
+        System.out.println("in select tickers model " + propertyChangeEvent.getPropertyName());
     }
 
     public void clearFilter() {
@@ -32,6 +34,10 @@ public class SelectTickersModel extends GUIModel {
 
     public List<Ticker> getTickersInFilter() {
         return new ArrayList<>(filter.getTickersInFilter());
+    }
+
+    public BaseFilter<Ticker> getFilter() {
+        return filter;
     }
     public List<Ticker> getTickers() {
         return new ArrayList<>(mainModel.getTickers());

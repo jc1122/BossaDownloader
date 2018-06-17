@@ -4,6 +4,7 @@ import app.API.JNAenums.OrderType;
 import app.API.PublicAPI.*;
 import app.API.PublicAPI.Properties;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.logging.Logger;
@@ -40,7 +41,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
         propertyMap.put(Delay.getInstance().getName(), Delay.getInstance());
         propertyMap.put(Order.getInstance().getName(), Order.getInstance());
         propertyMap.put(Outlook.getInstance().getName(), Outlook.getInstance());
-        propertyMap.put(Filter.getInstance().getName(), Filter.getInstance());
+        //propertyMap.put(Filter.getInstance().getName(), Filter.getInstance());
         propertyMap.put(Tickers.getInstance().getName(), Tickers.getInstance());
         logger.finest("Finished initializing static");
     }
@@ -304,7 +305,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
      *
      * @return set of TickerSelector currently in filter
      */
-    Set<Ticker> getTickersInFilter() {
+    private Set<Ticker> getTickersInFilter() {
         return new HashSet<>(tickersInFilter); //this should be immutable
     }
 
@@ -334,7 +335,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
         public String addTickersToFilter(Set<Ticker> tickers) {
 
             super.addTickersToFilter(tickers);
-            Filter.getInstance().update(INSTANCE.getTickersInFilter());
+            //Filter.getInstance().update(INSTANCE.getTickersInFilter());
             String result = BossaAPI.API.addTickersToFilter(tickers);
             return result;
         }
@@ -343,7 +344,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
         public String removeTickersFromFilter(Set<Ticker> tickers) throws IllegalStateException {
 
             super.removeTickersFromFilter(tickers);
-            Filter.getInstance().update(INSTANCE.getTickersInFilter());
+            //Filter.getInstance().update(INSTANCE.getTickersInFilter());
             String result = BossaAPI.API.removeTickersFromFilter(tickers);
             return result;
         }
@@ -359,7 +360,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
         protected void addToWatchers(Set<Ticker> tickers, BaseFilter<Ticker> watcher) {
 
             super.addToWatchers(tickers, watcher);
-            Filter.getInstance().update(INSTANCE.getTickersInFilter());
+            //Filter.getInstance().update(INSTANCE.getTickersInFilter());
             BossaAPI.API.addTickersToFilter(tickers);
         }
 
@@ -367,8 +368,13 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
         protected void removeFromParent(Set<Ticker> tickers, BaseFilter<Ticker> filter) {
 
             super.removeFromParent(tickers, filter);
-            Filter.getInstance().update(INSTANCE.getTickersInFilter());
+            //Filter.getInstance().update(INSTANCE.getTickersInFilter());
             BossaAPI.API.removeTickersFromFilter(tickers);
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            firePropertyChange(evt);
         }
         @Override
         public void finalize() {

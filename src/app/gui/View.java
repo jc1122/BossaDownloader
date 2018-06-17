@@ -5,13 +5,15 @@ import app.gui.dialog.SaveToCSV.SaveToCSVController;
 import app.gui.dialog.SaveToCSV.SaveToCSVDialog;
 import app.gui.dialog.SaveToCSV.SaveToCSVModel;
 import app.gui.dialog.SaveToCSV.SaveToCSVView;
-import app.gui.menu.MainMenuBarFactory;
 import app.gui.dialog.TickerSelector.SelectTickersDialog;
+import app.gui.dialog.TickerSelector.SelectTickersModel;
+import app.gui.menu.MainMenuBarFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Logger;
 
+//TODO refactor all to use the new filter system
 class View {
     private static final Logger logger =
             Logger.getLogger(View.class.getName());
@@ -26,6 +28,7 @@ class View {
             SaveToCSVController<SaveToCSVModel, SaveToCSVView>> saveToCSVDialog = null;
 
     private JLabel bottomInfoLabel;
+
     View(Controller controller, Model model) {
         this.controller = controller;
         this.model = model;
@@ -140,6 +143,9 @@ class View {
         }
         if(saveToCSVDialog == null) {
             saveToCSVDialog = GUIDialogFactory.getSaveToCSVDialog(model);
+            SelectTickersModel.class.cast(selectTickersDialog.getModel())
+                    .getFilter()
+                    .addPropertyChangeListener(saveToCSVDialog.getModel());
         }
         saveToCSVDialog.getDialog().setVisible(true);
         saveToCSVDialog.getDialog().requestFocus();

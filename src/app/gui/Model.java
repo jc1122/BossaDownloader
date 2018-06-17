@@ -15,18 +15,18 @@ public class Model implements Properties<String, PropertyAPI<?,String>>, OnOffOp
     private final FilterOperations<Ticker> filterOperations;
     private final OnOffOperations onOff;
 
-    public BaseFilter<Ticker> getModelFilter() {
+    public DefaultFilter getModelFilter() {
         return modelFilter;
     }
 
-    private final BaseFilter<Ticker> modelFilter;
+    private final DefaultFilter modelFilter;
 
     public Model(Properties<String, PropertyAPI<?, String>> properties, OnOffOperations onOff) {
 
         this.properties = properties;
         this.onOff = onOff;
 
-        modelFilter = Filter.getMasterFilter();
+        modelFilter = new DefaultFilter();//Filter.getMasterFilter();
         this.filterOperations = modelFilter;
     }
 

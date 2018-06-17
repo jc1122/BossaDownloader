@@ -1,18 +1,15 @@
 package app.API.PublicAPI;
 
 import app.API.JNAinterface.NolRecentInfoAPI;
+import org.jetbrains.annotations.NotNull;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Adds listener to quotes. Manages watched tickers. Generic was only used for testing. Remove generics in the future.
- * TODO simplify this, you really do not need child filters; only one master filter and only one layer of childs
  *
  * @param <T>
  */
@@ -33,7 +30,7 @@ public class BaseFilter<T extends Ticker> implements FilterOperations<T>, Proper
         this(null);
     }
 
-    BaseFilter(BaseFilter<T> parent) {
+    protected BaseFilter(BaseFilter<T> parent) {
         this.parent = parent;
         pcs = new PropertyChangeSupport(this);
         tickerWatchers = new HashMap<>();
@@ -54,11 +51,11 @@ public class BaseFilter<T extends Ticker> implements FilterOperations<T>, Proper
         pcs.removePropertyChangeListener(listener);
     }
 
-    public void addChild(BaseFilter<T> filter) {
+    protected void addChild(BaseFilter<T> filter) {
         this.childs.add(filter);
     }
 
-    public BaseFilter getParent() {
+    private BaseFilter getParent() {
         return parent;
     }
 
@@ -70,10 +67,25 @@ public class BaseFilter<T extends Ticker> implements FilterOperations<T>, Proper
      */
     @Override
     public String addTickersToFilter(Set<T> tickers) {
-        Set<T> oldValue = new HashSet<>(tickerWatchers.keySet());
+        Set<T> thisTickersOld = getTs();
+
         addToWatchers(tickers, this);
-        pcs.firePropertyChange("Filter", oldValue, tickerWatchers.keySet());
+
+        Set<T> thisTickersNew = getTs();
+
+        pcs.firePropertyChange("Filter", thisTickersOld, thisTickersNew);
         return null;
+    }
+
+    @NotNull
+    private Set<T> getTs() {
+        Set<T> thisTickers = new HashSet<>();
+        for (Map.Entry<T, Set<BaseFilter<T>>> entry : tickerWatchers.entrySet()) {
+            if (Set.class.cast(entry.getValue()).contains(this)) {
+                thisTickers.add(entry.getKey());
+            }
+        }
+        return thisTickers;
     }
 
     /**
@@ -107,10 +119,11 @@ public class BaseFilter<T extends Ticker> implements FilterOperations<T>, Proper
      */
     @Override
     public String removeTickersFromFilter(Set<T> tickers) throws IllegalStateException {
-        Set<T> oldValue = new HashSet<>(tickerWatchers.keySet());
+        Set<T> oldValue = getTs();
         removeFromParent(tickers, this);
         removeFromChilds(tickers);
-        pcs.firePropertyChange("Filter", oldValue, tickerWatchers.keySet());
+        Set<T> newValue = getTs();
+        pcs.firePropertyChange("Filter", oldValue, newValue);
         return null;
     }
 
@@ -149,7 +162,7 @@ public class BaseFilter<T extends Ticker> implements FilterOperations<T>, Proper
         return Collections.unmodifiableSet(this.tickerWatchers.keySet());
     }
 
-    public Set<BaseFilter<T>> getWatchers(T ticker) {
+    protected Set<BaseFilter<T>> getWatchers(T ticker) {
         return tickerWatchers.get(ticker);
     }
 
@@ -170,5 +183,9 @@ public class BaseFilter<T extends Ticker> implements FilterOperations<T>, Proper
                 pcs.firePropertyChange("Quotes", evt.getOldValue(), evt.getNewValue());
             }
         }
+    }
+
+    protected void firePropertyChange(PropertyChangeEvent evt) {
+        pcs.firePropertyChange(evt);
     }
 }
