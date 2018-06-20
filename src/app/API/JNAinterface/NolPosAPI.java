@@ -1,6 +1,5 @@
 package app.API.JNAinterface;
 
-import app.API.PublicAPI.DefaultFilter;
 import app.API.PublicAPI.Position;
 import app.API.PublicAPI.Ticker;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +14,7 @@ import java.util.Objects;
  * Contains information about position in portfolio.
  * Will update value of current position on market data change.
  */
-public final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInterface.NolPos> implements Position {
+final class NolPosAPI extends BossaAPIClassWrapper<NolPosAPI, BossaAPIInterface.NolPos> implements Position {
     private final Ticker ticker;
 
     @SuppressWarnings("FieldCanBeLocal") //will fall out of scope and not update property when collected by gc

@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 abstract class BossaAPIClassWrapper<T, Q extends Structure> {
     protected static final Logger logger =
             Logger.getLogger(BossaAPIClassWrapper.class.getName());
-    protected final Q wrappee; //TODO change to protected
+    protected final Q wrappee;
 
     protected BossaAPIClassWrapper(Q wrappee) {
         this.wrappee = wrappee;

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//TODO make this an interface
 /**
  * Stores market info about given ticker. <br>
  * Data returned in this class is shattered. Not all fields are valid in each instance!
@@ -40,7 +41,7 @@ import java.util.Map;
  * ReferPrice - reference price, typically close price of previous session, see {@link NolRecentInfoAPI#getReferPrice()}<br>
  * Error - error code of this message, for validity check only, see {@link NolRecentInfoAPI#getError()}<br>
  */
-public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAPI, BossaAPIInterface.NolRecentInfo> {
+final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAPI, BossaAPIInterface.NolRecentInfo> {
 
     private final NolBidAskStrAPI offers;
     private final Ticker ticker;

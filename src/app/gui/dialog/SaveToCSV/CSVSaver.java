@@ -12,7 +12,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CSVSaver implements PropertyChangeListener {
 

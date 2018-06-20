@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Stores information about trading account.
  */
-public final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI, BossaAPIInterface.NolStatement> implements Statement {
+final class NolStatementAPI extends BossaAPIClassWrapper<NolStatementAPI, BossaAPIInterface.NolStatement> implements Statement {
     //private List<NolFundAPI> fundList;
     private final Map<String, Double> fundMap;
     private final List<Position> positionList;

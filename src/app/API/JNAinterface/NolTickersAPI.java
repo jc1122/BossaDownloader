@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @see NolTickerAPI
  */
-public final class NolTickersAPI
+final class NolTickersAPI
         extends BossaAPIClassWrapper<NolTickersAPI, BossaAPIInterface.NolTickers>
         implements AutoCloseable {
     private final List<NolTickerAPI> tickerListCache;

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AbstractFilterTest {
 
-    AbstractFilter<String> test;
+    BaseFilter<String> test;
 
     AbstractFilter<String> test1;
     AbstractFilter<String> test2;

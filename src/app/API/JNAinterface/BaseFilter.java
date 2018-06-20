@@ -1,6 +1,7 @@
-package app.API.PublicAPI;
+package app.API.JNAinterface;
 
-import app.API.JNAinterface.NolRecentInfoAPI;
+import app.API.PublicAPI.FilterOperations;
+import app.API.PublicAPI.Ticker;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.PropertyChangeEvent;
@@ -13,7 +14,7 @@ import java.util.*;
  *
  * @param <T>
  */
-public class BaseFilter<T extends Ticker> implements FilterOperations<T>, PropertyChangeListener {
+class BaseFilter<T extends Ticker> implements FilterOperations<T>, PropertyChangeListener {
     /**
      * parent of this component, valid only for non-master nodes, top node should be a different implementation of
      * this class than the children

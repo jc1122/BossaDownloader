@@ -1,5 +1,6 @@
 package app.gui;
 
+import app.API.JNAinterface.DefaultFilter;
 import app.API.PublicAPI.*;
 
 import java.beans.PropertyChangeListener;

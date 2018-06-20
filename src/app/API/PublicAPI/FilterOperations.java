@@ -1,7 +1,5 @@
 package app.API.PublicAPI;
 
-import app.API.JNAinterface.NolTickerAPI;
-
 import java.util.Set;
 
 public interface FilterOperations<T> {

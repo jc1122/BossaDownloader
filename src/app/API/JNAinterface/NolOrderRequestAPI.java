@@ -4,7 +4,7 @@ import app.API.PublicAPI.Ticker;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * //TODO check behavior and add javadoc
+ * //TODO check behavior and make this an interface
  */
 public final class NolOrderRequestAPI extends BossaAPIClassWrapper<NolOrderRequestAPI, BossaAPIInterface.NolOrderRequest> {
     private final String origID;
