@@ -1,6 +1,6 @@
-package app.API.PublicAPI;
+package app.API.JNAinterface;
 
-import app.API.JNAinterface.BossaAPI;
+import app.API.PublicAPI.Ticker;
 
 public class DefaultFilter extends BaseFilter<Ticker> {
 

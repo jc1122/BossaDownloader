@@ -21,7 +21,6 @@ public class Tickers extends PropertyAPI<Set<Ticker>, String> {
 
     private Tickers() {
         super("Tickers");
-
     }
 
     @Override

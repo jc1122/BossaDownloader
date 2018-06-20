@@ -1,7 +1,6 @@
 package app.gui.dialog.TickerSelector;
 
-import app.API.PublicAPI.BaseFilter;
-import app.API.PublicAPI.DefaultFilter;
+import app.API.JNAinterface.DefaultFilter;
 import app.API.PublicAPI.Ticker;
 import app.gui.Model;
 import app.gui.dialog.GUIModel;
@@ -13,7 +12,7 @@ import java.util.Set;
 
 public class SelectTickersModel extends GUIModel {
 
-    private final BaseFilter<Ticker> filter;
+    private final DefaultFilter filter;
     SelectTickersModel(Model mainModel) {
         super(mainModel);
         filter = new DefaultFilter();
@@ -36,7 +35,7 @@ public class SelectTickersModel extends GUIModel {
         return new ArrayList<>(filter.getTickersInFilter());
     }
 
-    public BaseFilter<Ticker> getFilter() {
+    public DefaultFilter getFilter() {
         return filter;
     }
     public List<Ticker> getTickers() {

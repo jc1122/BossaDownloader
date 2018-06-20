@@ -321,7 +321,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
         return filterFormat.toString();
     }
 
-    public static class MasterFilter extends BaseFilter<Ticker> {
+    static class MasterFilter extends BaseFilter<Ticker> {
         private static final MasterFilter INSTANCE = new MasterFilter();
 
         public static MasterFilter getInstance() {
