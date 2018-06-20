@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//TODO make this an interface
 /**
  * Stores market info about given ticker. <br>
  * Data returned in this class is shattered. Not all fields are valid in each instance!
@@ -40,7 +41,7 @@ import java.util.Map;
  * ReferPrice - reference price, typically close price of previous session, see {@link NolRecentInfoAPI#getReferPrice()}<br>
  * Error - error code of this message, for validity check only, see {@link NolRecentInfoAPI#getError()}<br>
  */
-public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAPI, BossaAPIInterface.NolRecentInfo> {
+final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAPI, BossaAPIInterface.NolRecentInfo> {
 
     private final NolBidAskStrAPI offers;
     private final Ticker ticker;
@@ -128,7 +129,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      * @return cash value
      */
     @Contract(pure = true)
-    private double getValoLT() {
+    public double getValoLT() {
         logger.exiting(NolTickerAPI.class.getName(), "getValoLT", wrappee.ValoLT);
         return wrappee.ValoLT;
     }
@@ -139,7 +140,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      * @return volume
      */
     @Contract(pure = true)
-    private int getVoLT() {
+    public int getVoLT() {
         logger.exiting(NolTickerAPI.class.getName(), "getVoLT", wrappee.VoLT);
         return wrappee.VoLT;
     }
@@ -150,7 +151,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      * @return time
      */
     @NotNull
-    private String getToLT() {
+    public String getToLT() {
         logger.exiting(NolTickerAPI.class.getName(), "getToLT");
         return toLT;
     }
@@ -161,7 +162,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      * @return open
      */
     @Contract(pure = true)
-    private double getOpen() {
+    public double getOpen() {
         logger.exiting(NolTickerAPI.class.getName(), "getOpen");
         return wrappee.Open;
     }
@@ -172,7 +173,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      * @return high
      */
     @Contract(pure = true)
-    private double getHigh() {
+    public double getHigh() {
         logger.exiting(NolTickerAPI.class.getName(), "getHigh", wrappee.High);
         return wrappee.High;
     }
@@ -183,7 +184,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      * @return low
      */
     @Contract(pure = true)
-    private double getLow() {
+    public double getLow() {
         logger.exiting(NolTickerAPI.class.getName(), "getLow", wrappee.Low);
         return wrappee.Low;
     }
@@ -194,7 +195,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      * @return close
      */
     @Contract(pure = true)
-    private double getClose() {
+    public double getClose() {
         logger.exiting(NolTickerAPI.class.getName(), "getClose", wrappee.Close);
         return wrappee.Close;
     }
@@ -205,7 +206,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      * @return bid price
      */
     @Contract(pure = true)
-    private double getBid() {
+    public double getBid() {
         logger.exiting(NolTickerAPI.class.getName(), "getBid", wrappee.Bid);
         return wrappee.Bid;
     }
@@ -216,7 +217,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      * @return ask price
      */
     @Contract(pure = true)
-    private double getAsk() {
+    public double getAsk() {
         logger.exiting(NolTickerAPI.class.getName(), "getAsk", wrappee.Ask);
         return wrappee.Ask;
     }
@@ -227,7 +228,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      * @return size
      */
     @Contract(pure = true)
-    private int getBidSize() {
+    public int getBidSize() {
         logger.exiting(NolTickerAPI.class.getName(), "getBidSize", wrappee.BidSize);
         return wrappee.BidSize;
     }
@@ -237,7 +238,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      *
      * @return size
      */
-    private int getAskSize() {
+    public int getAskSize() {
         logger.exiting(NolTickerAPI.class.getName(), "getAskSize", wrappee.AskSize);
         return wrappee.AskSize;
     }
@@ -247,7 +248,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      *
      * @return cumulative volume
      */
-    private int getTotalVolume() {
+    public int getTotalVolume() {
         logger.exiting(NolTickerAPI.class.getName(), "getTotalVolume", wrappee.TotalVolume);
         return wrappee.TotalVolume;
     }
@@ -257,7 +258,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      *
      * @return turnover
      */
-    private double getTotalValue() {
+    public double getTotalValue() {
         logger.exiting(NolTickerAPI.class.getName(), "getTotalValue", wrappee.TotalValue);
         return wrappee.TotalValue;
     }
@@ -267,7 +268,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      *
      * @return open interest
      */
-    private int getOpenInterest() {
+    public int getOpenInterest() {
         logger.exiting(NolTickerAPI.class.getName(), "getOpenInterest", wrappee.OpenInterest);
         return wrappee.OpenInterest;
     }
@@ -277,7 +278,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      *
      * @return phase
      */
-    private String getPhase() {
+    public String getPhase() {
         logger.exiting(NolTickerAPI.class.getName(), "getPhase", wrappee.Phase);
         return phase;
     }
@@ -287,7 +288,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      *
      * @return status
      */
-    private String getStatus() {
+    public String getStatus() {
         logger.exiting(NolTickerAPI.class.getName(), "getStatus", wrappee.Status);
         return status;
     }
@@ -299,7 +300,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      *
      * @return amount of offers
      */
-    private int getBidAmount() {
+    public int getBidAmount() {
         logger.exiting(NolTickerAPI.class.getName(), "getBidAmount", wrappee.BidAmount);
         return wrappee.BidAmount;
     }
@@ -311,7 +312,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      *
      * @return amount of offers
      */
-    private int getAskAmount() {
+    public int getAskAmount() {
         logger.exiting(NolTickerAPI.class.getName(), "getAskAmount", wrappee.AskAmount);
         return wrappee.AskAmount;
     }
@@ -321,7 +322,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      *
      * @return turnover
      */
-    private double getOpenValue() {
+    public double getOpenValue() {
         logger.exiting(NolTickerAPI.class.getName(), "getOpenValue", wrappee.OpenValue);
         return wrappee.OpenValue;
     }
@@ -331,7 +332,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      *
      * @return turnover
      */
-    private double getCloseValue() {
+    public double getCloseValue() {
         logger.exiting(NolTickerAPI.class.getName(), "getCloseValue", wrappee.CloseValue);
         return wrappee.CloseValue;
     }
@@ -352,7 +353,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      * @return list of offers
      * @see NolBidAskTblAPI
      */
-    private List<NolBidAskTblAPI> getOffers() {
+    public List<NolBidAskTblAPI> getOffers() {
         logger.exiting(NolTickerAPI.class.getName(), "getOffers", wrappee.offers);
         return offers.getBidask_table();
     }
