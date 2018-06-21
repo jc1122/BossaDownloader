@@ -1,15 +1,15 @@
 package app.gui.dialog.QuoteDialog;
 
+import app.API.JNAinterface.DefaultFilter;
+import app.API.JNAinterface.NolRecentInfoAPI;
+import app.API.JNAinterface.Tickers;
+import app.API.PublicAPI.Ticker;
+
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
-
-import app.API.JNAinterface.DefaultFilter;
-import app.API.JNAinterface.NolRecentInfoAPI;
-import app.API.JNAinterface.Tickers;
-import app.API.PublicAPI.Ticker;
 
 public class QuotesDialog implements PropertyChangeListener {
 
@@ -29,7 +29,7 @@ public class QuotesDialog implements PropertyChangeListener {
         filter.addPropertyChangeListener(this);
         filter.addTickersToFilter(Collections.singleton(instrument));
 
-        createGUI();
+        SwingUtilities.invokeLater(this::createGUI);
     }
 
     public void createGUI() {
@@ -64,12 +64,16 @@ public class QuotesDialog implements PropertyChangeListener {
         labels.put("Error", new JLabel());
 
         labels.forEach((key, value) -> value.setText(key));
+        values = new HashMap<>();
         labels.keySet().forEach(key -> values.put(key, new JLabel()));
 
         for(String key : labels.keySet()) {
             pane.add(labels.get(key));
             pane.add(values.get(key));
         }
+        dialog.add(pane);
+        dialog.setSize(new Dimension(600, 300));
+        dialog.setVisible(true);
     }
 
     @Override
@@ -77,6 +81,7 @@ public class QuotesDialog implements PropertyChangeListener {
         if(Objects.equals(propertyChangeEvent.getPropertyName(), "Quotes")) {
             NolRecentInfoAPI info = (NolRecentInfoAPI) propertyChangeEvent.getNewValue();
             Map<String, Boolean> bitMask = info.getBitMask();
+            System.out.println(bitMask);
             if(bitMask.get("ValoLT")) {
                 values.get("ValoLT").setText(Double.toString(info.getValoLT()));
             }
@@ -102,6 +107,7 @@ public class QuotesDialog implements PropertyChangeListener {
                 values.get("Bid").setText(Double.toString(info.getBid()));
             }
             if(bitMask.get("Ask")) {
+                System.out.println(info.getAsk());
                 values.get("Ask").setText(Double.toString(info.getAsk()));
             }
             if(bitMask.get("BidSize")) {

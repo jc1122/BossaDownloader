@@ -117,7 +117,7 @@ public enum BossaAPI implements OrderOperations, Properties<String, PropertyAPI<
         int errorCode = INSTANCE.AddToFilter(tickerString, false);
         String output = GetResultCodeDesc(errorCode);
         if (errorCode < 0) {
-            IllegalArgumentException e = new IllegalArgumentException(output);
+            IllegalArgumentException e = new IllegalArgumentException(output + " " + tickerString);
             logger.finer(e.getMessage());
             throw e;
         }
