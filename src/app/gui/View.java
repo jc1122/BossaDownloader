@@ -88,7 +88,7 @@ class View {
         JMenuItem saveToCSV = (JMenuItem) mainMenuBarFactory.getComponent("Save to CSV"); //Tickers/Save to CSV
         saveToCSV.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.saveToCSV()));
 
-        JMenuItem watchQuotes = (JMenuItem) mainMenuBarFactory.getComponent("Save to CSV"); //Tickers/Watch quotes
+        JMenuItem watchQuotes = (JMenuItem) mainMenuBarFactory.getComponent("Watch quotes"); //Tickers/Watch quotes
         watchQuotes.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.watchQuotes()));
 
         JMenuItem version = (JMenuItem)mainMenuBarFactory.getComponent("Version");// Help/version
