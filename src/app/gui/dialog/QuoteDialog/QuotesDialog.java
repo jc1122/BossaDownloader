@@ -98,6 +98,54 @@ public class QuotesDialog implements PropertyChangeListener {
             if(bitMask.get("Close")) {
                 values.get("Close").setText(Double.toString(info.getClose()));
             }
+            if(bitMask.get("Bid")) {
+                values.get("Bid").setText(Double.toString(info.getBid()));
+            }
+            if(bitMask.get("Ask")) {
+                values.get("Ask").setText(Double.toString(info.getAsk()));
+            }
+            if(bitMask.get("BidSize")) {
+                values.get("BidSize").setText(Integer.toString(info.getBidSize()));
+            }
+            if(bitMask.get("AskSize")) {
+                values.get("AskSize").setText(Integer.toString(info.getAskSize()));
+            }
+            if(bitMask.get("TotalVolume")) {
+                values.get("TotalVolume").setText(Integer.toString(info.getTotalVolume()));
+            }
+            if(bitMask.get("TotalValue")) {
+                values.get("TotalValue").setText(Double.toString(info.getTotalValue()));
+            }
+            if(bitMask.get("OpenInterest")) {
+                values.get("OpenInterest").setText(Integer.toString(info.getOpenInterest()));
+            }
+            if(bitMask.get("Phase")) {
+                values.get("Phase").setText(info.getPhase());
+            }
+            if(bitMask.get("Status")) {
+                values.get("Status").setText(info.getStatus());
+            }
+            if(bitMask.get("BidAmount")) {
+                values.get("BidAmount").setText(Double.toString(info.getBidAmount()));
+            }
+            if(bitMask.get("AskAmount")) {
+                values.get("AskAmount").setText(Integer.toString(info.getAskAmount()));
+            }
+            if(bitMask.get("OpenValue")) {
+                values.get("OpenValue").setText(Double.toString(info.getOpenValue()));
+            }
+            if(bitMask.get("CloseValue")) {
+                values.get("CloseValue").setText(Double.toString(info.getCloseValue()));
+            }
+            if(bitMask.get("ReferPrice")) {
+                values.get("ReferPrice").setText(Double.toString(info.getReferPrice()));
+            }
+            if(bitMask.get("Offers")) {
+                values.get("Offers").setText(info.getOffers().toString());
+            }
+            if(bitMask.get("Error")) {
+                values.get("Error").setText("no error info");
+            }
         }
     }
 }
