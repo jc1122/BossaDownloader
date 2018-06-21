@@ -41,7 +41,7 @@ import java.util.Map;
  * ReferPrice - reference price, typically close price of previous session, see {@link NolRecentInfoAPI#getReferPrice()}<br>
  * Error - error code of this message, for validity check only, see {@link NolRecentInfoAPI#getError()}<br>
  */
-final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAPI, BossaAPIInterface.NolRecentInfo> {
+public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAPI, BossaAPIInterface.NolRecentInfo> {
 
     private final NolBidAskStrAPI offers;
     private final Ticker ticker;

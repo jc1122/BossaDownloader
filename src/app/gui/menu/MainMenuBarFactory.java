@@ -16,7 +16,7 @@ public class MainMenuBarFactory extends AbstractGuiFactory<JMenuBar, JMenu> {
         String[] accountsMenuNames = new String[]{"Statement"};
         addComponent(factory.getContainer("Accounts", accountsMenuNames));
 
-        String[] tickersMenuNames = new String[]{"Select...", "Save to CSV"};
+        String[] tickersMenuNames = new String[]{"Select...", "Save to CSV", "Watch quotes"};
         addComponent(factory.getContainer("Tickers", tickersMenuNames));
 
         String[] helpMenuNames = new String[]{"Version"};

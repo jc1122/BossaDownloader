@@ -79,4 +79,5 @@ public class Controller {
         view.showSaveToCSVDialog();
     }
 
+    void watchQuotes() {view.showWatchQuotesDialog();}
 }

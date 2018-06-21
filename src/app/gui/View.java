@@ -1,6 +1,7 @@
 package app.gui;
 
 import app.gui.dialog.GUIDialogFactory;
+import app.gui.dialog.QuoteDialog.QuotesDialog;
 import app.gui.dialog.SaveToCSV.SaveToCSVController;
 import app.gui.dialog.SaveToCSV.SaveToCSVDialog;
 import app.gui.dialog.SaveToCSV.SaveToCSVModel;
@@ -87,6 +88,9 @@ class View {
         JMenuItem saveToCSV = (JMenuItem) mainMenuBarFactory.getComponent("Save to CSV"); //Tickers/Save to CSV
         saveToCSV.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.saveToCSV()));
 
+        JMenuItem watchQuotes = (JMenuItem) mainMenuBarFactory.getComponent("Save to CSV"); //Tickers/Watch quotes
+        watchQuotes.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.watchQuotes()));
+
         JMenuItem version = (JMenuItem)mainMenuBarFactory.getComponent("Version");// Help/version
         version.addActionListener(new ActionListenerShowsDialogOnException((e) -> controller.showVersion()));
         logger.exiting(this.getClass().getName(), "addEventListeners");
@@ -152,4 +156,7 @@ class View {
         logger.exiting(this.getClass().getName(), "showSelectTickersDialog", "created a new dialog");
     }
 
+    void showWatchQuotesDialog() {
+        new QuotesDialog();
+    }
 }
