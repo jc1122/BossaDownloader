@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Contract;
  * Stores market data of one level of market quotes. Information stored is offer side (bid/ask), offer depth (level),
  * price, amount of offers, cumulative volume of security.
  */
-final class NolBidAskTblAPI extends BossaAPIClassWrapper<NolBidAskTblAPI, BossaAPIInterface.NolBidAskTbl> {
+public final class NolBidAskTblAPI extends BossaAPIClassWrapper<NolBidAskTblAPI, BossaAPIInterface.NolBidAskTbl> {
 
     //this constructor is accessed by reflection
     private NolBidAskTblAPI(BossaAPIInterface.NolBidAskTbl nolBidAskTbl) {
@@ -20,7 +20,7 @@ final class NolBidAskTblAPI extends BossaAPIClassWrapper<NolBidAskTblAPI, BossaA
      * @return position of offer, relative to best offer on given side
      */
     @Contract(pure = true)
-    private int getDepth() {
+    public int getDepth() {
         logger.exiting(NolBidAskTblAPI.class.getName(), "getDepth");
         return wrappee.depth;
     }
@@ -31,7 +31,7 @@ final class NolBidAskTblAPI extends BossaAPIClassWrapper<NolBidAskTblAPI, BossaA
      * @return side
      */
     @Contract(pure = true)
-    private MarketSide getSide() {
+    public MarketSide getSide() {
         logger.exiting(NolBidAskTblAPI.class.getName(), "getSide");
         if (wrappee.side > 2 || wrappee.side < 1) {
             throw new IllegalStateException("not initialized!");
@@ -45,7 +45,7 @@ final class NolBidAskTblAPI extends BossaAPIClassWrapper<NolBidAskTblAPI, BossaA
      * @return price
      */
     @Contract(pure = true)
-    private double getPrice() {
+    public double getPrice() {
         logger.exiting(NolBidAskTblAPI.class.getName(), "getPrice");
         return wrappee.price;
     }
@@ -56,7 +56,7 @@ final class NolBidAskTblAPI extends BossaAPIClassWrapper<NolBidAskTblAPI, BossaA
      * @return size
      */
     @Contract(pure = true)
-    private int getSize() {
+    public int getSize() {
         logger.exiting(NolBidAskTblAPI.class.getName(), "getSize");
         return wrappee.size;
     }
@@ -67,7 +67,7 @@ final class NolBidAskTblAPI extends BossaAPIClassWrapper<NolBidAskTblAPI, BossaA
      * @return amount
      */
     @Contract(pure = true)
-    private int getAmount() {
+    public int getAmount() {
         logger.exiting(NolBidAskTblAPI.class.getName(), "getAmount");
         return wrappee.amount;
     }
