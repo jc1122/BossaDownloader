@@ -5,10 +5,7 @@ import app.API.PublicAPI.Ticker;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //TODO make this an interface
 /**
@@ -353,7 +350,7 @@ public final class NolRecentInfoAPI extends BossaAPIClassWrapper<NolRecentInfoAP
      * @return list of offers
      * @see NolBidAskTblAPI
      */
-    public List<NolBidAskTblAPI> getOffers() {
+    public Set<NolBidAskTblAPI> getOffers() {
         logger.exiting(NolTickerAPI.class.getName(), "getOffers", wrappee.offers);
         return offers.getBidask_table();
     }

@@ -147,9 +147,9 @@ class View {
         }
         if(saveToCSVDialog == null) {
             saveToCSVDialog = GUIDialogFactory.getSaveToCSVDialog(model);
-            SelectTickersModel.class.cast(selectTickersDialog.getModel())
-                    .getFilter()
-                    .addPropertyChangeListener(saveToCSVDialog.getModel());
+//            SelectTickersModel.class.cast(selectTickersDialog.getModel())
+//                    .getFilter()
+//                    .addPropertyChangeListener(saveToCSVDialog.getModel());
         }
         saveToCSVDialog.getDialog().setVisible(true);
         saveToCSVDialog.getDialog().requestFocus();

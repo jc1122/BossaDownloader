@@ -25,6 +25,7 @@ public class QuotesDialog implements PropertyChangeListener {
     private Map<String, JLabel> values;
     private Map<String, JLabel> offerValues;
 
+
     public QuotesDialog() {
         DefaultFilter filter = new DefaultFilter();
         Set<Ticker> tickers = Tickers.getInstance().getValue();
@@ -34,6 +35,7 @@ public class QuotesDialog implements PropertyChangeListener {
 
         filter.addPropertyChangeListener(this);
         filter.addTickersToFilter(Collections.singleton(instrument));
+
     }
 
     public void createGUI() {
@@ -174,7 +176,7 @@ public class QuotesDialog implements PropertyChangeListener {
         if(Objects.equals(propertyChangeEvent.getPropertyName(), "Quotes")) {
             NolRecentInfoAPI info = (NolRecentInfoAPI) propertyChangeEvent.getNewValue();
             Map<String, Boolean> bitMask = info.getBitMask();
-            System.out.println(bitMask);
+            //System.out.println(bitMask);
 
             values.get("TickerISIN").setText(info.getTicker().getIsin());
             values.get("TickerName").setText(info.getTicker().getName());
@@ -207,7 +209,7 @@ public class QuotesDialog implements PropertyChangeListener {
                 values.get("Bid").setText(Double.toString(info.getBid()));
             }
             if(bitMask.get("Ask")) {
-                System.out.println(info.getAsk());
+                //System.out.println(info.getAsk());
                 values.get("Ask").setText(Double.toString(info.getAsk()));
             }
             if(bitMask.get("BidSize")) {
@@ -232,7 +234,7 @@ public class QuotesDialog implements PropertyChangeListener {
                 values.get("Status").setText(info.getStatus());
             }
             if(bitMask.get("BidAmount")) {
-                values.get("BidAmount").setText(Double.toString(info.getBidAmount()));
+                values.get("BidAmount").setText(Integer.toString(info.getBidAmount()));
             }
             if(bitMask.get("AskAmount")) {
                 values.get("AskAmount").setText(Integer.toString(info.getAskAmount()));
@@ -247,12 +249,12 @@ public class QuotesDialog implements PropertyChangeListener {
                 values.get("ReferPrice").setText(Double.toString(info.getReferPrice()));
             }
             if(bitMask.get("Offers")) {
-                List<NolBidAskTblAPI> offers = info.getOffers();
+                Set<NolBidAskTblAPI> offers = info.getOffers();
                 for (NolBidAskTblAPI offer : offers) {
                     StringBuilder key = new StringBuilder();
                     key.append(offer.getSide());
                     key.append(offer.getDepth());
-                    System.out.println(key.toString() + "price");
+                    //System.out.println(key.toString() + "price");
                     offerValues.get(key.toString() + "side")
                             .setText(offer.getSide().toString());
                     offerValues.get(key.toString() + "price")

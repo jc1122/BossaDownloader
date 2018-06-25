@@ -2,7 +2,9 @@ package app.API.JNAinterface;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Stores list of market quotes (market levels). The list may not be sorted.
@@ -20,9 +22,9 @@ final class NolBidAskStrAPI extends BossaAPIClassWrapper<NolBidAskStrAPI, BossaA
                 NolBidAskTblAPI.class);
     }
 
-    @NotNull List<NolBidAskTblAPI> getBidask_table() {
+    @NotNull Set<NolBidAskTblAPI> getBidask_table() {
         logger.exiting(NolBidAskStrAPI.class.getName(), "getBidask_table", bidAskList);
-        return bidAskList;
+        return new HashSet<>(bidAskList);
     }
 
 }

@@ -2,6 +2,7 @@ package app.gui.dialog.SaveToCSV;
 
 import app.API.JNAinterface.NolRecentInfoAPI;
 import app.API.PublicAPI.Ticker;
+import app.gui.dialog.QuoteDialog.QuoteLastInfo;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -17,18 +18,40 @@ public class CSVSaver implements PropertyChangeListener {
 
     private Set<Ticker> tickersToSave = new HashSet<>();
     private boolean saveToFile = false;
-
+    Set<QuoteLastInfo> observedQuotes;
+    public CSVSaver() {
+        observedQuotes = new HashSet<>();
+        observedQuotes.add(QuoteLastInfo.getInstance("PL0GF0014183")); //FW20
+        observedQuotes.add(QuoteLastInfo.getInstance("PL9999999987")); //WIG20
+        observedQuotes.add(QuoteLastInfo.getInstance("PLALIOR00045")); //ALIOR
+        observedQuotes.add(QuoteLastInfo.getInstance("PLBZ00000044")); //BZWBK
+        observedQuotes.add(QuoteLastInfo.getInstance("PLCCC0000016")); //CCC
+        observedQuotes.add(QuoteLastInfo.getInstance("PLOPTTC00011")); //CDProjekt
+        observedQuotes.add(QuoteLastInfo.getInstance("PLCFRPT00013")); //polsat
+        observedQuotes.add(QuoteLastInfo.getInstance("PLENERG00022")); //energa
+        observedQuotes.add(QuoteLastInfo.getInstance("PLEURCH00011")); //eurocash
+        observedQuotes.add(QuoteLastInfo.getInstance("PLJSW0000015")); //kghm
+        observedQuotes.add(QuoteLastInfo.getInstance("PLLOTOS00025")); //lotos
+        observedQuotes.add(QuoteLastInfo.getInstance("PLLPP0000011")); //lpp
+        observedQuotes.add(QuoteLastInfo.getInstance("PLBRE0000012")); //mbank
+        observedQuotes.add(QuoteLastInfo.getInstance("PLTLKPL00017")); //orange
+        observedQuotes.add(QuoteLastInfo.getInstance("PLPEKAO00016")); //pekao
+        observedQuotes.add(QuoteLastInfo.getInstance("PLPGER000010")); //pge
+        observedQuotes.add(QuoteLastInfo.getInstance("PLPGNIG00014")); //pgnig
+        observedQuotes.add(QuoteLastInfo.getInstance("PLPKN0000018")); //pknorlen
+        observedQuotes.add(QuoteLastInfo.getInstance("PLPKO0000016")); //pkobp
+        observedQuotes.add(QuoteLastInfo.getInstance("PLPZU0000011")); //pzu
+        observedQuotes.add(QuoteLastInfo.getInstance("PLTAURN00011")); //tauronpe
+        observedQuotes.forEach(quote -> quote.addPropertyChangeListener(this));
+        observedQuotes.forEach(this::writeToCSV);
+    }
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        if(saveToFile) {
-            if (Objects.equals(propertyChangeEvent.getPropertyName(), "Quotes")) {
-                NolRecentInfoAPI quote = (NolRecentInfoAPI) propertyChangeEvent.getNewValue();
-                if (tickersToSave.contains(quote.getTicker())) {
-                    writeToCSV(quote);
-                }
-            }
-            if (Objects.equals(propertyChangeEvent.getPropertyName(), "Filter")) {
-                tickersToSave = (Set<Ticker>) propertyChangeEvent.getNewValue();
+        if(true) { //saveToFile
+            System.out.println("here!");
+            if (Objects.equals(propertyChangeEvent.getPropertyName(), "QuoteLastInfo")) {
+                QuoteLastInfo quote = (QuoteLastInfo) propertyChangeEvent.getNewValue();
+                writeToCSV(quote);
             }
         }
     }
@@ -43,30 +66,18 @@ public class CSVSaver implements PropertyChangeListener {
     }
 
     //this method needs to be synchronized by opened file
-    public void writeToCSV(NolRecentInfoAPI quote) {
+    public void writeToCSV(QuoteLastInfo quote) {
 
-        String name = quote.getTicker().getName();
+        String name = quote.getName();
         LocalDate localDate = LocalDate.now();
         String fileName = name + localDate + ".csv";
         File quotesFile = new File(fileName);
         List<String> quoteToString = null;
         System.out.println(quote);
         quoteToString = Arrays.asList(quote.toString());
-// quote.getTicker().getName(),
-//                    Double.toString(quote.getOpen()),
-//                    Double.toString(quote.getHigh()),
-//                    Double.toString(quote.getLow()),
-//                    Double.toString(quote.getClose()),
-//                    Double.toString(quote.getOffers().get(0).getAmount()),
-//                    Double.toString(quote.getOffers().get(0).getDepth()),
-//                    Double.toString(quote.getOffers().get(0).getPrice()),
-//                    Double.toString(quote.getOffers().get(0).getSize())
-////                Double.toString(quote.getOffers().get(1).getAmount()),
-////                Double.toString(quote.getOffers().get(1).getDepth()),
-////                Double.toString(quote.getOffers().get(1).getPrice()),
-////                Double.toString(quote.getOffers().get(1).getSize())
+
         if(!quotesFile.exists()) {
-            List<String> header = Arrays.asList("name,open,high,low,close,bid1,bidvol1,ask1,askvol1");
+            List<String> header = Arrays.asList(quote.getHeader());
             try {
                 Files.write(Paths.get(fileName), header, StandardCharsets.UTF_8);
             } catch (Exception e) {
