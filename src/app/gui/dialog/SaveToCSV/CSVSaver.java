@@ -17,8 +17,9 @@ import java.util.*;
 public class CSVSaver implements PropertyChangeListener {
 
     private Set<Ticker> tickersToSave = new HashSet<>();
-    private boolean saveToFile = false;
+    private boolean saveToFile = true;
     Set<QuoteLastInfo> observedQuotes;
+
     public CSVSaver() {
         observedQuotes = new HashSet<>();
         observedQuotes.add(QuoteLastInfo.getInstance("PL0GF0014183")); //FW20
@@ -45,14 +46,13 @@ public class CSVSaver implements PropertyChangeListener {
         observedQuotes.forEach(quote -> quote.addPropertyChangeListener(this));
         observedQuotes.forEach(this::writeToCSV);
     }
+
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        if(true) { //saveToFile
-            System.out.println("here!");
-            if (Objects.equals(propertyChangeEvent.getPropertyName(), "QuoteLastInfo")) {
-                QuoteLastInfo quote = (QuoteLastInfo) propertyChangeEvent.getNewValue();
-                writeToCSV(quote);
-            }
+        System.out.println("here!");
+        if (Objects.equals(propertyChangeEvent.getPropertyName(), "QuoteLastInfo")) {
+            QuoteLastInfo quote = (QuoteLastInfo) propertyChangeEvent.getNewValue();
+            writeToCSV(quote);
         }
     }
 
@@ -70,13 +70,13 @@ public class CSVSaver implements PropertyChangeListener {
 
         String name = quote.getName();
         LocalDate localDate = LocalDate.now();
-        String fileName = name + localDate + ".csv";
+        String fileName = ".\\csv\\" + name + localDate + ".csv";
         File quotesFile = new File(fileName);
         List<String> quoteToString = null;
         System.out.println(quote);
         quoteToString = Arrays.asList(quote.toString());
 
-        if(!quotesFile.exists()) {
+        if (!quotesFile.exists()) {
             List<String> header = Arrays.asList(quote.getHeader());
             try {
                 Files.write(Paths.get(fileName), header, StandardCharsets.UTF_8);
@@ -85,8 +85,8 @@ public class CSVSaver implements PropertyChangeListener {
             }
         }
 
-        try(Scanner lineScanner = new Scanner(quotesFile)) {
-            while(lineScanner.hasNextLine()) {
+        try (Scanner lineScanner = new Scanner(quotesFile)) {
+            while (lineScanner.hasNextLine()) {
                 String line = lineScanner.nextLine();
                 if (line.equals(quoteToString.get(0))) {
                     lineScanner.close();
@@ -94,11 +94,8 @@ public class CSVSaver implements PropertyChangeListener {
                 }
             }
             Files.write(Paths.get(fileName), quoteToString, StandardCharsets.UTF_8, StandardOpenOption.APPEND);
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
-        System.out.println("writing to file!");
-
     }
 }

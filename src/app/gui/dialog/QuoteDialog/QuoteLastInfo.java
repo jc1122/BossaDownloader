@@ -14,7 +14,7 @@ import java.util.*;
 
 public class QuoteLastInfo implements PropertyChangeListener {
 
-    PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    PropertyChangeSupport pcs;
 
     private static Map<String, QuoteLastInfo> INSTANCES = new HashMap<>();
     private String tolt, phase, status;
@@ -100,6 +100,7 @@ public class QuoteLastInfo implements PropertyChangeListener {
             for(int i=1; i<6; i++) {
                 offers.put("BID" + i,null);
             }
+            pcs = new PropertyChangeSupport(this);
             filter.addPropertyChangeListener(this);
             filter.addTickersToFilter(Collections.singleton(ticker));
         } else {
@@ -118,6 +119,7 @@ public class QuoteLastInfo implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        //System.out.println("quote incoming!");
         if (propertyChangeEvent.getPropertyName().equals("Quotes")) {
             NolRecentInfoAPI info = (NolRecentInfoAPI) propertyChangeEvent.getNewValue();
 
@@ -192,7 +194,8 @@ public class QuoteLastInfo implements PropertyChangeListener {
                         offers.replace(offer.getSide().toString() + offer.getDepth(),offer);
                     }
                 }
-                pcs.firePropertyChange("QuoteLastInfo", this, this);
+                pcs.firePropertyChange("QuoteLastInfo", null, this);
+                //System.out.println("fired property change");
                 //System.out.println(this.getHeader());
                 //System.out.println(this.toString());
             }
@@ -201,6 +204,7 @@ public class QuoteLastInfo implements PropertyChangeListener {
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
+        System.out.println("added listener");
     }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {

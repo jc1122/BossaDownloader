@@ -29,7 +29,7 @@ public class SaveToCSVModel extends GUIModel {
         super(model);
         tickersInFilter = model.getTickersInFilter();
         saver = new CSVSaver();
-        this.addPropertyChangeListener(saver);
+        //this.addPropertyChangeListener(saver);
     }
 
     public Set<Ticker> getTickersInFilter() {
