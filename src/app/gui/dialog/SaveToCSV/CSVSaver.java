@@ -86,13 +86,14 @@ public class CSVSaver implements PropertyChangeListener {
         }
 
         try (Scanner lineScanner = new Scanner(quotesFile)) {
-            while (lineScanner.hasNextLine()) {
-                String line = lineScanner.nextLine();
-                if (line.equals(quoteToString.get(0))) {
-                    lineScanner.close();
-                    return;
-                }
-            }
+            //this is redundant as each timestamp is different
+//            while (lineScanner.hasNextLine()) {
+//                String line = lineScanner.nextLine();
+//                if (line.equals(quoteToString.get(0))) {
+//                    lineScanner.close();
+//                    return;
+//                }
+//            }
             Files.write(Paths.get(fileName), quoteToString, StandardCharsets.UTF_8, StandardOpenOption.APPEND);
         } catch (Exception e) {
             System.out.println(e.getMessage());
